@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EG-Experts | Managed Service Provider & BPO Solutions</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              blue: '#1C4C96',
+              blueHover: '#153a75',
+              gold: '#C2A74C',
+              goldHover: '#d8be5e',
+              darkBg: '#0B132B',
+              darkSurface: '#080E1F',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Smooth transitions for theme switching */
+    * {
+      transition-property: background-color, border-color, color, fill, stroke;
+      transition-duration: 200ms;
+    }
+    .no-transition {
+      transition: none !important;
+    }
+    /* Hide scrollbar for clean modals while maintaining scrollability */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-[#1C4C96] selection:text-white dark:selection:bg-[#C2A74C] dark:selection:text-slate-950 flex flex-col min-h-screen overflow-x-hidden">
+
+  <header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/95 dark:bg-[#0B132B]/95 border-b border-slate-200 dark:border-slate-800 shadow-sm">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20 sm:h-24">
+        
+        <!-- Brand Logo -->
+        <a href="#home" onclick="navigateTo('home'); return false;" class="flex items-center gap-3 select-none group">
+          <svg class="w-9 h-9 sm:w-11 sm:h-11 flex-shrink-0 drop-shadow-sm transition-transform duration-300 group-hover:scale-105" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="38" y="13" width="24" height="24" rx="6" transform="rotate(45 50 25)" fill="#C2A74C"/>
+            <rect x="38" y="63" width="24" height="24" rx="6" transform="rotate(45 50 75)" fill="#C2A74C"/>
+            <rect x="13" y="38" width="24" height="24" rx="6" transform="rotate(45 25 50)" fill="#1C4C96"/>
+            <rect x="63" y="38" width="24" height="24" rx="6" transform="rotate(45 75 50)" fill="#1C4C96"/>
+          </svg>
+          <div class="flex flex-col uppercase font-black leading-[1.05] tracking-tight">
+            <span class="text-[#1C4C96] dark:text-white text-lg sm:text-2xl">Experts</span>
+            <div class="flex items-baseline">
+              <span class="text-[#1C4C96] dark:text-white text-lg sm:text-2xl">Group</span>
+              <span class="text-[#C2A74C] text-[9px] sm:text-[11px] ml-1 font-bold tracking-widest">PLUS</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden xl:flex items-center gap-8 font-semibold">
+          <button onclick="navigateTo('home')" id="nav-link-home" class="nav-btn transition-colors px-2 py-1 rounded-md text-sm text-[#1C4C96] dark:text-[#C2A74C] font-bold">
+            Home
+          </button>
+          <button onclick="navigateTo('about')" id="nav-link-about" class="nav-btn transition-colors px-2 py-1 rounded-md text-sm text-slate-600 hover:text-[#1C4C96] dark:text-slate-300 dark:hover:text-[#C2A74C]">
+            About Us
+          </button>
+          
+          <div class="relative" id="services-dropdown-container">
+            <button id="services-dropdown-btn" onclick="toggleServicesDropdown()" class="flex items-center gap-1.5 transition-colors px-2 py-1 rounded-md text-sm text-slate-600 hover:text-[#1C4C96] dark:text-slate-300 dark:hover:text-[#C2A74C]">
+              <span>Services</span> 
+              <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300" id="dropdown-chevron"></i>
+            </button>
+            
+            <div id="services-dropdown-menu" class="hidden absolute top-full mt-3 left-1/2 -translate-x-1/2 w-64 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 py-2 overflow-hidden z-50">
+              <button onclick="navigateTo('training')" class="service-nav-item w-full text-left px-5 py-3 text-sm font-bold transition-all border-l-4 border-transparent text-slate-700 dark:text-slate-300 hover:bg-[#1C4C96] hover:text-white hover:border-[#C2A74C] dark:hover:bg-[#C2A74C] dark:hover:text-slate-950">
+                Expert Training
+              </button>
+              <button onclick="navigateTo('consultation')" class="service-nav-item w-full text-left px-5 py-3 text-sm font-bold transition-all border-l-4 border-transparent text-slate-700 dark:text-slate-300 hover:bg-[#1C4C96] hover:text-white hover:border-[#C2A74C] dark:hover:bg-[#C2A74C] dark:hover:text-slate-950">
+                Expert Consultation
+              </button>
+              <button onclick="navigateTo('operations')" class="service-nav-item w-full text-left px-5 py-3 text-sm font-bold transition-all border-l-4 border-transparent text-slate-700 dark:text-slate-300 hover:bg-[#1C4C96] hover:text-white hover:border-[#C2A74C] dark:hover:bg-[#C2A74C] dark:hover:text-slate-950">
+                Expert Operations
+              </button>
+              <button onclick="navigateTo('bpo')" class="service-nav-item w-full text-left px-5 py-3 text-sm font-bold transition-all border-l-4 border-transparent text-slate-700 dark:text-slate-300 hover:bg-[#1C4C96] hover:text-white hover:border-[#C2A74C] dark:hover:bg-[#C2A74C] dark:hover:text-slate-950">
+                Expert BPO
+              </button>
+            </div>
+          </div>
+          
+          <button onclick="navigateTo('contact')" id="nav-link-contact" class="nav-btn transition-colors px-2 py-1 rounded-md text-sm text-slate-600 hover:text-[#1C4C96] dark:text-slate-300 dark:hover:text-[#C2A74C]">
+            Contact
+          </button>
+
+          <div class="w-px h-6 bg-slate-300 dark:bg-slate-700 mx-1"></div>
+
+          <!-- Light/Dark Toggle -->
+          <button onclick="toggleTheme()" class="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Toggle Dark Mode">
+            <i data-lucide="moon" class="w-5 h-5 text-[#1C4C96] block dark:hidden" id="theme-icon-light"></i>
+            <i data-lucide="sun" class="w-5 h-5 text-[#C2A74C] hidden dark:block" id="theme-icon-dark"></i>
+          </button>
+
+          <!-- Top CTA -->
+          <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="px-6 py-2.5 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-all shadow-md text-sm flex items-center gap-2 group min-h-[44px]">
+            <span>Schedule a Call</span>
+            <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+          </a>
+        </nav>
+
+        <!-- Mobile Buttons -->
+        <div class="flex xl:hidden items-center gap-2 sm:gap-3">
+          <button onclick="toggleTheme()" class="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Toggle Theme">
+            <i data-lucide="moon" class="w-5 h-5 text-[#1C4C96] block dark:hidden"></i>
+            <i data-lucide="sun" class="w-5 h-5 text-[#C2A74C] hidden dark:block"></i>
+          </button>
+          <button onclick="toggleMobileMenu()" class="text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 p-2.5 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Toggle Navigation Menu">
+            <i data-lucide="menu" class="w-6 h-6" id="mobile-menu-icon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobile-nav-drawer" class="hidden xl:hidden bg-white/98 dark:bg-[#0B132B]/98 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 absolute w-full shadow-2xl z-50 max-h-[calc(100vh-80px)] overflow-y-auto">
+      <div class="px-5 py-6 flex flex-col gap-2">
+        <button onclick="navigateTo('home')" class="text-left px-5 py-3.5 rounded-xl text-base font-bold min-h-[48px] bg-[#1C4C96]/10 text-[#1C4C96] dark:bg-slate-800 dark:text-[#C2A74C]" id="mobile-link-home">
+          Home
+        </button>
+        <button onclick="navigateTo('about')" class="text-left px-5 py-3.5 rounded-xl text-base font-bold min-h-[48px] text-slate-800 dark:text-slate-200" id="mobile-link-about">
+          About Us
+        </button>
+        
+        <div class="px-5 pt-3 pb-1 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+          Our Services
+        </div>
+        <div class="grid grid-cols-1 gap-1.5 pl-2">
+          <button onclick="navigateTo('training')" class="text-left px-4 py-3 rounded-xl text-sm font-bold border-l-4 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 min-h-[44px]">
+            Expert Training
+          </button>
+          <button onclick="navigateTo('consultation')" class="text-left px-4 py-3 rounded-xl text-sm font-bold border-l-4 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 min-h-[44px]">
+            Expert Consultation
+          </button>
+          <button onclick="navigateTo('operations')" class="text-left px-4 py-3 rounded-xl text-sm font-bold border-l-4 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 min-h-[44px]">
+            Expert Operations
+          </button>
+          <button onclick="navigateTo('bpo')" class="text-left px-4 py-3 rounded-xl text-sm font-bold border-l-4 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 min-h-[44px]">
+            Expert BPO
+          </button>
+        </div>
+
+        <button onclick="navigateTo('contact')" class="text-left px-5 py-3.5 mt-2 rounded-xl text-base font-bold min-h-[48px] text-slate-800 dark:text-slate-200" id="mobile-link-contact">
+          Contact
+        </button>
+        
+        <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
+          <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="w-full px-6 py-4 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-colors shadow-md text-center flex items-center justify-center gap-2 min-h-[48px]">
+            <span>Schedule a Call</span>
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+          <a href="tel:+201044111646" class="w-full px-6 py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-center flex items-center justify-center gap-2 text-sm min-h-[44px]">
+            <i data-lucide="phone" class="w-4 h-4 text-[#C2A74C]"></i>
+            <span>+20 104 411 1646</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow">
+    
+    <!-- HOME PAGE -->
+    <section id="view-home" class="page-view animate-in fade-in duration-300">
+      <!-- Hero Section -->
+      <div class="relative pt-16 pb-20 sm:pt-24 sm:pb-28 lg:pt-32 lg:pb-32 overflow-hidden bg-slate-50 dark:bg-slate-950">
+        <div class="absolute top-0 right-0 -translate-y-12 translate-x-1/3 w-[350px] sm:w-[650px] h-[350px] sm:h-[650px] bg-[radial-gradient(ellipse_at_center,rgba(28,76,150,0.15)_0%,rgba(0,0,0,0)_70%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(194,167,76,0.12)_0%,rgba(0,0,0,0)_70%)] pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-200/60 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 mb-6 backdrop-blur-sm">
+            <span class="flex h-2 w-2 rounded-full bg-[#C2A74C] animate-pulse"></span>
+            <span class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 tracking-wide uppercase">ENTERPRISE B2B SOLUTIONS</span>
+          </div>
+          
+          <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.12] mb-6 max-w-5xl mx-auto">
+            Your All-In-One <br class="hidden sm:block"/> 
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#1C4C96] via-[#2563eb] to-[#C2A74C] dark:from-[#C2A74C] dark:via-[#eadd9d] dark:to-white">Managed Service Provider</span>
+          </h1>
+          
+          <p class="text-sm sm:text-lg md:text-xl text-slate-600 dark:text-slate-300 mb-8 sm:mb-10 max-w-3xl mx-auto leading-relaxed">
+            Scale operations, upskill your workforce, and streamline processes with our premier training, strategic consultation, operational delegation, and BPO solutions designed for modern enterprises.
+          </p>
+          
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
+            <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-all duration-300 shadow-md shadow-[#1C4C96]/20 flex items-center justify-center gap-2 group text-base min-h-[48px]">
+              <span>Schedule a Call</span>
+              <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+            <button onclick="navigateTo('about')" class="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold hover:border-[#1C4C96] dark:hover:border-[#C2A74C] hover:text-[#1C4C96] dark:hover:text-[#C2A74C] transition-all duration-300 flex items-center justify-center text-base shadow-sm min-h-[48px]">
+              Discover Our Story
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Four Divisions Grid -->
+      <div class="py-16 sm:py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center mb-12 sm:mb-16">
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
+              Core Pillars
+            </div>
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">Our Four Divisions</h2>
+            <div class="w-16 h-1 bg-[#C2A74C] mx-auto rounded-full"></div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <!-- Training Card -->
+            <div onclick="navigateTo('training')" class="bg-slate-50 dark:bg-slate-800/80 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center cursor-pointer hover:-translate-y-1.5 hover:shadow-xl hover:border-[#1C4C96]/40 dark:hover:border-[#C2A74C]/40 transition-all group flex flex-col justify-between">
+              <div>
+                <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-5 border border-slate-100 dark:border-slate-800 group-hover:bg-[#1C4C96] dark:group-hover:bg-[#C2A74C] group-hover:scale-105 transition-all shadow-sm">
+                  <i data-lucide="graduation-cap" class="w-7 h-7 sm:w-8 sm:h-8 text-[#1C4C96] dark:text-[#C2A74C] group-hover:text-white dark:group-hover:text-slate-950"></i>
+                </div>
+                <div class="text-[11px] font-bold text-[#1C4C96] dark:text-[#C2A74C] uppercase tracking-wider mb-2">Tailored Curricula</div>
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C]">Expert Training</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">Customized upskilling & structured onboarding for new hires, departments, and executive leadership.</p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center gap-1.5 text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C] group-hover:gap-2.5 transition-all">
+                <span>Explore division</span>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </div>
+
+            <!-- Consultation Card -->
+            <div onclick="navigateTo('consultation')" class="bg-slate-50 dark:bg-slate-800/80 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center cursor-pointer hover:-translate-y-1.5 hover:shadow-xl hover:border-[#1C4C96]/40 dark:hover:border-[#C2A74C]/40 transition-all group flex flex-col justify-between">
+              <div>
+                <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-5 border border-slate-100 dark:border-slate-800 group-hover:bg-[#1C4C96] dark:group-hover:bg-[#C2A74C] group-hover:scale-105 transition-all shadow-sm">
+                  <i data-lucide="lightbulb" class="w-7 h-7 sm:w-8 sm:h-8 text-[#1C4C96] dark:text-[#C2A74C] group-hover:text-white dark:group-hover:text-slate-950"></i>
+                </div>
+                <div class="text-[11px] font-bold text-[#1C4C96] dark:text-[#C2A74C] uppercase tracking-wider mb-2">3-Week Diagnostic</div>
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C]">Expert Consultation</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">Rigorous strategic diagnostics and hands-on advisory execution with 6-month dedicated support.</p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center gap-1.5 text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C] group-hover:gap-2.5 transition-all">
+                <span>Explore division</span>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </div>
+
+            <!-- Operations Card -->
+            <div onclick="navigateTo('operations')" class="bg-slate-50 dark:bg-slate-800/80 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center cursor-pointer hover:-translate-y-1.5 hover:shadow-xl hover:border-[#1C4C96]/40 dark:hover:border-[#C2A74C]/40 transition-all group flex flex-col justify-between">
+              <div>
+                <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-5 border border-slate-100 dark:border-slate-800 group-hover:bg-[#1C4C96] dark:group-hover:bg-[#C2A74C] group-hover:scale-105 transition-all shadow-sm">
+                  <i data-lucide="settings" class="w-7 h-7 sm:w-8 sm:h-8 text-[#1C4C96] dark:text-[#C2A74C] group-hover:text-white dark:group-hover:text-slate-950"></i>
+                </div>
+                <div class="text-[11px] font-bold text-[#1C4C96] dark:text-[#C2A74C] uppercase tracking-wider mb-2">12 Service Pods</div>
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C]">Expert Operations</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">Comprehensive 12-point operational delegation with fast 1-3 day pod onboarding.</p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center gap-1.5 text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C] group-hover:gap-2.5 transition-all">
+                <span>Explore division</span>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </div>
+
+            <!-- BPO Card -->
+            <div onclick="navigateTo('bpo')" class="bg-slate-50 dark:bg-slate-800/80 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center cursor-pointer hover:-translate-y-1.5 hover:shadow-xl hover:border-[#1C4C96]/40 dark:hover:border-[#C2A74C]/40 transition-all group flex flex-col justify-between">
+              <div>
+                <div class="w-14 h-14 sm:w-16 sm:h-16 mx-auto bg-white dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-5 border border-slate-100 dark:border-slate-800 group-hover:bg-[#1C4C96] dark:group-hover:bg-[#C2A74C] group-hover:scale-105 transition-all shadow-sm">
+                  <i data-lucide="headset" class="w-7 h-7 sm:w-8 sm:h-8 text-[#1C4C96] dark:text-[#C2A74C] group-hover:text-white dark:group-hover:text-slate-950"></i>
+                </div>
+                <div class="text-[11px] font-bold text-[#1C4C96] dark:text-[#C2A74C] uppercase tracking-wider mb-2">98% Chat CSAT</div>
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C]">Expert BPO</h3>
+                <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed">Specialized, high-conversion support with guaranteed CSAT SLAs and zero contract lock-in.</p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center gap-1.5 text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C] group-hover:gap-2.5 transition-all">
+                <span>Explore division</span>
+                <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Home Schedule CTA -->
+      <div class="schedule-cta-container"></div>
+    </section>
+
+    <!-- ABOUT US PAGE -->
+    <section id="view-about" class="page-view hidden animate-in fade-in duration-300">
+      <!-- Service Hero Header -->
+      <div class="service-hero-wrapper" 
+           data-crumb="About Us"
+           data-title="About Experts Group"
+           data-subtitle="We partner with businesses to solve complex operational challenges, accelerate growth, and drive long-term workforce excellence."
+           data-b1-icon="building" data-b1-label="Headquarters" data-b1-value="Cairo, Egypt"
+           data-b2-icon="users" data-b2-label="Companies Empowered" data-b2-value="200+ Clients">
+      </div>
+
+      <!-- Narrative Section -->
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16 text-center">
+        <div class="bg-white dark:bg-slate-800/90 rounded-3xl p-6 sm:p-10 lg:p-12 border border-slate-200 dark:border-slate-700/80 shadow-md space-y-4 sm:space-y-6">
+          <p class="text-sm sm:text-base lg:text-lg text-slate-700 dark:text-slate-200 leading-relaxed">
+            At EG-Experts, we believe that every business has the potential to thrive when backed by the right strategy and a dedicated team. Based in Egypt, we are a full-service business consulting, operational management, and Business Process Outsourcing (BPO) firm dedicated to solving complex business problems.
+          </p>
+          <p class="text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+            We are a team of passionate, forward-thinking professionals whose primary goal is to improve lives and elevate businesses through disruptive, high-quality services. Whether you are a small startup looking to establish your footprint or a large enterprise aiming to optimize performance, we have built a world-class operations team ready to fuel your growth.
+          </p>
+
+          <div class="pt-4 border-t border-slate-100 dark:border-slate-700/60 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-black tracking-wider uppercase text-[#1C4C96] dark:text-[#C2A74C]">
+            <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/50">Training</span>
+            <span class="text-slate-400 dark:text-slate-600">|</span>
+            <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/50">Consultation</span>
+            <span class="text-slate-400 dark:text-slate-600">|</span>
+            <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/50">Services</span>
+            <span class="text-slate-400 dark:text-slate-600">|</span>
+            <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/50">BPO</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mission & Vision Dual Cards -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-14">
+        <div class="grid md:grid-cols-2 gap-6 sm:gap-8 items-stretch">
+          <div class="rounded-3xl p-6 sm:p-10 bg-gradient-to-br from-[#1C4C96] to-[#12366e] text-white shadow-lg flex flex-col justify-between border border-white/10 relative overflow-hidden group">
+            <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-colors"></div>
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mb-5 text-[#C2A74C] border border-white/10">
+                <i data-lucide="target" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-extrabold mb-3 tracking-tight text-white">Our Mission</h3>
+              <p class="text-blue-100 leading-relaxed text-sm sm:text-base lg:text-lg">
+                To empower businesses by providing end-to-end, tailor-made solutions in consulting, training, and outsourcing, allowing our clients to focus on what they do best—growing their business.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/15 flex items-center gap-2 text-xs font-semibold text-[#C2A74C] uppercase tracking-wider">
+              <span>Client-First Execution</span>
+            </div>
+          </div>
+
+          <div class="rounded-3xl p-6 sm:p-10 bg-gradient-to-br from-[#0e274d] to-[#08172e] dark:from-[#0d1f3d] dark:to-[#050b14] text-white shadow-lg flex flex-col justify-between border border-white/10 relative overflow-hidden group">
+            <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-[#C2A74C]/10 rounded-full blur-2xl group-hover:bg-[#C2A74C]/20 transition-colors"></div>
+            <div>
+              <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mb-5 text-[#C2A74C] border border-white/10">
+                <i data-lucide="eye" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-extrabold mb-3 tracking-tight text-white">Our Vision</h3>
+              <p class="text-slate-200 leading-relaxed text-sm sm:text-base lg:text-lg">
+                To be the premier all-in-one business partner across the region, recognized for setting new standards in operational excellence, driving workforce growth, and empowering businesses through seamless BPO and strategic consulting.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-white/15 flex items-center gap-2 text-xs font-semibold text-[#C2A74C] uppercase tracking-wider">
+              <span>Regional Leadership & Impact</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trusted Clients Showcase -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24">
+        <div class="bg-white dark:bg-slate-800/90 rounded-3xl p-6 sm:p-12 border border-slate-200 dark:border-slate-700/80 shadow-md text-center">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
+            Proven Track Record
+          </div>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">
+            Businesses That Trust EG-Experts
+          </h2>
+          <div class="w-16 h-1 bg-[#C2A74C] mx-auto rounded-full mb-10"></div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-5 items-center justify-center mb-10">
+            <!-- BE FORWARD -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
+              <div class="flex items-center gap-1 font-black italic tracking-tighter text-xs sm:text-sm">
+                <span class="text-slate-900 dark:text-white">BE</span>
+                <span class="text-[#FF6600]">FORWARD</span>
+              </div>
+            </div>
+
+            <!-- FLAIRSTECH -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 bg-[#C41230] text-white flex items-center justify-center font-black text-[10px] rounded">F</div>
+                <div class="text-left leading-none">
+                  <span class="font-extrabold text-[10px] sm:text-xs text-slate-900 dark:text-white tracking-wider block">FLAIRSTECH</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PSEO -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
+              <div class="font-black text-xs sm:text-sm tracking-tight text-slate-900 dark:text-white flex items-center">
+                <span class="text-[#1C4C96] text-sm sm:text-base">P</span>
+                <span>SEO</span>
+              </div>
+            </div>
+
+            <!-- Madrid -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
+              <div class="flex items-center gap-1 font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
+                <span class="text-[10px] font-black text-[#1C4C96]">=</span>
+                <span class="tracking-wide">Madrid</span>
+              </div>
+            </div>
+
+            <!-- Mountains Solutions -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
+              <div class="text-[10px] font-black uppercase text-slate-800 dark:text-white leading-tight">
+                Mountains<br /><span class="text-slate-400 font-medium text-[8px]">Solutions</span>
+              </div>
+            </div>
+
+            <!-- The Outsource -->
+            <div class="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
+              <div class="bg-[#B93826] text-white px-2 py-1 rounded text-[10px] sm:text-xs font-black tracking-tight flex items-center gap-0.5">
+                <span>The</span>
+                <span class="underline decoration-[#C2A74C]">Outsource</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="max-w-xl mx-auto pt-6 border-t border-slate-100 dark:border-slate-700/60">
+            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
+              200+ companies use EG-Experts to grow their businesses.
+            </h3>
+            <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mb-6">
+              Join us and make your company a better place.
+            </p>
+            <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-all shadow-md text-xs sm:text-sm group min-h-[44px]">
+              <span>Schedule a Call</span>
+              <i data-lucide="external-link" class="w-3.5 h-3.5 group-hover:scale-110 transition-transform"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="schedule-cta-container"></div>
+    </section>
+
+    <!-- TRAINING PAGE -->
+    <section id="view-training" class="page-view hidden animate-in fade-in duration-300">
+      <div class="service-hero-wrapper" 
+           data-crumb="Services / Expert Training"
+           data-title="Expert Training"
+           data-subtitle="Elevate your workforce. Personalized, high-impact training programs designed to maximize human capital and drive departmental efficiency."
+           data-b1-icon="graduation-cap" data-b1-label="Custom Curriculum" data-b1-value="100% Tailored"
+           data-b2-icon="building" data-b2-label="Delivery Options" data-b2-value="On-Site & Virtual">
+      </div>
+
+      <!-- Training Tiers Section -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
+        <div class="text-center mb-12 sm:mb-16 max-w-3xl mx-auto">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
+            Curriculum Options
+          </div>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">
+            Expert Training for Your Business Growth
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base leading-relaxed">
+            Invest in your team to drive faster growth, ensure operational stability, and scale seamlessly.
+          </p>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6 sm:gap-8 items-stretch mb-16">
+          <!-- Tier 1: Employee Training (Most Requested) -->
+          <div class="rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all relative bg-white dark:bg-slate-800/90 border-2 border-[#1C4C96] dark:border-[#C2A74C] shadow-xl shadow-[#1C4C96]/10 dark:shadow-[#C2A74C]/5 lg:-translate-y-2">
+            <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#1C4C96] text-white dark:bg-[#C2A74C] dark:text-slate-950 text-xs font-bold tracking-wider uppercase shadow-md flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              Most Requested
+            </div>
+
+            <div>
+              <div class="mb-6">
+                <span class="text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C] uppercase tracking-wider block mb-1">
+                  Ideal for new hires
+                </span>
+                <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  Employee Training
+                </h3>
+                <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mt-2.5 leading-relaxed min-h-[48px]">
+                  Equip your incoming team members with essential skills and structured onboarding so they hit the ground running.
+                </p>
+              </div>
+
+              <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 mb-8 min-h-[44px] bg-[#1C4C96] hover:bg-[#153a75] text-white shadow-md shadow-[#1C4C96]/20">
+                <span>Schedule a Call</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+
+              <div class="border-t border-slate-100 dark:border-slate-700/70 pt-5 mb-6">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3.5">
+                  What's Included
+                </div>
+                <ul class="space-y-3">
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Expert Industry Trainers</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Tailored Onboarding Curriculum</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Practical Workshops</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Hands-On Exercises</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Custom Training Materials <span class="ml-1 text-[10px] font-semibold text-[#C2A74C] px-1.5 py-0.5 rounded bg-[#C2A74C]/15">Add-On</span></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <span class="flex items-center gap-1"><i data-lucide="globe" class="w-3.5 h-3.5 text-[#1C4C96] dark:text-[#C2A74C]"></i> Online & On-Site</span>
+              <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5 text-[#1C4C96] dark:text-[#C2A74C]"></i> No Headcount Min</span>
+            </div>
+          </div>
+
+          <!-- Tier 2: Department Training -->
+          <div class="rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md">
+            <div>
+              <div class="mb-6">
+                <span class="text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C] uppercase tracking-wider block mb-1">
+                  Ideal for existing teams
+                </span>
+                <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  Department Training
+                </h3>
+                <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mt-2.5 leading-relaxed min-h-[48px]">
+                  Specialized skill development across operational and administrative departments to boost overall efficiency and bridge skill gaps.
+                </p>
+              </div>
+
+              <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 mb-8 min-h-[44px] bg-slate-100 hover:bg-[#1C4C96] hover:text-white dark:bg-slate-700 dark:hover:bg-[#C2A74C] dark:hover:text-slate-900 text-slate-800 dark:text-white">
+                <span>Schedule a Call</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+
+              <div class="border-t border-slate-100 dark:border-slate-700/70 pt-5 mb-6">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3.5">
+                  What's Included
+                </div>
+                <ul class="space-y-3">
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Department-Specific Upskilling</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Process & Workflow Optimization</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Interactive Group Exercises</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Case Studies</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Departmental Playbooks <span class="ml-1 text-[10px] font-semibold text-[#C2A74C] px-1.5 py-0.5 rounded bg-[#C2A74C]/15">Add-On</span></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <span class="flex items-center gap-1"><i data-lucide="globe" class="w-3.5 h-3.5 text-[#1C4C96] dark:text-[#C2A74C]"></i> Online & On-Site</span>
+              <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5 text-[#1C4C96] dark:text-[#C2A74C]"></i> No Headcount Min</span>
+            </div>
+          </div>
+
+          <!-- Tier 3: Management Training -->
+          <div class="rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all bg-white dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md">
+            <div>
+              <div class="mb-6">
+                <span class="text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C] uppercase tracking-wider block mb-1">
+                  Ideal for leaders & managers
+                </span>
+                <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                  Management Training
+                </h3>
+                <p class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm mt-2.5 leading-relaxed min-h-[48px]">
+                  Strengthen leadership capabilities and team management to build a high-performance organization.
+                </p>
+              </div>
+
+              <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="w-full py-3.5 px-4 rounded-xl font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 mb-8 min-h-[44px] bg-slate-100 hover:bg-[#1C4C96] hover:text-white dark:bg-slate-700 dark:hover:bg-[#C2A74C] dark:hover:text-slate-900 text-slate-800 dark:text-white">
+                <span>Schedule a Call</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+
+              <div class="border-t border-slate-100 dark:border-slate-700/70 pt-5 mb-6">
+                <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3.5">
+                  What's Included
+                </div>
+                <ul class="space-y-3">
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Strategic Planning & Execution</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Coaching & Active Communication</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Conflict Resolution & Negotiation</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Team Empowerment Frameworks</span>
+                  </li>
+                  <li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                    <span>Executive Toolkits <span class="ml-1 text-[10px] font-semibold text-[#C2A74C] px-1.5 py-0.5 rounded bg-[#C2A74C]/15">Add-On</span></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium">
+              <span class="flex items-center gap-1"><i data-lucide="globe" class="w-3.5 h-3.5 text-[#1C4C96] dark:text-[#C2A74C]"></i> Online & On-Site</span>
+              <span class="flex items-center gap-1"><i data-lucide="users" class="w-3.5 h-3.5 text-[#1C4C96] dark:text-[#C2A74C]"></i> No Headcount Min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Training Split FAQ -->
+      <div class="training-faq-container"></div>
+      <div class="schedule-cta-container"></div>
+    </section>
+
+    <!-- CONSULTATION PAGE -->
+    <section id="view-consultation" class="page-view hidden animate-in fade-in duration-300">
+      <div class="service-hero-wrapper" 
+           data-crumb="Services / Expert Consultation"
+           data-title="Expert Consultation"
+           data-subtitle="Move beyond theory. Rigorous strategic planning paired with hands-on execution support to eliminate bottlenecks and deliver measurable ROI."
+           data-b1-icon="target" data-b1-label="Delivery Guarantee" data-b1-value="3 Weeks Max"
+           data-b2-icon="users" data-b2-label="Advisory Support" data-b2-value="6 Months">
+      </div>
+
+      <!-- Interactive Carousel Section -->
+      <div class="py-14 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
+            Practice Areas
+          </div>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
+            Explore Our Strategic Options
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-base">
+            Swipe or use arrows to view our consultation practices. We align with your specific unit economics.
+          </p>
+        </div>
+
+        <!-- Slider Card with Touch Events -->
+        <div id="consultation-slider-card" class="max-w-4xl mx-auto relative bg-white dark:bg-slate-800/90 rounded-3xl border border-slate-200 dark:border-slate-700/80 p-6 sm:p-12 shadow-lg transition-all select-none touch-pan-y">
+          <div class="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100 dark:border-slate-700/70">
+            <span id="slider-category" class="text-[11px] sm:text-xs font-bold tracking-widest uppercase text-[#1C4C96] dark:text-[#C2A74C]">
+              Finance & Margin Expansion
+            </span>
+            <div class="flex items-center gap-2">
+              <span id="slider-status-indicator" class="text-[10px] text-slate-400 uppercase font-semibold hidden sm:inline">
+                Auto 10s
+              </span>
+              <span id="slider-counter" class="text-xs font-bold text-slate-400 dark:text-slate-500 font-mono">
+                01 / 07
+              </span>
+            </div>
+          </div>
+
+          <div class="min-h-[120px] sm:min-h-[140px] flex flex-col justify-center text-center px-2 sm:px-10">
+            <h3 id="slider-title" class="text-xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
+              Financial & Unit Economics Strategy
+            </h3>
+            <p id="slider-desc" class="text-slate-600 dark:text-slate-300 text-xs sm:text-base leading-relaxed max-w-2xl mx-auto">
+              Build 12-to-36 month cash flow models, optimize pricing structures, and improve unit margins to ensure long-term financial health.
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-5 mt-8 sm:mt-12 pt-6 border-t border-slate-100 dark:border-slate-700/70">
+            <div class="flex items-center gap-2">
+              <button onclick="prevConsultationSlide()" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" aria-label="Previous Slide">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+              </button>
+              <button onclick="nextConsultationSlide()" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" aria-label="Next Slide">
+                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+              </button>
+            </div>
+
+            <!-- Dots Indicator -->
+            <div id="slider-dots" class="flex items-center gap-1.5 sm:gap-2"></div>
+
+            <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold text-xs sm:text-sm shadow-md transition-all">
+              <span>Schedule a Call</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consultation Features Section -->
+      <div class="py-16 sm:py-24 bg-slate-900 text-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+            <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">
+              Our Consultation Features
+            </h2>
+            <p class="text-slate-300 text-xs sm:text-base leading-relaxed">
+              Engineered to eliminate strategic bottlenecks, accelerate executive decision-making, and deliver measurable ROI from day one.
+            </p>
+          </div>
+
+          <div class="grid lg:grid-cols-12 gap-8 items-start max-w-6xl mx-auto">
+            <!-- Core Deliverables -->
+            <div class="lg:col-span-7 bg-slate-800/90 border border-slate-700/80 rounded-3xl p-6 sm:p-10 space-y-6">
+              <div class="text-xs font-bold text-[#C2A74C] uppercase tracking-wider mb-2">Core Deliverables</div>
+              
+              <div class="flex items-start gap-4">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-[#C2A74C] shrink-0 mt-1"></i>
+                <div>
+                  <h3 class="font-bold text-base sm:text-lg text-white mb-1">Guaranteed Fast Delivery</h3>
+                  <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">No matter the scope or complexity, receive your complete strategic diagnostic and final consultation package within 3 weeks maximum.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-[#C2A74C] shrink-0 mt-1"></i>
+                <div>
+                  <h3 class="font-bold text-base sm:text-lg text-white mb-1">Market & Industry Research</h3>
+                  <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">Besides the provided data, EG-Experts leverages its own primary and secondary research sources to analyze market trends and benchmark your performance.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-[#C2A74C] shrink-0 mt-1"></i>
+                <div>
+                  <h3 class="font-bold text-base sm:text-lg text-white mb-1">Operational & Process Diagnostic</h3>
+                  <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">A thorough assessment of your existing workflows, organizational structure, and bottlenecks to pinpoint exact areas for improvement. Grow what you have, not start over.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-[#C2A74C] shrink-0 mt-1"></i>
+                <div>
+                  <h3 class="font-bold text-base sm:text-lg text-white mb-1">Custom Strategic Action Plan</h3>
+                  <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">A clear, step-by-step roadmap with actionable recommendations designed to address your specific business goals and growth targets.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Extended Execution Add-Ons -->
+            <div class="lg:col-span-5 bg-slate-800/90 border border-slate-700/80 rounded-3xl p-6 sm:p-10 space-y-6">
+              <div class="text-xs font-bold text-[#C2A74C] uppercase tracking-wider mb-2">Extended Execution Add-Ons</div>
+              
+              <div class="flex items-start gap-4">
+                <i data-lucide="plus-circle" class="w-5 h-5 text-[#C2A74C] shrink-0 mt-1"></i>
+                <div>
+                  <h3 class="font-bold text-base sm:text-lg text-white mb-1">Dedicated Advisory Support (Add-On)</h3>
+                  <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">Direct access to an expert throughout your engagement to guide and ensure results for 6 months, with adjustments to the plan as operational realities shift.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-4">
+                <i data-lucide="plus-circle" class="w-5 h-5 text-[#C2A74C] shrink-0 mt-1"></i>
+                <div>
+                  <h3 class="font-bold text-base sm:text-lg text-white mb-1">Custom Playbook Creation (Add-On)</h3>
+                  <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">Turn strategic recommendations into detailed Standard Operating Procedures (SOPs) and departmental playbooks for your team, designed for execution.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="consultation-faq-container"></div>
+      <div class="schedule-cta-container"></div>
+    </section>
+
+    <!-- OPERATIONS PAGE -->
+    <section id="view-operations" class="page-view hidden animate-in fade-in duration-300">
+      <div class="service-hero-wrapper" 
+           data-crumb="Services / Expert Operations"
+           data-title="Expert Operations"
+           data-subtitle="Take the heavy lifting off your shoulders. Instantly scale your capabilities, bypass hiring delays, and reduce overhead with our 12-point service grid."
+           data-b1-icon="zap" data-b1-label="Onboarding Speed" data-b1-value="1-3 Days"
+           data-b2-icon="layers" data-b2-label="Services Available" data-b2-value="12+ Domains">
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
+        <div class="text-center mb-12 sm:mb-16 max-w-3xl mx-auto">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
+            Operational Pods
+          </div>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">
+            Comprehensive Operational Delegation
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-base leading-relaxed">
+            Click on any service card below to view detailed deliverables, business advantages, and operational specifications.
+          </p>
+        </div>
+
+        <!-- 12-Card Grid -->
+        <div id="operations-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 mb-20"></div>
+
+        <!-- Why Delegate Section -->
+        <div class="bg-[#1C4C96] dark:bg-[#0F172A] rounded-3xl p-8 sm:p-14 text-white text-center relative overflow-hidden shadow-xl border border-white/10 mb-16">
+          <div class="relative z-10">
+            <h2 class="text-2xl sm:text-4xl font-extrabold mb-10 tracking-tight">Why Delegate to EG-Experts?</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-left">
+              <div class="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/15">
+                <div class="w-10 h-10 bg-[#C2A74C] text-slate-950 rounded-xl flex items-center justify-center shadow font-black text-lg mb-4">01</div>
+                <h4 class="font-bold text-white text-base mb-2">Instant Expertise</h4>
+                <p class="text-xs sm:text-sm text-blue-100 dark:text-slate-300 leading-relaxed">Bypass the 3-month hiring curve and instantly access top-tier vetted talent.</p>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/15">
+                <div class="w-10 h-10 bg-[#C2A74C] text-slate-950 rounded-xl flex items-center justify-center shadow font-black text-lg mb-4">02</div>
+                <h4 class="font-bold text-white text-base mb-2">Cost Efficiency</h4>
+                <p class="text-xs sm:text-sm text-blue-100 dark:text-slate-300 leading-relaxed">Reduce overhead drastically. No benefits, hardware, or office lease overhead.</p>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/15">
+                <div class="w-10 h-10 bg-[#C2A74C] text-slate-950 rounded-xl flex items-center justify-center shadow font-black text-lg mb-4">03</div>
+                <h4 class="font-bold text-white text-base mb-2">Infinite Scalability</h4>
+                <p class="text-xs sm:text-sm text-blue-100 dark:text-slate-300 leading-relaxed">Scale your pod up or down on demand based on seasonal requirements.</p>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/15">
+                <div class="w-10 h-10 bg-[#C2A74C] text-slate-950 rounded-xl flex items-center justify-center shadow font-black text-lg mb-4">04</div>
+                <h4 class="font-bold text-white text-base mb-2">Seamless Integration</h4>
+                <p class="text-xs sm:text-sm text-blue-100 dark:text-slate-300 leading-relaxed">We plug directly into your preferred tools (Slack, Teams, Jira, Asana).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="operations-faq-container"></div>
+      <div class="schedule-cta-container"></div>
+    </section>
+
+    <!-- BPO PAGE -->
+    <section id="view-bpo" class="page-view hidden animate-in fade-in duration-300">
+      <div class="service-hero-wrapper" 
+           data-crumb="Services / Expert BPO"
+           data-title="Expert BPO Solutions"
+           data-subtitle="Specialized, high-accuracy Business Process Outsourcing designed for modern enterprises to drive revenue, boost satisfaction, and slash overhead."
+           data-b1-icon="headset" data-b1-label="Chat Satisfaction" data-b1-value="98% CSAT"
+           data-b2-icon="briefcase" data-b2-label="Contracts" data-b2-value="Zero Lock-in">
+      </div>
+
+      <!-- 4 Capabilities Metrics -->
+      <div class="py-14 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
+            High-Conversion Capabilities
+          </div>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
+            Our Main B.P.O Options
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-base">
+            These are our most requested specialized outsourcing pods. Meet with our leadership team for custom operational configurations.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
+          <!-- Customer Support -->
+          <div class="bg-white dark:bg-slate-800/90 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center hover:-translate-y-1.5 hover:shadow-lg transition-all flex flex-col items-center justify-between">
+            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-4 text-[#1C4C96] dark:text-[#C2A74C] shadow-sm border border-slate-100 dark:border-slate-800">
+              <i data-lucide="thumbs-up" class="w-7 h-7"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base sm:text-lg mb-1">Customer Support</h3>
+            <div class="text-base sm:text-xl font-extrabold text-[#1C4C96] dark:text-[#C2A74C] mb-1">Highest CSAT</div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Market leading multichannel QA</p>
+          </div>
+
+          <!-- Chat Support -->
+          <div class="bg-white dark:bg-slate-800/90 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center hover:-translate-y-1.5 hover:shadow-lg transition-all flex flex-col items-center justify-between">
+            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-4 text-[#1C4C96] dark:text-[#C2A74C] shadow-sm border border-slate-100 dark:border-slate-800">
+              <i data-lucide="message-square" class="w-7 h-7"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base sm:text-lg mb-1">Chat Support</h3>
+            <div class="text-base sm:text-xl font-extrabold text-[#1C4C96] dark:text-[#C2A74C] mb-1">98% CSAT</div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Instant live response coverage</p>
+          </div>
+
+          <!-- Account Executive -->
+          <div class="bg-white dark:bg-slate-800/90 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center hover:-translate-y-1.5 hover:shadow-lg transition-all flex flex-col items-center justify-between">
+            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-4 text-[#1C4C96] dark:text-[#C2A74C] shadow-sm border border-slate-100 dark:border-slate-800">
+              <i data-lucide="briefcase" class="w-7 h-7"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base sm:text-lg mb-1">Account Executive</h3>
+            <div class="text-base sm:text-xl font-extrabold text-[#1C4C96] dark:text-[#C2A74C] mb-1">55% Closing</div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Elite B2B closing rate</p>
+          </div>
+
+          <!-- Cold Calling -->
+          <div class="bg-white dark:bg-slate-800/90 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center hover:-translate-y-1.5 hover:shadow-lg transition-all flex flex-col items-center justify-between">
+            <div class="w-14 h-14 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-4 text-[#1C4C96] dark:text-[#C2A74C] shadow-sm border border-slate-100 dark:border-slate-800">
+              <i data-lucide="headphones" class="w-7 h-7"></i>
+            </div>
+            <h3 class="font-bold text-slate-900 dark:text-white text-base sm:text-lg mb-1">Cold Calling</h3>
+            <div class="text-base sm:text-xl font-extrabold text-[#1C4C96] dark:text-[#C2A74C] mb-1">60% Conversion</div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">From appointment set to meeting</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- BPO Service Packages -->
+      <div class="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
+            Transparent Engagement
+          </div>
+          <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
+            Our Service Packages
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-base">
+            Discover what is the best package for your operational scope. Both online and on-site delivery models are available for all tiers.
+          </p>
+        </div>
+
+        <div class="space-y-6 sm:space-y-8">
+          <!-- Professional Package -->
+          <div class="rounded-3xl shadow-md transition-all overflow-hidden bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-slate-300">
+            <div class="p-6 sm:p-10 grid lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+              <div class="lg:col-span-6 space-y-3 sm:space-y-4">
+                <div class="flex items-center gap-3">
+                  <h3 class="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Professional</h3>
+                  <span class="text-[10px] sm:text-xs font-bold px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Core Operations</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                  <span class="font-bold text-slate-900 dark:text-white">Best for:</span> Companies with existing software needing skilled operational execution.
+                </p>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                  Expert execution inside your existing setup. We handle day-to-day Billing Management and HR operations using your team's current tools.
+                </p>
+                <div class="pt-2">
+                  <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm min-h-[44px] bg-slate-100 hover:bg-[#1C4C96] hover:text-white dark:bg-slate-700 dark:hover:bg-[#C2A74C] dark:hover:text-slate-900 text-slate-800 dark:text-white">
+                    <span>Schedule a Call</span>
+                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 space-y-3 lg:border-l lg:border-slate-100 lg:dark:border-slate-700/80 lg:pl-8">
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Dedicated Billing & HR team support</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Seamless integration in your tech stack</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Standard SLAs & routine execution</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Direct email & chat operational support</span>
+                </div>
+              </div>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-900/60 py-3 px-6 text-center text-xs text-slate-600 dark:text-slate-400 font-semibold border-t border-slate-100 dark:border-slate-700/60 tracking-wide">
+              Flexible monthly plans, zero contract lock-in.
+            </div>
+          </div>
+
+          <!-- Premium Package (Most Popular) -->
+          <div class="rounded-3xl shadow-md transition-all overflow-hidden bg-white dark:bg-slate-800 border-2 border-[#1C4C96] dark:border-[#C2A74C]">
+            <div class="p-6 sm:p-10 grid lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+              <div class="lg:col-span-6 space-y-3 sm:space-y-4">
+                <div class="flex items-center gap-3">
+                  <h3 class="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Premium</h3>
+                  <span class="text-[10px] sm:text-xs font-bold px-2.5 py-0.5 sm:py-1 rounded-full bg-[#1C4C96] text-white dark:bg-[#C2A74C] dark:text-slate-900">Most Popular</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                  <span class="font-bold text-slate-900 dark:text-white">Best for:</span> Growing teams wanting modern tools without software procurement headaches.
+                </p>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                  Complete operational support paired with modern software. We provide expert personnel and supply the enterprise technology stack for you.
+                </p>
+                <div class="pt-2">
+                  <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm min-h-[44px] bg-[#1C4C96] hover:bg-[#153a75] text-white shadow-[#1C4C96]/20">
+                    <span>Schedule a Call</span>
+                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 space-y-3 lg:border-l lg:border-slate-100 lg:dark:border-slate-700/80 lg:pl-8">
+                <div class="font-bold text-xs uppercase tracking-wider text-[#1C4C96] dark:text-[#C2A74C] mb-2 sm:mb-3">Everything in Professional, plus:</div>
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Enterprise software & tech stack included</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Automated workflows & custom reporting</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Priority onboarding & software setup</span>
+                </div>
+              </div>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-900/60 py-3 px-6 text-center text-xs text-slate-600 dark:text-slate-400 font-semibold border-t border-slate-100 dark:border-slate-700/60 tracking-wide">
+              Instant tech deployment, zero licensing hassle.
+            </div>
+          </div>
+
+          <!-- Ultimate Package -->
+          <div class="rounded-3xl shadow-md transition-all overflow-hidden bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-slate-300">
+            <div class="p-6 sm:p-10 grid lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+              <div class="lg:col-span-6 space-y-3 sm:space-y-4">
+                <div class="flex items-center gap-3">
+                  <h3 class="text-xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Ultimate</h3>
+                  <span class="text-[10px] sm:text-xs font-bold px-2.5 py-0.5 sm:py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300">Full Governance</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 font-medium leading-relaxed">
+                  <span class="font-bold text-slate-900 dark:text-white">Best for:</span> Busy executives wanting a 100% hands-off, high-performance back office.
+                </p>
+                <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                  A completely outsourced back office with guaranteed oversight. End-to-end execution, full technology suite, and dedicated team leadership.
+                </p>
+                <div class="pt-2">
+                  <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm min-h-[44px] bg-slate-100 hover:bg-[#1C4C96] hover:text-white dark:bg-slate-700 dark:hover:bg-[#C2A74C] dark:hover:text-slate-900 text-slate-800 dark:text-white">
+                    <span>Schedule a Call</span>
+                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                  </a>
+                </div>
+              </div>
+
+              <div class="lg:col-span-6 space-y-3 lg:border-l lg:border-slate-100 lg:dark:border-slate-700/80 lg:pl-8">
+                <div class="font-bold text-xs uppercase tracking-wider text-[#1C4C96] dark:text-[#C2A74C] mb-2 sm:mb-3">Everything in Premium, plus:</div>
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Dedicated Team Lead & QA management supervision</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Custom KPI tracking & guaranteed SLA metrics</span>
+                </div>
+                <div class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+                  <span class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">Quarterly strategy & process optimization reviews</span>
+                </div>
+              </div>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-900/60 py-3 px-6 text-center text-xs text-slate-600 dark:text-slate-400 font-semibold border-t border-slate-100 dark:border-slate-700/60 tracking-wide">
+              100% hands-off governance, performance guaranteed.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bpo-faq-container"></div>
+      <div class="schedule-cta-container"></div>
+    </section>
+
+    <!-- CONTACT PAGE -->
+    <section id="view-contact" class="page-view hidden animate-in fade-in duration-300">
+      <div class="pt-16 pb-12 sm:pt-24 sm:pb-16 bg-slate-50 dark:bg-[#0B132B] border-b border-slate-200 dark:border-slate-800 text-center px-4">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-3">Contact Us</h1>
+        <p class="text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Ready to scale your enterprise? Get in touch with our operations team today.</p>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16 grid lg:grid-cols-12 gap-10 sm:gap-14">
+        <div class="lg:col-span-7 bg-white dark:bg-slate-800/90 p-6 sm:p-10 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-md">
+          <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-4">Send us a message</h3>
+          
+          <div id="contact-success-msg" class="hidden mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs sm:text-sm font-semibold flex items-center gap-2">
+            <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0"></i>
+            Thank you for reaching out! Our team will respond within 24 hours.
+          </div>
+
+          <form class="space-y-4 sm:space-y-5" onsubmit="handleContactSubmit(event)">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">First Name</label>
+                <input required type="text" class="w-full px-4 py-3 text-base rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1C4C96] dark:focus:ring-[#C2A74C]" placeholder="John" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Last Name</label>
+                <input required type="text" class="w-full px-4 py-3 text-base rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1C4C96] dark:focus:ring-[#C2A74C]" placeholder="Doe" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Work Email</label>
+              <input required type="email" class="w-full px-4 py-3 text-base rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1C4C96] dark:focus:ring-[#C2A74C]" placeholder="john@company.com" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Service of Interest</label>
+              <select class="w-full px-4 py-3 text-base rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1C4C96] dark:focus:ring-[#C2A74C]">
+                <option>Expert Training</option>
+                <option>Expert Consultation</option>
+                <option>Expert Operations</option>
+                <option>Expert BPO</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Message</label>
+              <textarea required rows="4" class="w-full px-4 py-3 text-base rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#1C4C96] dark:focus:ring-[#C2A74C]" placeholder="How can we help your business scale?"></textarea>
+            </div>
+            <button type="submit" class="w-full py-4 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-colors shadow-md text-sm sm:text-base min-h-[48px]">
+              Submit Inquiry
+            </button>
+          </form>
+        </div>
+
+        <div class="lg:col-span-5 flex flex-col justify-between space-y-8">
+          <div>
+            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">Direct Contact</h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">Prefer to reach out directly? Our executive team is available Mon-Fri.</p>
+          </div>
+          
+          <div class="space-y-6">
+            <div class="flex items-start gap-4">
+              <div class="w-11 h-11 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700">
+                <i data-lucide="mail" class="w-5 h-5 text-[#1C4C96] dark:text-[#C2A74C]"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">Email Us</h4>
+                <a href="mailto:info@eg-experts.com" class="text-[#1C4C96] dark:text-[#C2A74C] hover:underline font-medium text-sm mt-0.5 block">info@eg-experts.com</a>
+                <p class="text-xs text-slate-500 mt-0.5">For corporate inquiries and RFPs.</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-11 h-11 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700">
+                <i data-lucide="phone" class="w-5 h-5 text-[#1C4C96] dark:text-[#C2A74C]"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">Call Us</h4>
+                <a href="tel:+201044111646" class="text-[#1C4C96] dark:text-[#C2A74C] hover:underline font-medium text-sm mt-0.5 block">+20 104 411 1646</a>
+                <p class="text-xs text-slate-500 mt-0.5">Available Mon-Fri, 9am - 6pm (EET).</p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-11 h-11 bg-slate-100 dark:bg-slate-800 rounded-xl flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-700">
+                <i data-lucide="map-pin" class="w-5 h-5 text-[#1C4C96] dark:text-[#C2A74C]"></i>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">Headquarters</h4>
+                <span class="text-slate-700 dark:text-slate-300 font-medium text-sm mt-0.5 block">Cairo, Egypt</span>
+                <p class="text-xs text-slate-500 mt-0.5">Serving enterprises globally.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+            <div class="text-xs font-bold text-slate-900 dark:text-white mb-1">Instant Calendar Booking</div>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mb-3">Skip email back-and-forth and lock in a 1-on-1 slot with our advisory directors.</p>
+            <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C] hover:underline">
+              <span>Open Calendar Scheduler</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="schedule-cta-container"></div>
+    </section>
+
+  </main>
+
+  <!-- MODAL FOR EXPERT OPERATIONS SERVICE DETAILS -->
+  <div id="operations-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm" onclick="closeOperationsModal()">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 relative text-left" onclick="event.stopPropagation()">
+      <button onclick="closeOperationsModal()" aria-label="Close dialog" class="absolute top-5 right-5 p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div id="modal-icon-container" class="w-12 h-12 bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 rounded-2xl flex items-center justify-center text-[#1C4C96] dark:text-[#C2A74C]"></div>
+        <div>
+          <span id="modal-tag" class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[#1C4C96] dark:text-[#C2A74C]"></span>
+          <h3 id="modal-title" class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight"></h3>
+        </div>
+      </div>
+
+      <p id="modal-desc" class="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-6"></p>
+
+      <div class="bg-slate-50 dark:bg-slate-800/60 p-4 sm:p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 mb-6">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+          Key Deliverables & Business Benefits
+        </h4>
+        <div id="modal-benefits" class="grid sm:grid-cols-2 gap-2.5"></div>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-blue-50/70 dark:bg-slate-800/40 border border-blue-100 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 mb-6 flex items-center gap-3">
+        <i data-lucide="shield-check" class="w-5 h-5 text-[#1C4C96] dark:text-[#C2A74C] shrink-0"></i>
+        <span><strong>Operational Advantage:</strong> <span id="modal-advantage"></span></span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <button onclick="closeOperationsModal()" class="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          Close
+        </button>
+        <a id="modal-cta-btn" href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white text-xs sm:text-sm font-bold shadow-md transition-all">
+          <span>Schedule a Call</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#080E1F] text-white pt-14 pb-10 border-t-[5px] border-[#C2A74C] mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+        <div class="sm:col-span-2">
+          <div class="flex items-center gap-3 mb-4">
+            <svg class="w-9 h-9 sm:w-11 sm:h-11 flex-shrink-0" viewBox="0 0 100 100" fill="none">
+              <rect x="38" y="13" width="24" height="24" rx="6" transform="rotate(45 50 25)" fill="#C2A74C"/>
+              <rect x="38" y="63" width="24" height="24" rx="6" transform="rotate(45 50 75)" fill="#C2A74C"/>
+              <rect x="13" y="38" width="24" height="24" rx="6" transform="rotate(45 25 50)" fill="#1C4C96"/>
+              <rect x="63" y="38" width="24" height="24" rx="6" transform="rotate(45 75 50)" fill="#1C4C96"/>
+            </svg>
+            <div class="flex flex-col uppercase font-black leading-[1.05] tracking-tight">
+              <span class="text-white text-lg sm:text-2xl">Experts</span>
+              <div class="flex items-baseline">
+                <span class="text-white text-lg sm:text-2xl">Group</span>
+                <span class="text-[#C2A74C] text-[9px] sm:text-[11px] ml-1 font-bold tracking-widest">PLUS</span>
+              </div>
+            </div>
+          </div>
+          <p class="text-slate-400 text-xs sm:text-sm leading-relaxed max-w-sm mt-3">
+            Your premier B2B partner for sustainable business growth, professional employee training, and high-accuracy operational outsourcing.
+          </p>
+          <div class="flex gap-3 mt-6">
+            <a href="mailto:info@eg-experts.com" class="w-9 h-9 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-400 hover:bg-[#1C4C96] hover:text-white transition-colors" aria-label="Email">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+            </a>
+            <a href="https://www.eg-experts.com/" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-full bg-slate-800/80 flex items-center justify-center text-slate-400 hover:bg-[#C2A74C] hover:text-slate-900 transition-colors" aria-label="Website">
+              <i data-lucide="globe" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-sm sm:text-base font-bold text-white mb-4 uppercase tracking-wider">Navigation</h4>
+          <ul class="space-y-2.5 text-xs sm:text-sm text-slate-400">
+            <li><button onclick="navigateTo('home')" class="hover:text-[#C2A74C] transition-colors">Home</button></li>
+            <li><button onclick="navigateTo('about')" class="hover:text-[#C2A74C] transition-colors">About Us</button></li>
+            <li><button onclick="navigateTo('training')" class="hover:text-[#C2A74C] transition-colors">Expert Training</button></li>
+            <li><button onclick="navigateTo('consultation')" class="hover:text-[#C2A74C] transition-colors">Expert Consultation</button></li>
+            <li><button onclick="navigateTo('operations')" class="hover:text-[#C2A74C] transition-colors">Expert Operations</button></li>
+            <li><button onclick="navigateTo('bpo')" class="hover:text-[#C2A74C] transition-colors">Expert BPO</button></li>
+            <li><button onclick="navigateTo('contact')" class="hover:text-[#C2A74C] transition-colors">Contact</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm sm:text-base font-bold text-white mb-4 uppercase tracking-wider">Contact Us</h4>
+          <ul class="space-y-3 text-xs sm:text-sm text-slate-400">
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="mail" class="w-4 h-4 text-[#C2A74C] shrink-0"></i>
+              <a href="mailto:info@eg-experts.com" class="hover:text-white transition-colors truncate">info@eg-experts.com</a>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="phone" class="w-4 h-4 text-[#C2A74C] shrink-0"></i>
+              <a href="tel:+201044111646" class="hover:text-white transition-colors">+20 104 411 1646</a>
+            </li>
+            <li class="flex items-center gap-2.5">
+              <i data-lucide="map-pin" class="w-4 h-4 text-[#C2A74C] shrink-0"></i>
+              <span>Cairo, Egypt</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-800/80 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-slate-500">
+        <p class="text-center sm:text-left">
+          &copy; <span id="current-year">2026</span> Experts Group Plus. All rights reserved.
+        </p>
+        <div class="flex gap-4">
+          <span class="hover:text-[#C2A74C] cursor-pointer">Privacy Policy</span>
+          <span class="hover:text-[#C2A74C] cursor-pointer">Terms of Service</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const CALENDAR_LINK = "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3";
+
+    // 12 Operations Services with complete detail descriptions
+    const operationsData = [
+      { 
+        icon: "share-2", 
+        tag: "Marketing",
+        title: "Social Media Management", 
+        desc: "End-to-end brand management, community engagement, and viral content strategy.",
+        detailedDesc: "Our dedicated social media squads manage every facet of your brand's digital presence. From creative content ideation and multi-channel scheduling to real-time audience engagement and analytics tracking, we build loyal, active online communities.",
+        benefits: [
+          "Consistent daily multi-channel publishing",
+          "Community response times under 15 minutes",
+          "Custom high-converting graphics and copywriting",
+          "Monthly ROI and growth performance dashboards"
+        ],
+        advantage: "Dedicated social media manager + copywriter per account pod."
+      },
+      { 
+        icon: "search", 
+        tag: "Growth",
+        title: "SEO Optimization", 
+        desc: "Data-driven organic search ranking strategies and technical site auditing.",
+        detailedDesc: "Dominate search engine results pages with comprehensive technical audits, competitor keyword clustering, on-page optimization, and high-authority link-building campaigns that drive sustained organic growth.",
+        benefits: [
+          "Technical health audits and Core Web Vitals remediation",
+          "Targeted intent-based keyword research",
+          "On-page schema and metadata optimization",
+          "Transparent rank tracking and traffic attribution"
+        ],
+        advantage: "Zero black-hat techniques; 100% Google algorithm compliant."
+      },
+      { 
+        icon: "bar-chart-2", 
+        tag: "Intelligence",
+        title: "Data Analysis", 
+        desc: "Transforming raw metrics into actionable business intelligence and dashboards.",
+        detailedDesc: "Unlock the value hidden within your operational data. Our BI analysts clean raw transactional data, construct automated executive dashboards, and formulate predictive insights to optimize business choices.",
+        benefits: [
+          "Interactive PowerBI and Tableau dashboard design",
+          "Automated cross-platform data pipeline synthesis",
+          "Cohort analysis and churn risk identification",
+          "Actionable weekly executive summaries"
+        ],
+        advantage: "Fast integration with major databases, CRMs, and ERP systems."
+      },
+      { 
+        icon: "palette", 
+        tag: "Creative",
+        title: "Graphic Design", 
+        desc: "Premium visual assets, branding guidelines, and UI/UX interface design.",
+        detailedDesc: "Empower your brand with elite visual storytelling. We provide dedicated graphic designers who craft compelling marketing collateral, brand guidelines, UI layouts, presentations, and product packaging.",
+        benefits: [
+          "Pixel-perfect digital, vector, and print collateral",
+          "Full brand identity kits and brand style guides",
+          "Rapid 24-48 hour turnaround on design iterations",
+          "All source vector files delivered directly to you"
+        ],
+        advantage: "Unlimited design revisions within your dedicated pod subscription."
+      },
+      { 
+        icon: "file-text", 
+        tag: "Creative",
+        title: "Content Writing", 
+        desc: "SEO-optimized, conversion-focused copywriting for blogs, PR, and web.",
+        detailedDesc: "Capture authority in your niche with meticulously researched, industry-specific written content. We produce long-form articles, whitepapers, press releases, landing page copy, and email sequences that educate and convert.",
+        benefits: [
+          "100% human-written, editorial-grade articles",
+          "Native English and bilingual Arabic copywriters",
+          "SEO-keyword integration with organic readability",
+          "In-depth industry research and competitor gap analysis"
+        ],
+        advantage: "Specialized writers with domain expertise across B2B, tech, and retail."
+      },
+      { 
+        icon: "user-plus", 
+        tag: "HR",
+        title: "Talent Acquisition", 
+        desc: "Sourcing, vetting, and headhunting elite industry professionals globally.",
+        detailedDesc: "Eliminate costly bad hires and reduce time-to-fill by up to 60%. Our talent scouts actively headhunt, rigorously pre-screen, and technically evaluate candidates to ensure cultural and competence alignment.",
+        benefits: [
+          "Comprehensive resume screening and initial technical vetting",
+          "Structured interview scorecards and background checks",
+          "Access to passive, top-tier global talent pools",
+          "Guaranteed 30-day candidate replacement warranty"
+        ],
+        advantage: "End-to-end recruitment cycle management from job posting to offer letter."
+      },
+      { 
+        icon: "video", 
+        tag: "Media",
+        title: "Video Editing", 
+        desc: "High-retention corporate video, reels, and commercial production.",
+        detailedDesc: "Turn raw footage into cinematic, high-retention video assets. We edit short-form TikTok/Reels/Shorts, corporate explainers, customer testimonials, and advertisements designed to stop the scroll.",
+        benefits: [
+          "Dynamic pacing, sound design, and color grading",
+          "Engaging animated captions and kinetic typography",
+          "Multi-aspect ratio formatting (9:16, 16:9, 1:1)",
+          "Fast turnarounds with cloud-based review links"
+        ],
+        advantage: "High-volume video workflows supported without quality degradation."
+      },
+      { 
+        icon: "box", 
+        tag: "Media",
+        title: "3D Animation", 
+        desc: "Immersive product visualizations, architectural renders, and motion graphics.",
+        detailedDesc: "Bring complex ideas and architectural concepts to life through photorealistic 3D rendering and dynamic animation. Perfect for physical products, hardware simulations, and high-impact digital campaigns.",
+        benefits: [
+          "Photorealistic 3D product modeling and lighting",
+          "Exploded view mechanical simulations",
+          "Commercial-ready motion design and rendering",
+          "Flexible 4K video exports for web and displays"
+        ],
+        advantage: "Expertise in Blender, Cinema4D, Maya, and Unreal Engine."
+      },
+      { 
+        icon: "calendar", 
+        tag: "Corporate",
+        title: "Event Planning", 
+        desc: "End-to-end logistics and management for corporate summits and launches.",
+        detailedDesc: "Host flawless corporate conferences, executive retreats, brand launches, and virtual summits. We orchestrate venue sourcing, vendor negotiation, technical AV production, attendee registration, and onsite coordination.",
+        benefits: [
+          "Complete budget control and vendor contract auditing",
+          "Keynote speaker curation and hospitality management",
+          "Live audio-visual, stage, and streaming production",
+          "Real-time attendee check-in and VIP handling"
+        ],
+        advantage: "Seamless hybrid setups combining in-person venues with global live streams."
+      },
+      { 
+        icon: "megaphone", 
+        tag: "Marketing",
+        title: "Paid Advertising", 
+        desc: "High-ROI campaign management across Meta, Google, LinkedIn, and TikTok.",
+        detailedDesc: "Maximize your advertising budget with precision-targeted media buying. Our performance marketers build granular campaign architectures, split-test creatives continually, and optimize for ROAS and CAC.",
+        benefits: [
+          "Advanced pixel tracking, CAPI, and conversion attribution",
+          "Rapid creative A/B testing frameworks",
+          "Strict budget monitoring with spend-efficiency guardrails",
+          "Weekly performance reports and strategic syncs"
+        ],
+        advantage: "Certified media buyers managing budgets across B2B and consumer niches."
+      },
+      { 
+        icon: "code", 
+        tag: "Tech",
+        title: "Web Development", 
+        desc: "Secure, scalable, and responsive web applications and enterprise platforms.",
+        detailedDesc: "Transform your web presence into an intuitive, high-performance customer conversion engine. Our engineers develop modern, lightning-fast web applications, marketing sites, and enterprise customer portals.",
+        benefits: [
+          "Custom responsive development (React, Next.js, WordPress)",
+          "Mobile-first architecture with sub-second page loads",
+          "Enterprise-grade security and SSL implementation",
+          "Continuous maintenance and technical monitoring"
+        ],
+        advantage: "Clean, documented code with seamless third-party API integrations."
+      },
+      { 
+        icon: "truck", 
+        tag: "Logistics",
+        title: "Shipping & Logistics", 
+        desc: "Supply chain streamlining, vendor management, and fulfillment optimization.",
+        detailedDesc: "Optimize your physical fulfillment pipelines to reduce delivery lead times and slash transit costs. We audit carrier agreements, streamline warehousing workflows, and manage last-mile dispatch.",
+        benefits: [
+          "Tiered shipping rate renegotiations with regional carriers",
+          "Inventory tracking and warehouse pick/pack optimization",
+          "Customs clearance and import/export documentation compliance",
+          "Real-time shipment tracking with customer visibility"
+        ],
+        advantage: "Direct relationships with domestic and international freight forwarders."
+      }
+    ];
+
+    // 7 Consultation Carousel Slides
+    const consultationOptions = [
+      {
+        title: "Financial & Unit Economics Strategy",
+        category: "Finance & Margin Expansion",
+        desc: "Build 12-to-36 month cash flow models, optimize pricing structures, and improve unit margins to ensure long-term financial health."
+      },
+      {
+        title: "Operational & Process Optimization",
+        category: "Workflow & Scalability",
+        desc: "Identify and eliminate departmental bottlenecks, eliminate duplicate workflows, and implement high-efficiency SOPs across your organization."
+      },
+      {
+        title: "Market Expansion & GTM Strategy",
+        category: "Growth & Market Penetration",
+        desc: "Target high-intent customer segments, test agile go-to-market channels, and outmaneuver regional competition with backed data."
+      },
+      {
+        title: "Organizational Structure & Team Scaling",
+        category: "Executive Governance",
+        desc: "Design scalable organizational charts, establish clear accountability matrices, and transition founders smoothly into executive leadership."
+      },
+      {
+        title: "Digital Transformation & Tech Stack Audit",
+        category: "Technology Architecture",
+        desc: "Audit SaaS software expenses, eradicate software bloat, and build unified, automated tech ecosystems across sales and operations."
+      },
+      {
+        title: "Sales Pipeline & Revenue Operations",
+        category: "Revenue & Conversion",
+        desc: "Re-engineer your sales stages, train high-converting account executives, and institute predictable monthly pipeline forecasting."
+      },
+      {
+        title: "Supply Chain & Vendor Cost Optimization",
+        category: "Procurement & Fulfillment",
+        desc: "Audit vendor agreements, renegotiate tier pricing, and streamline end-to-end fulfillment pipelines to maximize bottom-line profit."
+      }
+    ];
+
+    // Training FAQs
+    const trainingFaqs = [
+      { q: "Is there a minimum number of participants required?", a: "No, there is no minimum number of participants required. Whether you need 1-on-1 executive coaching or a department-wide workshop, we scale our training to fit your exact headcount." },
+      { q: "How are the training sessions delivered?", a: "We offer flexible delivery methods to suit your operational needs. Sessions can be conducted 100% online via virtual classrooms, on-site at your corporate headquarters, or through a hybrid approach combining both." },
+      { q: "How long does a typical training program take?", a: "The duration varies based on the curriculum depth and your team's availability. Programs can range from intensive 1-day workshops to comprehensive multi-week academies. We tailor the schedule to minimize disruption to your daily operations." },
+      { q: "How long does the preparation phase take?", a: "Typically, our preparation phase takes 1 to 2 weeks. During this time, we conduct a needs assessment, align with your stakeholders, and custom-tailor the curriculum and materials to match your specific corporate objectives." },
+      { q: "How much does the training cost?", a: "Pricing is customized based on the program's length, delivery method, and level of customization. After our initial strategy call and needs assessment, we provide a transparent, detailed proposal with no hidden fees." },
+      { q: "How do I ensure my company's content and data remain secure?", a: "We take data security very seriously. All training programs are conducted under strict enterprise-grade NDAs. Any proprietary company data used for custom case studies is heavily protected and never shared outside your organization." },
+      { q: "How do we get started?", a: "Simply click the 'Schedule a Call' button to schedule a brief strategy call. We'll discuss your current challenges, desired outcomes, and map out a tailored training plan for your team." }
+    ];
+
+    // Consultation FAQs
+    const consultationFaqs = [
+      { q: "How long does a typical consultation engagement last?", a: "Our standard diagnostic and strategic action plan delivery is completed within 3 weeks maximum. With our Dedicated Advisory Support add-on, we continue actively guiding implementation for 6 months." },
+      { q: "How does the diagnostic process begin?", a: "We begin with a 360-degree assessment of your existing operational workflows, organizational structure, and financial metrics. We focus on growing what you already have rather than asking you to start over." },
+      { q: "Can you help our team execute the strategy?", a: "Yes. In addition to creating custom playbooks and SOPs, our senior advisors stay embedded with your executive team throughout the engagement to guide real-world implementation." },
+      { q: "Do you specialize in specific business sectors?", a: "Our data-backed unit economics and operational frameworks are universally applicable across B2B services, technology, retail, logistics, and scaling enterprise operations." }
+    ];
+
+    // Operations FAQs
+    const operationsFaqs = [
+      { q: "What is your onboarding timeline for operational services?", a: "We operate with rapid agility. Depending on the complexity of the tasks and necessary system access, our standard onboarding process integrates our specialist teams into your workflow within 1 to 3 business days." },
+      { q: "How do you ensure team synchronization and communication?", a: "Our dedicated Account Managers act as a bridge. We utilize your preferred communication channels (Slack, Microsoft Teams, Email) and project management tools (Jira, Asana, Monday, Trello) to ensure 100% synchronization and visibility." },
+      { q: "Can I bundle these services, or are they standalone?", a: "Absolutely. Most of our enterprise clients create custom 'pods' (e.g., combining Web Development, Graphic Design, and SEO into a unified digital team) for a comprehensive, highly cost-effective operational solution." },
+      { q: "Where are your operational teams located?", a: "We maintain a robust global talent pool, with significant, highly-trained hubs located in Egypt and the region, ensuring overlapping time zones, bilingual fluency (Arabic/English), and cost arbitrage." }
+    ];
+
+    // BPO FAQs
+    const bpoFaqs = [
+      { q: "Will I be locked into a long-term contract?", a: "No. We believe in earning your business continually based on performance. We offer highly flexible monthly plans with ZERO contract lock-in, allowing you to scale your outsourced operations with complete freedom and minimal risk." },
+      { q: "How do you ensure the quality of your services, like Customer Support and Cold Calling?", a: "We employ dedicated QA Managers for every pod who randomly audit calls, chats, and tickets daily. We measure against agreed-upon SLAs and CSAT targets, providing you with transparent weekly and monthly BI reporting." },
+      { q: "Can you work with our existing software and tools?", a: "Yes, seamlessly. Our agents are trained to integrate directly into your existing CRM, VoIP, and helpdesk ecosystem (Salesforce, Zendesk, HubSpot, Intercom, RingCentral, etc.) usually within days of kickoff." },
+      { q: "What if I want a completely hands-off approach to my back office?", a: "Our Ultimate package is specifically designed for this. We provide dedicated Team Leads and QA managers who take over day-to-day oversight, delivering weekly KPI reports without requiring your active intervention." },
+      { q: "Do you offer custom BPO services if my specific operational needs aren't listed?", a: "Yes. While Customer Support, Chat Support, Account Execution, and Cold Calling are our most requested services, we routinely build custom back-office and technical support solutions tailored to your unique workflows." },
+      { q: "How do you handle data security and client confidentiality?", a: "Security is paramount. We operate under strict enterprise-grade NDAs, utilize monitored workstation networks, enforce endpoint security, and adhere strictly to global data compliance standards." },
+      { q: "What languages do your support and sales agents speak?", a: "Our teams are fully bilingual in English and Arabic, with additional language squads available upon request for multinational operations." }
+    ];
+
+    // State
+    let currentSlide = 0;
+    let isSliderPaused = false;
+    let sliderTimer = null;
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function navigateTo(pageId) {
+      document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById('view-' + pageId);
+      if (target) {
+        target.classList.remove('hidden');
+      }
+
+      // Close mobile drawer & dropdowns
+      document.getElementById('mobile-nav-drawer').classList.add('hidden');
+      document.getElementById('services-dropdown-menu').classList.add('hidden');
+      document.getElementById('dropdown-chevron').classList.remove('rotate-180');
+
+      // Update active nav styles
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('text-[#1C4C96]', 'dark:text-[#C2A74C]', 'font-bold');
+        btn.classList.add('text-slate-600', 'dark:text-slate-300');
+      });
+      const activeBtn = document.getElementById('nav-link-' + pageId);
+      if (activeBtn) {
+        activeBtn.classList.add('text-[#1C4C96]', 'dark:text-[#C2A74C]', 'font-bold');
+        activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Refresh icons
+      setTimeout(() => { lucide.createIcons(); }, 50);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      try {
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      } catch (e) {}
+    }
+
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    function toggleServicesDropdown() {
+      const menu = document.getElementById('services-dropdown-menu');
+      const chevron = document.getElementById('dropdown-chevron');
+      menu.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
+    }
+
+    function toggleMobileMenu() {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      drawer.classList.toggle('hidden');
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      const container = document.getElementById('services-dropdown-container');
+      if (container && !container.contains(e.target)) {
+        document.getElementById('services-dropdown-menu').classList.add('hidden');
+        document.getElementById('dropdown-chevron').classList.remove('rotate-180');
+      }
+    });
+
+    // Build Service Heroes
+    function buildServiceHeroes() {
+      document.querySelectorAll('.service-hero-wrapper').forEach(wrapper => {
+        const crumb = wrapper.getAttribute('data-crumb');
+        const title = wrapper.getAttribute('data-title');
+        const subtitle = wrapper.getAttribute('data-subtitle');
+        const b1Icon = wrapper.getAttribute('data-b1-icon');
+        const b1Label = wrapper.getAttribute('data-b1-label');
+        const b1Value = wrapper.getAttribute('data-b1-value');
+        const b2Icon = wrapper.getAttribute('data-b2-icon');
+        const b2Label = wrapper.getAttribute('data-b2-label');
+        const b2Value = wrapper.getAttribute('data-b2-value');
+
+        const titleWords = title.split(' ').map((word) => {
+          if (word.toLowerCase() === 'expert') {
+            return `<span class="text-transparent bg-clip-text bg-gradient-to-r from-[#1C4C96] to-[#3b82f6] dark:from-[#C2A74C] dark:to-[#fef08a] mr-2 sm:mr-3">${word}</span>`;
+          }
+          return `<span class="mr-2 sm:mr-3">${word}</span>`;
+        }).join('');
+
+        wrapper.innerHTML = `
+          <div class="relative bg-slate-50 dark:bg-[#0B132B] overflow-hidden pt-16 pb-14 sm:pt-24 sm:pb-20 lg:pt-28 lg:pb-24 border-b border-slate-200 dark:border-slate-800/80">
+            <div class="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:20px_20px] sm:bg-[size:28px_28px] opacity-60 dark:opacity-100"></div>
+            <div class="absolute top-0 right-0 w-72 sm:w-[500px] h-72 sm:h-[500px] bg-[#1C4C96]/10 dark:bg-[#1C4C96]/25 rounded-full blur-[80px] sm:blur-[120px] -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+            <div class="absolute bottom-0 left-0 w-64 sm:w-[450px] h-64 sm:h-[450px] bg-[#C2A74C]/10 dark:bg-[#C2A74C]/15 rounded-full blur-[70px] sm:blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+                <div class="lg:col-span-7">
+                  <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4 sm:mb-6 uppercase tracking-wider">
+                    <span>Home</span>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-60"></i>
+                    <span class="text-[#1C4C96] dark:text-[#C2A74C]">${crumb}</span>
+                  </div>
+                  <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white mb-4 sm:mb-6 leading-[1.15] tracking-tight">
+                    ${titleWords}
+                  </h1>
+                  <p class="text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
+                    ${subtitle}
+                  </p>
+                </div>
+
+                <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 w-full max-w-md">
+                    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 rounded-2xl shadow-sm flex items-center gap-4">
+                      <div class="w-11 h-11 sm:w-12 sm:h-12 bg-slate-100 dark:bg-slate-900/90 rounded-xl flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[#1C4C96] dark:text-[#C2A74C]">
+                        <i data-lucide="${b1Icon}" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                      </div>
+                      <div>
+                        <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">${b1Label}</div>
+                        <div class="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">${b1Value}</div>
+                      </div>
+                    </div>
+
+                    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 rounded-2xl shadow-sm flex items-center gap-4">
+                      <div class="w-11 h-11 sm:w-12 sm:h-12 bg-slate-100 dark:bg-slate-900/90 rounded-xl flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[#1C4C96] dark:text-[#C2A74C]">
+                        <i data-lucide="${b2Icon}" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+                      </div>
+                      <div>
+                        <div class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">${b2Label}</div>
+                        <div class="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">${b2Value}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Build ScheduleCallCTA
+    function buildScheduleCTA() {
+      const html = `
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-14 sm:my-20">
+          <div class="relative rounded-3xl overflow-hidden bg-gradient-to-br sm:bg-gradient-to-r from-[#1C4C96] via-[#163e7c] to-[#0b1e3f] p-7 sm:p-12 md:p-14 text-white shadow-xl border border-blue-400/20">
+            <div class="absolute top-0 right-0 w-80 h-80 bg-[#C2A74C]/15 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 text-center md:text-left">
+              <div class="max-w-2xl">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[#C2A74C] font-semibold text-xs uppercase tracking-wider mb-3 border border-white/10">
+                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                  Let's Collaborate
+                </div>
+                <h3 class="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-2 sm:mb-3">
+                  Ready to Supercharge Your Operations?
+                </h3>
+                <p class="text-blue-100 text-xs sm:text-sm md:text-base leading-relaxed">
+                  Schedule a call with our senior leadership team to discover how EG-Experts can streamline your business.
+                </p>
+              </div>
+              <a href="${CALENDAR_LINK}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-4 rounded-xl bg-[#C2A74C] hover:bg-[#d8be5e] text-slate-950 font-bold transition-all shadow-lg text-sm sm:text-base min-h-[48px] group">
+                <span>Schedule a Call</span>
+                <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      document.querySelectorAll('.schedule-cta-container').forEach(el => el.innerHTML = html);
+    }
+
+    // Build Split FAQ Sections
+    function buildSplitFAQ(containerClass, faqs, subtitle) {
+      const itemsHtml = faqs.map((faq, idx) => `
+        <div class="faq-card bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm overflow-hidden" data-idx="${idx}">
+          <button onclick="toggleFAQ(this)" class="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between focus:outline-none min-h-[52px]">
+            <span class="faq-question font-bold text-sm sm:text-base pr-3 text-slate-900 dark:text-white">${faq.q}</span>
+            <div class="faq-icon-box w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300">
+              <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></i>
+            </div>
+          </button>
+          <div class="faq-answer hidden px-5 sm:px-6 pb-5 pt-1 text-slate-600 dark:text-slate-300 leading-relaxed text-xs sm:text-sm border-t border-slate-100 dark:border-slate-700/60">
+            ${faq.a}
+          </div>
+        </div>
+      `).join('');
+
+      const html = `
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-16 sm:my-24">
+          <div class="grid lg:grid-cols-12 gap-8 lg:gap-14 items-start">
+            <div class="lg:col-span-4 lg:sticky lg:top-28 bg-white dark:bg-slate-800/90 backdrop-blur-sm p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-4">
+                Need Clarification?
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">
+                Frequently Asked Questions
+              </h2>
+              <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mb-6 leading-relaxed">
+                ${subtitle}
+              </p>
+              <a href="${CALENDAR_LINK}" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-all shadow-md text-xs sm:text-sm group min-h-[44px]">
+                <span>Schedule a Call</span>
+                <i data-lucide="external-link" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
+              </a>
+            </div>
+
+            <div class="lg:col-span-8 space-y-3.5">
+              ${itemsHtml}
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll(containerClass).forEach(el => el.innerHTML = html);
+    }
+
+    function toggleFAQ(button) {
+      const card = button.closest('.faq-card');
+      const answer = card.querySelector('.faq-answer');
+      const chevron = card.querySelector('.faq-icon-box i');
+      const question = card.querySelector('.faq-question');
+      const iconBox = card.querySelector('.faq-icon-box');
+
+      const isHidden = answer.classList.contains('hidden');
+
+      // Close all in this group
+      const parentContainer = card.parentElement;
+      parentContainer.querySelectorAll('.faq-answer').forEach(ans => ans.classList.add('hidden'));
+      parentContainer.querySelectorAll('.faq-card').forEach(c => {
+        c.classList.remove('border-[#1C4C96]/50', 'dark:border-[#C2A74C]/50', 'ring-1', 'ring-[#1C4C96]/20', 'dark:ring-[#C2A74C]/20');
+        c.querySelector('.faq-question').classList.remove('text-[#1C4C96]', 'dark:text-[#C2A74C]');
+        c.querySelector('.faq-question').classList.add('text-slate-900', 'dark:text-white');
+        const iBox = c.querySelector('.faq-icon-box');
+        iBox.classList.remove('bg-[#1C4C96]', 'text-white', 'dark:bg-[#C2A74C]', 'dark:text-slate-950');
+        iBox.classList.add('bg-slate-100', 'dark:bg-slate-700', 'text-slate-500', 'dark:text-slate-300');
+        const icon = c.querySelector('i');
+        if (icon) icon.classList.remove('rotate-180');
+      });
+
+      if (isHidden) {
+        answer.classList.remove('hidden');
+        card.classList.add('border-[#1C4C96]/50', 'dark:border-[#C2A74C]/50', 'ring-1', 'ring-[#1C4C96]/20', 'dark:ring-[#C2A74C]/20');
+        question.classList.add('text-[#1C4C96]', 'dark:text-[#C2A74C]');
+        question.classList.remove('text-slate-900', 'dark:text-white');
+        iconBox.classList.add('bg-[#1C4C96]', 'text-white', 'dark:bg-[#C2A74C]', 'dark:text-slate-950');
+        iconBox.classList.remove('bg-slate-100', 'dark:bg-slate-700', 'text-slate-500', 'dark:text-slate-300');
+        if (chevron) chevron.classList.add('rotate-180');
+      }
+    }
+
+    // Build 12 Operations Cards
+    function buildOperationsGrid() {
+      const grid = document.getElementById('operations-grid');
+      if (!grid) return;
+
+      grid.innerHTML = operationsData.map((op, idx) => `
+        <div onclick="openOperationsModal(${idx})" class="bg-white dark:bg-slate-800/90 p-6 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:-translate-y-1.5 hover:border-[#1C4C96]/50 dark:hover:border-[#C2A74C]/50 transition-all flex flex-col justify-between group cursor-pointer">
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <div class="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center text-[#1C4C96] dark:text-[#C2A74C] group-hover:bg-[#1C4C96] dark:group-hover:bg-[#C2A74C] group-hover:text-white dark:group-hover:text-slate-950 transition-all shadow-sm border border-slate-100 dark:border-slate-800">
+                <i data-lucide="${op.icon}" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700/70 text-slate-600 dark:text-slate-300">
+                ${op.tag}
+              </span>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C] transition-colors">
+              ${op.title}
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              ${op.desc}
+            </p>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C]">
+            <span>View Details</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openOperationsModal(idx) {
+      const op = operationsData[idx];
+      if (!op) return;
+
+      document.getElementById('modal-icon-container').innerHTML = `<i data-lucide="${op.icon}" class="w-6 h-6"></i>`;
+      document.getElementById('modal-tag').textContent = op.tag;
+      document.getElementById('modal-title').textContent = op.title;
+      document.getElementById('modal-desc').textContent = op.detailedDesc;
+      document.getElementById('modal-advantage').textContent = op.advantage;
+      document.getElementById('modal-cta-btn').setAttribute('href', CALENDAR_LINK);
+
+      const benefitsContainer = document.getElementById('modal-benefits');
+      benefitsContainer.innerHTML = op.benefits.map(b => `
+        <div class="flex items-start gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+          <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+          <span class="leading-snug">${b}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('operations-modal').classList.remove('hidden');
+      document.getElementById('operations-modal').classList.add('flex');
+      document.body.style.overflow = 'hidden';
+
+      lucide.createIcons();
+    }
+
+    function closeOperationsModal() {
+      document.getElementById('operations-modal').classList.add('hidden');
+      document.getElementById('operations-modal').classList.remove('flex');
+      document.body.style.overflow = 'unset';
+    }
+
+    // Escape key listener for modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeOperationsModal();
+      }
+    });
+
+    function renderConsultationSlide() {
+      const item = consultationOptions[currentSlide];
+      if (!item) return;
+
+      document.getElementById('slider-category').textContent = item.category;
+      document.getElementById('slider-title').textContent = item.title;
+      document.getElementById('slider-desc').textContent = item.desc;
+      document.getElementById('slider-counter').textContent = `0${currentSlide + 1} / 0${consultationOptions.length}`;
+
+      const dotsContainer = document.getElementById('slider-dots');
+      if (dotsContainer) {
+        dotsContainer.innerHTML = consultationOptions.map((_, i) => `
+          <button onclick="goToConsultationSlide(${i})" class="h-1.5 rounded-full transition-all duration-300 ${
+            currentSlide === i ? 'w-7 sm:w-8 bg-[#1C4C96] dark:bg-[#C2A74C]' : 'w-2 bg-slate-300 dark:bg-slate-700'
+          }" aria-label="Go to slide ${i+1}"></button>
+        `).join('');
+      }
+    }
+
+    function nextConsultationSlide() {
+      currentSlide = (currentSlide + 1) % consultationOptions.length;
+      renderConsultationSlide();
+    }
+
+    function prevConsultationSlide() {
+      currentSlide = (currentSlide - 1 + consultationOptions.length) % consultationOptions.length;
+      renderConsultationSlide();
+    }
+
+    function goToConsultationSlide(idx) {
+      currentSlide = idx;
+      renderConsultationSlide();
+    }
+
+    function startSliderTimer() {
+      if (sliderTimer) clearInterval(sliderTimer);
+      sliderTimer = setInterval(() => {
+        if (!isSliderPaused) {
+          nextConsultationSlide();
+        }
+      }, 10000);
+    }
+
+    // Setup touch events & hover pause on slider card
+    function setupSliderInteractions() {
+      const card = document.getElementById('consultation-slider-card');
+      if (!card) return;
+
+      card.addEventListener('mouseenter', () => {
+        isSliderPaused = true;
+        document.getElementById('slider-status-indicator').textContent = 'Paused';
+      });
+
+      card.addEventListener('mouseleave', () => {
+        isSliderPaused = false;
+        document.getElementById('slider-status-indicator').textContent = 'Auto 10s';
+      });
+
+      card.addEventListener('touchstart', (e) => {
+        isSliderPaused = true;
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+
+      card.addEventListener('touchend', (e) => {
+        isSliderPaused = false;
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipeGesture();
+      }, { passive: true });
+    }
+
+    function handleSwipeGesture() {
+      const diff = touchStartX - touchEndX;
+      const threshold = 45;
+      if (diff > threshold) {
+        nextConsultationSlide();
+      } else if (diff < -threshold) {
+        prevConsultationSlide();
+      }
+    }
+
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const msg = document.getElementById('contact-success-msg');
+      msg.classList.remove('hidden');
+      e.target.reset();
+      setTimeout(() => {
+        msg.classList.add('hidden');
+      }, 5000);
+      lucide.createIcons();
+    }
+
+    // Initialize Page Content on Load
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      document.getElementById('current-year').textContent = new Date().getFullYear();
+
+      buildServiceHeroes();
+      buildScheduleCTA();
+      buildSplitFAQ('.training-faq-container', trainingFaqs, 'Here are answers to common questions about our corporate training delivery, scheduling, and scope.');
+      buildSplitFAQ('.consultation-faq-container', consultationFaqs, 'Frequently asked questions regarding our strategic diagnostics, roadmap deliveries, and execution advisory.');
+      buildSplitFAQ('.operations-faq-container', operationsFaqs, 'Frequently asked questions regarding our operational pods, onboarding times, and team communication.');
+      buildSplitFAQ('.bpo-faq-container', bpoFaqs, 'Answers to common questions regarding contract flexibility, data security, and BPO agent deployment.');
+      
+      buildOperationsGrid();
+      renderConsultationSlide();
+      setupSliderInteractions();
+      startSliderTimer();
+
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
