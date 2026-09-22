@@ -65,7 +65,6 @@ const ServiceHero = ({ breadcrumbs, title, subtitle, badges }) => (
           </p>
         </div>
 
-        {}
         <div className="lg:col-span-5 flex justify-center lg:justify-end">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 w-full max-w-md">
             {badges.map((badge, idx) => {
@@ -120,7 +119,6 @@ const SplitFAQSection = ({ faqs, subtitle = "Here are some common questions abou
           </a>
         </div>
 
-        {}
         <div className="lg:col-span-8 space-y-3.5">
           {faqs.map((faq, idx) => {
             const isOpen = openIdx === idx;
@@ -219,7 +217,6 @@ const HomePage = ({ navigate }) => (
           Scale operations, upskill your workforce, and streamline processes with our premier training, strategic consultation, operational delegation, and BPO solutions designed for modern enterprises.
         </p>
         
-        {}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-md sm:max-w-none mx-auto">
           <a 
             href={CALENDAR_LINK} 
@@ -237,30 +234,10 @@ const HomePage = ({ navigate }) => (
             Discover Our Story
           </button>
         </div>
-
-        {}
-        <div className="mt-14 sm:mt-20 pt-8 sm:pt-10 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
-          <div className="p-3">
-            <div className="text-2xl sm:text-3xl font-extrabold text-[#1C4C96] dark:text-[#C2A74C]">200+</div>
-            <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Enterprise Clients</div>
-          </div>
-          <div className="p-3">
-            <div className="text-2xl sm:text-3xl font-extrabold text-[#1C4C96] dark:text-[#C2A74C]">98%</div>
-            <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Customer CSAT</div>
-          </div>
-          <div className="p-3">
-            <div className="text-2xl sm:text-3xl font-extrabold text-[#1C4C96] dark:text-[#C2A74C]">1-3 Days</div>
-            <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Pod Onboarding</div>
-          </div>
-          <div className="p-3">
-            <div className="text-2xl sm:text-3xl font-extrabold text-[#1C4C96] dark:text-[#C2A74C]">0 Lock-In</div>
-            <div className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">Contract Freedom</div>
-          </div>
-        </div>
       </div>
     </section>
 
-    {}
+    {/* Core Divisions Grid */}
     <section className="py-16 sm:py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 sm:mb-16">
@@ -328,7 +305,6 @@ const AboutPage = () => {
         ]}
       />
 
-      {}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16 text-center">
         <div className="bg-white dark:bg-slate-800/90 rounded-3xl p-6 sm:p-10 lg:p-12 border border-slate-200 dark:border-slate-700/80 shadow-md space-y-4 sm:space-y-6">
           <p className="text-sm sm:text-base lg:text-lg text-slate-700 dark:text-slate-200 leading-relaxed">
@@ -349,7 +325,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-14">
         <div className="grid md:grid-cols-2 gap-6 sm:gap-8 items-stretch">
           <div className="rounded-3xl p-6 sm:p-10 bg-gradient-to-br from-[#1C4C96] to-[#12366e] text-white shadow-lg flex flex-col justify-between border border-white/10 relative overflow-hidden group">
@@ -390,7 +365,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24">
         <div className="bg-white dark:bg-slate-800/90 rounded-3xl p-6 sm:p-12 border border-slate-200 dark:border-slate-700/80 shadow-md text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
@@ -402,7 +376,6 @@ const AboutPage = () => {
           <div className="w-16 h-1 bg-[#C2A74C] mx-auto rounded-full mb-10"></div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-5 items-center justify-center mb-10">
-            {/* BE FORWARD */}
             <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
               <div className="flex items-center gap-1 font-black italic tracking-tighter text-xs sm:text-sm">
                 <span className="text-slate-900 dark:text-white">BE</span>
@@ -410,7 +383,6 @@ const AboutPage = () => {
               </div>
             </div>
 
-            {/* FLAIRSTECH */}
             <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
               <div className="flex items-center gap-1.5">
                 <div className="w-5 h-5 bg-[#C41230] text-white flex items-center justify-center font-black text-[10px] rounded">F</div>
@@ -420,7 +392,6 @@ const AboutPage = () => {
               </div>
             </div>
 
-            {/* PSEO Agency */}
             <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
               <div className="font-black text-xs sm:text-sm tracking-tight text-slate-900 dark:text-white flex items-center">
                 <span className="text-[#1C4C96] text-sm sm:text-base">P</span>
@@ -428,7 +399,6 @@ const AboutPage = () => {
               </div>
             </div>
 
-            {/* Madrid */}
             <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
               <div className="flex items-center gap-1 font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
                 <span className="text-[10px] font-black text-[#1C4C96]">=</span>
@@ -436,14 +406,12 @@ const AboutPage = () => {
               </div>
             </div>
 
-            {/* MOUNTAINS SOLUTIONS */}
             <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
               <div className="text-[10px] font-black uppercase text-slate-800 dark:text-white leading-tight">
                 Mountains<br /><span className="text-slate-400 font-medium text-[8px]">Solutions</span>
               </div>
             </div>
 
-            {/* The Outsource */}
             <div className="p-3 sm:p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-center h-16 sm:h-20 hover:scale-105 transition-transform">
               <div className="bg-[#B93826] text-white px-2 py-1 rounded text-[10px] sm:text-xs font-black tracking-tight flex items-center gap-0.5">
                 <span>The</span>
@@ -567,7 +535,6 @@ const TrainingPage = () => {
         ]}
       />
       
-      {}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
         <div className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
@@ -675,6 +642,9 @@ const TrainingPage = () => {
 
 const ConsultationPage = () => {
   const [currentOption, setCurrentOption] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const touchStartXRef = useRef(null);
+  const touchEndXRef = useRef(null);
 
   const consultationOptions = [
     {
@@ -720,6 +690,40 @@ const ConsultationPage = () => {
 
   const prevOption = () => {
     setCurrentOption((prev) => (prev - 1 + consultationOptions.length) % consultationOptions.length);
+  };
+
+  useEffect(() => {
+    if (isPaused) return;
+    const timer = setInterval(() => {
+      setCurrentOption((prev) => (prev + 1) % consultationOptions.length);
+    }, 10000);
+    return () => clearInterval(timer);
+  }, [isPaused, currentOption, consultationOptions.length]);
+
+  const handleTouchStart = (e) => {
+    setIsPaused(true);
+    touchStartXRef.current = e.targetTouches[0].clientX;
+    touchEndXRef.current = null;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndXRef.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    setIsPaused(false);
+    if (!touchStartXRef.current || !touchEndXRef.current) return;
+    const distance = touchStartXRef.current - touchEndXRef.current;
+    const minSwipeDistance = 45;
+
+    if (distance > minSwipeDistance) {
+      nextOption();
+    } else if (distance < -minSwipeDistance) {
+      prevOption();
+    }
+
+    touchStartXRef.current = null;
+    touchEndXRef.current = null;
   };
 
   const coreFeatures = [
@@ -771,7 +775,6 @@ const ConsultationPage = () => {
         ]}
       />
 
-      {}
       <section className="py-14 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
@@ -785,14 +788,26 @@ const ConsultationPage = () => {
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto relative bg-white dark:bg-slate-800/90 rounded-3xl border border-slate-200 dark:border-slate-700/80 p-6 sm:p-12 shadow-lg transition-all">
+        <div 
+          className="max-w-4xl mx-auto relative bg-white dark:bg-slate-800/90 rounded-3xl border border-slate-200 dark:border-slate-700/80 p-6 sm:p-12 shadow-lg transition-all touch-pan-y select-none"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           <div className="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100 dark:border-slate-700/70">
             <span className="text-[11px] sm:text-xs font-bold tracking-widest uppercase text-[#1C4C96] dark:text-[#C2A74C]">
               {consultationOptions[currentOption].category}
             </span>
-            <span className="text-xs font-bold text-slate-400 dark:text-slate-500 font-mono">
-              0{currentOption + 1} / 0{consultationOptions.length}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] text-slate-400 uppercase font-semibold hidden sm:inline">
+                {isPaused ? 'Paused' : 'Auto 10s'}
+              </span>
+              <span className="text-xs font-bold text-slate-400 dark:text-slate-500 font-mono">
+                0{currentOption + 1} / 0{consultationOptions.length}
+              </span>
+            </div>
           </div>
 
           <div className="min-h-[120px] sm:min-h-[140px] flex flex-col justify-center text-center px-2 sm:px-10">
@@ -822,26 +837,26 @@ const ConsultationPage = () => {
               </button>
             </div>
 
-            <div className="flex items-center gap-1.5">
-              {consultationOptions.map((_, idx) => (
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              {consultationOptions.map((_, i) => (
                 <button
-                  key={idx}
-                  onClick={() => setCurrentOption(idx)}
-                  aria-label={`Go to slide ${idx + 1}`}
-                  className={`h-1.5 transition-all duration-300 rounded-full ${
-                    currentOption === idx 
-                      ? 'w-7 bg-[#1C4C96] dark:bg-[#C2A74C]' 
-                      : 'w-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300'
+                  key={i}
+                  onClick={() => setCurrentOption(i)}
+                  aria-label={`Go to slide ${i + 1}`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    currentOption === i 
+                      ? 'w-7 sm:w-8 bg-[#1C4C96] dark:bg-[#C2A74C]' 
+                      : 'w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400'
                   }`}
                 />
               ))}
             </div>
 
-            <a 
+            <a
               href={CALENDAR_LINK}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold text-xs sm:text-sm transition-colors shadow-md min-h-[44px]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold text-xs sm:text-sm shadow-md transition-all"
             >
               <span>Schedule a Call</span>
               <ArrowRight className="w-4 h-4" />
@@ -850,15 +865,11 @@ const ConsultationPage = () => {
         </div>
       </section>
 
-      {}
-      <section className="bg-slate-900 dark:bg-slate-950 text-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8 border-y border-slate-800 transition-colors relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(28,76,150,0.15)_0%,transparent_60%)] pointer-events-none"></div>
-        <div className="max-w-7xl mx-auto relative z-10">
+      {/* Consultation Features Section */}
+      <section className="py-16 sm:py-24 bg-slate-900 text-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
-              Diagnostic & Action
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-3">
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">
               Our Consultation Features
             </h2>
             <p className="text-slate-300 text-xs sm:text-base leading-relaxed">
@@ -866,61 +877,31 @@ const ConsultationPage = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 items-start max-w-6xl mx-auto">
-            <div className="bg-slate-800/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 lg:p-10 border border-slate-700/80 shadow-xl">
-              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-700">
-                <div className="w-10 h-10 rounded-xl bg-[#1C4C96]/30 flex items-center justify-center text-[#C2A74C]">
-                  <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-white">Core Strategic Deliverables</h3>
-                  <span className="text-xs text-slate-400 font-medium">Included in every baseline consultation</span>
-                </div>
-              </div>
-
-              <div className="space-y-5">
-                {coreFeatures.map((feat, idx) => (
-                  <div key={idx} className={idx < coreFeatures.length - 1 ? 'border-b border-slate-700/60 pb-4' : ''}>
-                    <h4 className="font-bold text-white text-sm sm:text-base mb-1 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#C2A74C]"></span>
-                      {feat.title}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed pl-3.5">
-                      {feat.desc}
-                    </p>
+          <div className="grid lg:grid-cols-12 gap-8 items-start max-w-6xl mx-auto">
+            <div className="lg:col-span-7 bg-slate-800/90 border border-slate-700/80 rounded-3xl p-6 sm:p-10 space-y-6">
+              <div className="text-xs font-bold text-[#C2A74C] uppercase tracking-wider mb-2">Core Deliverables</div>
+              {coreFeatures.map((feat, idx) => (
+                <div key={idx} className="flex items-start gap-4">
+                  <CheckCircle2 className="w-5 h-5 text-[#C2A74C] shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-bold text-base sm:text-lg text-white mb-1">{feat.title}</h3>
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">{feat.desc}</p>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
 
-            <div className="bg-slate-800/80 backdrop-blur-sm rounded-3xl p-6 sm:p-8 lg:p-10 border border-slate-700/80 shadow-xl">
-              <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-700">
-                <div className="w-10 h-10 rounded-xl bg-[#C2A74C]/20 flex items-center justify-center text-[#C2A74C]">
-                  <PlusCircle className="w-5 h-5 sm:w-6 sm:h-6" />
-                </div>
-                <div>
-                  <h3 className="text-lg sm:text-xl font-bold text-white">High-Impact Add-Ons</h3>
-                  <span className="text-xs text-[#C2A74C] font-medium">Embedded execution & operationalization</span>
-                </div>
-              </div>
-
-              <div className="space-y-5">
-                {addOnFeatures.map((addon, idx) => (
-                  <div key={idx} className={idx < addOnFeatures.length - 1 ? 'border-b border-slate-700/60 pb-4' : ''}>
-                    <h4 className="font-bold text-white text-sm sm:text-base mb-1 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#1C4C96]"></span>
-                      {addon.title}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed pl-3.5">
-                      {addon.desc}
-                    </p>
+            <div className="lg:col-span-5 bg-slate-800/90 border border-slate-700/80 rounded-3xl p-6 sm:p-10 space-y-6">
+              <div className="text-xs font-bold text-[#C2A74C] uppercase tracking-wider mb-2">Extended Execution Add-Ons</div>
+              {addOnFeatures.map((feat, idx) => (
+                <div key={idx} className="flex items-start gap-4">
+                  <PlusCircle className="w-5 h-5 text-[#C2A74C] shrink-0 mt-1" />
+                  <div>
+                    <h3 className="font-bold text-base sm:text-lg text-white mb-1">{feat.title}</h3>
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">{feat.desc}</p>
                   </div>
-                ))}
-              </div>
-
-              <div className="mt-6 p-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-slate-300 leading-relaxed">
-                💡 <span className="font-bold text-white">Need a custom scope?</span> We work with executive leadership teams across all industries to shape targeted advisory engagements.
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -928,12 +909,12 @@ const ConsultationPage = () => {
 
       <SplitFAQSection 
         faqs={faqs} 
-        subtitle="Common questions regarding our strategic audits, diagnostic deliverables, and embedded advisory options."
+        subtitle="Frequently asked questions about our strategic diagnostics, roadmap deliveries, and execution advisory."
       />
 
       <ScheduleCallCTA 
-        title="Ready to Eliminate Operational Bottlenecks?"
-        subtitle="Schedule a call to discuss our guaranteed 3-week diagnostic audit and executive advisory support."
+        title="Ready to Redefine Your Enterprise Strategy?"
+        subtitle="Schedule a call with our advisory partners to uncover immediate revenue and margin expansion opportunities."
       />
     </div>
   );
@@ -941,6 +922,184 @@ const ConsultationPage = () => {
 
 const OperationsPage = () => {
   const [selectedService, setSelectedService] = useState(null);
+
+  const operationsList = [
+    { 
+      icon: Share2, 
+      tag: "Marketing",
+      title: "Social Media Management", 
+      desc: "End-to-end brand management, community engagement, and viral content strategy.",
+      detailedDesc: "Our dedicated social media squads manage every facet of your brand's digital presence. From creative content ideation and multi-channel scheduling to real-time audience engagement and analytics tracking, we build loyal, active online communities.",
+      benefits: [
+        "Consistent daily multi-channel publishing",
+        "Community response times under 15 minutes",
+        "Custom high-converting graphics and copywriting",
+        "Monthly ROI and growth performance dashboards"
+      ],
+      advantage: "Dedicated social media manager + copywriter per account pod."
+    },
+    { 
+      icon: Search, 
+      tag: "Growth",
+      title: "SEO Optimization", 
+      desc: "Data-driven organic search ranking strategies and technical site auditing.",
+      detailedDesc: "Dominate search engine results pages with comprehensive technical audits, competitor keyword clustering, on-page optimization, and high-authority link-building campaigns that drive sustained organic growth.",
+      benefits: [
+        "Technical health audits and Core Web Vitals remediation",
+        "Targeted intent-based keyword research",
+        "On-page schema and metadata optimization",
+        "Transparent rank tracking and traffic attribution"
+      ],
+      advantage: "Zero black-hat techniques; 100% Google algorithm compliant."
+    },
+    { 
+      icon: BarChart2, 
+      tag: "Intelligence",
+      title: "Data Analysis", 
+      desc: "Transforming raw metrics into actionable business intelligence and dashboards.",
+      detailedDesc: "Unlock the value hidden within your operational data. Our BI analysts clean raw transactional data, construct automated executive dashboards, and formulate predictive insights to optimize business choices.",
+      benefits: [
+        "Interactive PowerBI and Tableau dashboard design",
+        "Automated cross-platform data pipeline synthesis",
+        "Cohort analysis and churn risk identification",
+        "Actionable weekly executive summaries"
+      ],
+      advantage: "Fast integration with major databases, CRMs, and ERP systems."
+    },
+    { 
+      icon: Palette, 
+      tag: "Creative",
+      title: "Graphic Design", 
+      desc: "Premium visual assets, branding guidelines, and UI/UX interface design.",
+      detailedDesc: "Empower your brand with elite visual storytelling. We provide dedicated graphic designers who craft compelling marketing collateral, brand guidelines, UI layouts, presentations, and product packaging.",
+      benefits: [
+        "Pixel-perfect digital, vector, and print collateral",
+        "Full brand identity kits and brand style guides",
+        "Rapid 24-48 hour turnaround on design iterations",
+        "All source vector files delivered directly to you"
+      ],
+      advantage: "Unlimited design revisions within your dedicated pod subscription."
+    },
+    { 
+      icon: FileText, 
+      tag: "Creative",
+      title: "Content Writing", 
+      desc: "SEO-optimized, conversion-focused copywriting for blogs, PR, and web.",
+      detailedDesc: "Capture authority in your niche with meticulously researched, industry-specific written content. We produce long-form articles, whitepapers, press releases, landing page copy, and email sequences that educate and convert.",
+      benefits: [
+        "100% human-written, editorial-grade articles",
+        "Native English and bilingual Arabic copywriters",
+        "SEO-keyword integration with organic readability",
+        "In-depth industry research and competitor gap analysis"
+      ],
+      advantage: "Specialized writers with domain expertise across B2B, tech, and retail."
+    },
+    { 
+      icon: UserPlus, 
+      tag: "HR",
+      title: "Talent Acquisition", 
+      desc: "Sourcing, vetting, and headhunting elite industry professionals globally.",
+      detailedDesc: "Eliminate costly bad hires and reduce time-to-fill by up to 60%. Our talent scouts actively headhunt, rigorously pre-screen, and technically evaluate candidates to ensure cultural and competence alignment.",
+      benefits: [
+        "Comprehensive resume screening and initial technical vetting",
+        "Structured interview scorecards and background checks",
+        "Access to passive, top-tier global talent pools",
+        "Guaranteed 30-day candidate replacement warranty"
+      ],
+      advantage: "End-to-end recruitment cycle management from job posting to offer letter."
+    },
+    { 
+      icon: Video, 
+      tag: "Media",
+      title: "Video Editing", 
+      desc: "High-retention corporate video, reels, and commercial production.",
+      detailedDesc: "Turn raw footage into cinematic, high-retention video assets. We edit short-form TikTok/Reels/Shorts, corporate explainers, customer testimonials, and advertisements designed to stop the scroll.",
+      benefits: [
+        "Dynamic pacing, sound design, and color grading",
+        "Engaging animated captions and kinetic typography",
+        "Multi-aspect ratio formatting (9:16, 16:9, 1:1)",
+        "Fast turnarounds with cloud-based review links"
+      ],
+      advantage: "High-volume video workflows supported without quality degradation."
+    },
+    { 
+      icon: Box, 
+      tag: "Media",
+      title: "3D Animation", 
+      desc: "Immersive product visualizations, architectural renders, and motion graphics.",
+      detailedDesc: "Bring complex ideas and architectural concepts to life through photorealistic 3D rendering and dynamic animation. Perfect for physical products, hardware simulations, and high-impact digital campaigns.",
+      benefits: [
+        "Photorealistic 3D product modeling and lighting",
+        "Exploded view mechanical simulations",
+        "Commercial-ready motion design and rendering",
+        "Flexible 4K video exports for web and displays"
+      ],
+      advantage: "Expertise in Blender, Cinema4D, Maya, and Unreal Engine."
+    },
+    { 
+      icon: Calendar, 
+      tag: "Corporate",
+      title: "Event Planning", 
+      desc: "End-to-end logistics and management for corporate summits and launches.",
+      detailedDesc: "Host flawless corporate conferences, executive retreats, brand launches, and virtual summits. We orchestrate venue sourcing, vendor negotiation, technical AV production, attendee registration, and onsite coordination.",
+      benefits: [
+        "Complete budget control and vendor contract auditing",
+        "Keynote speaker curation and hospitality management",
+        "Live audio-visual, stage, and streaming production",
+        "Real-time attendee check-in and VIP handling"
+      ],
+      advantage: "Seamless hybrid setups combining in-person venues with global live streams."
+    },
+    { 
+      icon: Megaphone, 
+      tag: "Marketing",
+      title: "Paid Advertising", 
+      desc: "High-ROI campaign management across Meta, Google, LinkedIn, and TikTok.",
+      detailedDesc: "Maximize your advertising budget with precision-targeted media buying. Our performance marketers build granular campaign architectures, split-test creatives continually, and optimize for ROAS and CAC.",
+      benefits: [
+        "Advanced pixel tracking, CAPI, and conversion attribution",
+        "Rapid creative A/B testing frameworks",
+        "Strict budget monitoring with spend-efficiency guardrails",
+        "Weekly performance reports and strategic syncs"
+      ],
+      advantage: "Certified media buyers managing budgets across B2B and consumer niches."
+    },
+    { 
+      icon: Code, 
+      tag: "Tech",
+      title: "Web Development", 
+      desc: "Secure, scalable, and responsive web applications and enterprise platforms.",
+      detailedDesc: "Transform your web presence into an intuitive, high-performance customer conversion engine. Our engineers develop modern, lightning-fast web applications, marketing sites, and enterprise customer portals.",
+      benefits: [
+        "Custom responsive development (React, Next.js, WordPress)",
+        "Mobile-first architecture with sub-second page loads",
+        "Enterprise-grade security and SSL implementation",
+        "Continuous maintenance and technical monitoring"
+      ],
+      advantage: "Clean, documented code with seamless third-party API integrations."
+    },
+    { 
+      icon: Truck, 
+      tag: "Logistics",
+      title: "Shipping & Logistics", 
+      desc: "Supply chain streamlining, vendor management, and fulfillment optimization.",
+      detailedDesc: "Optimize your physical fulfillment pipelines to reduce delivery lead times and slash transit costs. We audit carrier agreements, streamline warehousing workflows, and manage last-mile dispatch.",
+      benefits: [
+        "Tiered shipping rate renegotiations with regional carriers",
+        "Inventory tracking and warehouse pick/pack optimization",
+        "Customs clearance and import/export documentation compliance",
+        "Real-time shipment tracking with customer visibility"
+      ],
+      advantage: "Direct relationships with domestic and international freight forwarders."
+    }
+  ];
+
+  const faqs = [
+    { q: "What is your onboarding timeline for operational services?", a: "We operate with rapid agility. Depending on the complexity of the tasks and necessary system access, our standard onboarding process integrates our specialist teams into your workflow within 1 to 3 business days." },
+    { q: "How do you ensure team synchronization and communication?", a: "Our dedicated Account Managers act as a bridge. We utilize your preferred communication channels (Slack, Microsoft Teams, Email) and project management tools (Jira, Asana, Monday, Trello) to ensure 100% synchronization and visibility." },
+    { q: "Can I bundle these services, or are they standalone?", a: "Absolutely. Most of our enterprise clients create custom 'pods' (e.g., combining Web Development, Graphic Design, and SEO into a unified digital team) for a comprehensive, highly cost-effective operational solution." },
+    { q: "Where are your operational teams located?", a: "We maintain a robust global talent pool, with significant, highly-trained hubs located in Egypt and the region, ensuring overlapping time zones, bilingual fluency (Arabic/English), and cost arbitrage." }
+  ];
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -958,232 +1117,6 @@ const OperationsPage = () => {
     };
   }, [selectedService]);
 
-  const operationsList = [
-    { 
-      icon: Share2, 
-      title: "Social Media Management", 
-      desc: "End-to-end brand management, community engagement, and viral content strategy.", 
-      category: "Marketing",
-      detailedDesc: "We take full ownership of your brand's presence across LinkedIn, X (Twitter), Instagram, Facebook, and TikTok. Our specialized social media squad crafts high-impact graphics, writes viral copy, actively moderates audience discussions, and implements targeted organic growth loops designed to establish enterprise authority.",
-      benefits: [
-        "Consistent multi-platform daily publishing and brand presence",
-        "Active community moderation with <15 min response benchmarks",
-        "High-engagement B2B copywriting and industry trend capitalization",
-        "Monthly competitor benchmarking and audience growth reporting"
-      ],
-      advantages: [
-        "Dedicated Pod Manager & Designer",
-        "1-3 Day Rapid Onboarding",
-        "Collaborative Content Approval Workflow"
-      ]
-    },
-    { 
-      icon: Search, 
-      title: "SEO Optimization", 
-      desc: "Data-driven organic search ranking strategies and technical site auditing.", 
-      category: "Growth",
-      detailedDesc: "Capture high-intent commercial buyers at the exact moment they search for your solutions. We execute exhaustive technical SEO audits, keyword gap analysis, high-authority backlink outreach, and content architecture upgrades to dominate Google search results.",
-      benefits: [
-        "Top-3 SERP targeting for high-converting buyer-intent keywords",
-        "Comprehensive technical auditing & Core Web Vitals optimization",
-        "White-hat editorial backlink acquisition from authoritative domains",
-        "Protection against search engine algorithm volatility"
-      ],
-      advantages: [
-        "Live Looker Studio Ranking Dashboard",
-        "Bi-Weekly SEO Strategy Sprints",
-        "Dedicated Technical SEO Architect"
-      ]
-    },
-    { 
-      icon: BarChart2, 
-      title: "Data Analysis", 
-      desc: "Transforming raw metrics into actionable business intelligence and dashboards.", 
-      category: "Intelligence",
-      detailedDesc: "Unify fragmented data from your CRM, ERP, ad platforms, and customer touchpoints into automated, executive-ready business intelligence. We eliminate decision guesswork by turning raw operational metrics into clear, actionable revenue forecasting dashboards.",
-      benefits: [
-        "Automated multi-source data pipeline and warehousing setup",
-        "Predictive customer churn and lifetime value (LTV) models",
-        "Interactive PowerBI and Google Looker Studio executive dashboards",
-        "Rigorous data hygiene, deduplication, and error cleaning"
-      ],
-      advantages: [
-        "Certified SQL & Python BI Specialists",
-        "Zero Software Licensing Bloat",
-        "Monthly Executive Briefing Delivery"
-      ]
-    },
-    { 
-      icon: Palette, 
-      title: "Graphic Design", 
-      desc: "Premium visual assets, branding guidelines, and UI/UX interface design.", 
-      category: "Creative",
-      detailedDesc: "Supercharge your brand's visual identity with our on-demand creative team. From pitch decks, sales collateral, and product packaging to complete UI/UX design systems and digital marketing assets, we deliver pixel-perfect designs with rapid turnaround.",
-      benefits: [
-        "Impeccable adherence to your enterprise brand guidelines",
-        "Rapid 24-48 hour standard deliverable turnaround times",
-        "Unlimited revisions until 100% satisfaction is achieved",
-        "Complete source files provided (Figma, Illustrator, Photoshop)"
-      ],
-      advantages: [
-        "Senior Adobe & Figma Design Leads",
-        "Real-Time Slack/Teams Creative Sync",
-        "Instant Scalability for Peak Campaigns"
-      ]
-    },
-    { 
-      icon: FileText, 
-      title: "Content Writing", 
-      desc: "SEO-optimized, conversion-focused copywriting for blogs, PR, and web.", 
-      category: "Creative",
-      detailedDesc: "Command authority in your industry with thought-leadership whitepapers, technical case studies, PR announcements, and high-converting landing page copy. Our writers specialize in translating complex B2B concepts into clear, persuasive buyer narratives.",
-      benefits: [
-        "Authoritative B2B tone of voice aligned with your target persona",
-        "High-ranking SEO editorial articles driving organic top-of-funnel traffic",
-        "Compelling case studies that accelerate enterprise sales cycles",
-        "Multi-stage editorial review with 100% originality guarantee"
-      ],
-      advantages: [
-        "Fluent Bilingual Writers (English & Arabic)",
-        "Deep Domain & Technical Research",
-        "Direct CMS Uploading & Formatting"
-      ]
-    },
-    { 
-      icon: UserPlus, 
-      title: "Talent Acquisition", 
-      desc: "Sourcing, vetting, and headhunting elite industry professionals globally.", 
-      category: "HR",
-      detailedDesc: "Eliminate lengthy hiring delays and reduce recruitment overhead. Our specialized talent scouts source, screen, and interview elite operational, administrative, and technical candidates, delivering pre-vetted shortlists ready for immediate onboarding.",
-      benefits: [
-        "Pre-screened candidate shortlists delivered within 5 business days",
-        "Comprehensive technical assessments and behavioral vetting",
-        "Full credential verification, background, and reference checks",
-        "Up to 60% recruitment cost savings compared to traditional agencies"
-      ],
-      advantages: [
-        "Extensive GCC & Regional Talent Pipeline",
-        "90-Day Free Replacement Guarantee",
-        "Dedicated Senior Headhunter Support"
-      ]
-    },
-    { 
-      icon: Video, 
-      title: "Video Editing", 
-      desc: "High-retention corporate video, reels, and commercial production.", 
-      category: "Media",
-      detailedDesc: "Elevate your visual storytelling with cinematic corporate video production. We handle raw footage ingestion, multi-camera synchronization, dynamic pacing, audio mastering, color grading, and custom subtitles tailored for cross-platform engagement.",
-      benefits: [
-        "High-retention pacing engineered for maximum viewer watch time",
-        "Studio-grade color grading, sound engineering, and motion typography",
-        "Multi-format exports (16:9 widescreen, 9:16 vertical reels, 1:1 square)",
-        "Fast-turnaround post-production pipelines for ongoing series"
-      ],
-      advantages: [
-        "Premiere Pro & DaVinci Resolve Experts",
-        "Frame-by-Frame Cloud Feedback Tool",
-        "Secure Raw Footage Cloud Archival"
-      ]
-    },
-    { 
-      icon: Box, 
-      title: "3D Animation", 
-      desc: "Immersive product visualizations, architectural renders, and motion graphics.", 
-      category: "Media",
-      detailedDesc: "Bring complex machinery, physical products, and architectural designs to life with photorealistic 3D visualization. We create cinematic 3D renders, exploded-view component demonstrations, and interactive animations that captivate prospects and investors.",
-      benefits: [
-        "Photorealistic 360-degree digital twins of physical products",
-        "Exploded component views demonstrating engineering precision",
-        "High-impact visual assets for investor decks, expos, and web",
-        "Conversion of raw CAD blueprints into stunning marketing assets"
-      ],
-      advantages: [
-        "Blender, Cinema 4D & Maya Specialists",
-        "Ultra-High-Definition 4K Render Output",
-        "Custom Lighting, Materials & Physics"
-      ]
-    },
-    { 
-      icon: Calendar, 
-      title: "Event Planning", 
-      desc: "End-to-end logistics and management for corporate summits and launches.", 
-      category: "Corporate",
-      detailedDesc: "Deliver unforgettable corporate summits, hybrid conferences, leadership retreats, and brand launch galas. We orchestrate every moving piece: venue procurement, audiovisual production, catering, speaker management, and on-site event coordination.",
-      benefits: [
-        "Stress-free, meticulous end-to-end logistical management",
-        "Aggressive vendor price negotiations and contract governance",
-        "Seamless hybrid live-streaming and attendee tech coordination",
-        "Comprehensive post-event feedback and ROI performance tracking"
-      ],
-      advantages: [
-        "Experienced On-Site Stage Directors",
-        "Rigorous Risk & Contingency Protocols",
-        "Custom Corporate Branding Integration"
-      ]
-    },
-    { 
-      icon: Megaphone, 
-      title: "Paid Advertising", 
-      desc: "High-ROI campaign management across Meta, Google, LinkedIn, and TikTok.", 
-      category: "Marketing",
-      detailedDesc: "Scale your revenue pipeline through data-driven paid advertising. We design, launch, and optimize targeted media campaigns across Google Ads, LinkedIn, Meta, and TikTok, maintaining relentless focus on lowering customer acquisition costs (CAC) and maximizing return on ad spend (ROAS).",
-      benefits: [
-        "Laser-focused B2B decision-maker targeting on LinkedIn & Google Search",
-        "Continuous multi-variant A/B testing of ad creative, headlines, and angles",
-        "Dynamic daily budget optimization to maximize high-performing channels",
-        "Full-funnel retargeting campaigns converting warm site visitors into leads"
-      ],
-      advantages: [
-        "Certified Google & Meta Media Buyers",
-        "Transparent 100% Client-Owned Ad Accounts",
-        "Weekly Performance & ROAS Reports"
-      ]
-    },
-    { 
-      icon: Code, 
-      title: "Web Development", 
-      desc: "Secure, scalable, and responsive web applications and enterprise platforms.", 
-      category: "Tech",
-      detailedDesc: "Empower your business with custom, high-speed digital infrastructure. From corporate web portals and high-converting landing page systems to complex internal SaaS applications, we write clean, secure, and easily maintainable code engineered for performance.",
-      benefits: [
-        "Blazing-fast page speeds achieving top Google Core Web Vitals scores",
-        "Fully responsive, mobile-first design across all device screen sizes",
-        "Enterprise-grade SSL security, automated backups, and DDoS protection",
-        "Seamless third-party API, CRM, payment gateway, and analytics integrations"
-      ],
-      advantages: [
-        "Modern Stack (React, Next.js, Node, Tailwind)",
-        "Zero Technical Debt Architecture",
-        "1-3 Day Rapid Kickoff"
-      ]
-    },
-    { 
-      icon: Truck, 
-      title: "Shipping & Logistics", 
-      desc: "Supply chain streamlining, vendor management, and fulfillment optimization.", 
-      category: "Logistics",
-      detailedDesc: "Overcome international fulfillment bottlenecks and reduce supply chain overhead. We coordinate freight forwarding, audit carrier agreements, expedite customs clearance, and implement automated inventory tracking across your entire supply pipeline.",
-      benefits: [
-        "Drastic reduction in shipping delays and international demurrage fees",
-        "Carrier agreement audits securing volume discount tier pricing",
-        "Full compliance with international customs regulations and paperwork",
-        "End-to-end real-time shipment visibility from dispatch to delivery"
-      ],
-      advantages: [
-        "GCC & Regional North Africa Gateway Clout",
-        "24/7 Shipment Exception Monitoring",
-        "3PL Vendor Auditing & SLA Enforcement"
-      ]
-    }
-  ];
-
-  const faqs = [
-    { q: "What is your onboarding timeline for operational services?", a: "We operate with rapid agility. Depending on the complexity of the tasks and necessary system access, our standard onboarding process integrates our specialist teams into your workflow within 1 to 3 business days." },
-    { q: "How do you ensure team synchronization and communication?", a: "Our dedicated Account Managers act as a bridge. We utilize your preferred communication channels (Slack, Microsoft Teams, Email) and project management tools (Jira, Asana, Monday, Trello) to ensure 100% synchronization and visibility." },
-    { q: "Can I bundle these services, or are they standalone?", a: "Absolutely. Most of our enterprise clients create custom 'pods' (e.g., combining Web Development, Graphic Design, and SEO into a unified digital team) for a comprehensive, highly cost-effective operational solution." },
-    { q: "Where are your operational teams located?", a: "We maintain a robust global talent pool, with significant, highly-trained hubs located in the GCC and Egypt, ensuring overlapping time zones, bilingual fluency (Arabic/English), and cost arbitrage." }
-  ];
-
   return (
     <div className="animate-in fade-in duration-500 pb-10 bg-slate-50/60 dark:bg-slate-950 min-h-screen transition-colors">
       <ServiceHero 
@@ -1196,188 +1129,164 @@ const OperationsPage = () => {
         ]}
       />
       
-      {/* Services Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 sm:mt-20">
         <div className="text-center mb-12 sm:mb-16 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
-            Specialized Pods
+            Operational Pods
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">
             Comprehensive Operational Delegation
           </h2>
           <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-base leading-relaxed">
-            Build your custom external team from our diverse roster of verified experts with zero overhead. Click any service card below for detailed scope and benefits.
+            Click on any service card below to view detailed deliverables, business advantages, and operational specifications.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-16 sm:mb-24">
-          {operationsList.map((op, idx) => (
-            <div 
-              key={idx} 
-              onClick={() => setSelectedService(op)}
-              className="bg-white dark:bg-slate-800/90 p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm hover:-translate-y-1.5 hover:shadow-xl hover:border-[#1C4C96]/60 dark:hover:border-[#C2A74C]/60 transition-all flex flex-col justify-between group cursor-pointer active:scale-[0.98]"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-xl flex items-center justify-center group-hover:bg-[#1C4C96] dark:group-hover:bg-[#C2A74C] transition-colors shadow-sm border border-slate-100 dark:border-slate-800">
-                    <op.icon className="w-6 h-6 text-[#1C4C96] dark:text-[#C2A74C] group-hover:text-white dark:group-hover:text-slate-950 transition-colors" />
+        {/* 12-card Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 mb-20">
+          {operationsList.map((op, idx) => {
+            const Icon = op.icon;
+            return (
+              <div 
+                key={idx} 
+                onClick={() => setSelectedService(op)}
+                className="bg-white dark:bg-slate-800/90 p-6 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:-translate-y-1.5 hover:border-[#1C4C96]/50 dark:hover:border-[#C2A74C]/50 transition-all duration-300 flex flex-col justify-between group cursor-pointer"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center text-[#1C4C96] dark:text-[#C2A74C] group-hover:bg-[#1C4C96] dark:group-hover:bg-[#C2A74C] group-hover:text-white dark:group-hover:text-slate-950 transition-all shadow-sm border border-slate-100 dark:border-slate-800">
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700/70 text-slate-600 dark:text-slate-300">
+                      {op.tag}
+                    </span>
                   </div>
-                  <span className="text-[10px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700/60 text-slate-600 dark:text-slate-400 group-hover:bg-[#1C4C96]/10 dark:group-hover:bg-[#C2A74C]/15 group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C] transition-colors">
-                    {op.category}
-                  </span>
+                  <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C] transition-colors">
+                    {op.title}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {op.desc}
+                  </p>
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2 leading-snug group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C] transition-colors">
-                  {op.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {op.desc}
-                </p>
-              </div>
 
-              <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C]">
-                <span>View Details</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C]">
+                  <span>View Details</span>
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Why Delegate Banner */}
-        <div className="bg-[#1C4C96] dark:bg-[#0F172A] rounded-3xl p-7 sm:p-12 lg:p-16 border border-[#1C4C96]/20 dark:border-slate-800 text-center relative overflow-hidden shadow-xl">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.1)_0%,transparent_70%)] pointer-events-none"></div>
+        {/* Why Delegate Section */}
+        <div className="bg-[#1C4C96] dark:bg-[#0F172A] rounded-3xl p-8 sm:p-14 text-white text-center relative overflow-hidden shadow-xl border border-white/10">
           <div className="relative z-10">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-8 sm:mb-12 tracking-tight">Why Delegate to EG-Experts?</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
+            <h2 className="text-2xl sm:text-4xl font-extrabold mb-10 tracking-tight">Why Delegate to EG-Experts?</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-left">
               {[
                 { t: "Instant Expertise", d: "Bypass the 3-month hiring curve and instantly access top-tier vetted talent." },
-                { t: "Cost Efficiency", d: "Reduce overhead drastically. No benefits, equipment, or office space costs." },
-                { t: "Infinite Scalability", d: "Scale your pod up or down on demand based on seasonal project needs." },
-                { t: "Seamless Integration", d: "We plug directly into your systems, tools, and company culture." }
+                { t: "Cost Efficiency", d: "Reduce overhead drastically. No benefits, hardware, or office lease overhead." },
+                { t: "Infinite Scalability", d: "Scale your pod up or down on demand based on seasonal requirements." },
+                { t: "Seamless Integration", d: "We plug directly into your preferred tools (Slack, Teams, Jira, Asana)." }
               ].map((r, i) => (
-                 <div key={i} className="bg-white/10 backdrop-blur-sm p-5 sm:p-6 rounded-2xl border border-white/20 hover:bg-white/15 transition-colors">
-                   <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto bg-[#C2A74C] rounded-full flex items-center justify-center shadow-md mb-4 text-slate-950 font-black text-lg">{i+1}</div>
-                   <h4 className="font-bold text-white text-base sm:text-lg mb-2">{r.t}</h4>
-                   <p className="text-xs sm:text-sm text-blue-100 dark:text-slate-300 leading-relaxed">{r.d}</p>
-                 </div>
+                <div key={i} className="bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/15 hover:bg-white/20 transition-colors">
+                  <div className="w-10 h-10 bg-[#C2A74C] text-slate-950 rounded-xl flex items-center justify-center shadow font-black text-lg mb-4">
+                    0{i+1}
+                  </div>
+                  <h4 className="font-bold text-white text-base mb-2">{r.t}</h4>
+                  <p className="text-xs sm:text-sm text-blue-100 dark:text-slate-300 leading-relaxed">{r.d}</p>
+                </div>
               ))}
             </div>
           </div>
         </div>
       </div>
 
-      <SplitFAQSection 
-        faqs={faqs} 
-        subtitle="Answers regarding our operational delegation timelines, system integrations, and team workflows."
-      />
-
-      <ScheduleCallCTA 
-        title="Ready to Delegate Your Back Office & Tech Workloads?"
-        subtitle="Schedule a call with our team to configure your specialized pods and onboard within 1 to 3 days."
-      />
-
-      {/* Interactive Service Detail Modal */}
+      {/* Modal Dialog for Selected Service */}
       {selectedService && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={() => setSelectedService(null)}
-          aria-modal="true"
-          role="dialog"
         >
           <div 
-            className="relative w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-3xl shadow-2xl p-6 sm:p-8 md:p-10 overflow-y-auto max-h-[90vh] animate-in zoom-in-95 duration-200 text-left"
+            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 relative text-left"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Close Button */}
             <button 
               onClick={() => setSelectedService(null)}
-              className="absolute top-5 right-5 sm:top-6 sm:right-6 w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center min-h-[44px] min-w-[44px] focus:outline-none"
-              aria-label="Close service details"
+              aria-label="Close dialog"
+              className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
 
-            {/* Modal Header */}
-            <div className="flex items-center gap-4 mb-6 pr-12">
-              <div className="w-14 h-14 bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-[#1C4C96] dark:text-[#C2A74C] shrink-0 border border-slate-200 dark:border-slate-700 shadow-sm">
-                <selectedService.icon className="w-7 h-7" />
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 rounded-2xl flex items-center justify-center text-[#1C4C96] dark:text-[#C2A74C]">
+                {React.createElement(selectedService.icon, { className: "w-6 h-6" })}
               </div>
               <div>
-                <div className="inline-block text-[10px] uppercase font-bold tracking-widest px-2.5 py-0.5 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] mb-1">
-                  {selectedService.category} Division
-                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-[#1C4C96] dark:text-[#C2A74C]">
+                  {selectedService.tag}
+                </span>
                 <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                   {selectedService.title}
                 </h3>
               </div>
             </div>
 
-            {/* In-Depth Overview */}
-            <div className="mb-6">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
-                Operational Scope
-              </h4>
-              <p className="text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-                {selectedService.detailedDesc}
-              </p>
-            </div>
+            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-6">
+              {selectedService.detailedDesc}
+            </p>
 
-            {/* Core Benefits */}
-            <div className="mb-6 border-t border-slate-100 dark:border-slate-800 pt-5">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
-                Key Business Benefits
+            <div className="bg-slate-50 dark:bg-slate-800/60 p-4 sm:p-5 rounded-2xl border border-slate-100 dark:border-slate-700/60 mb-6">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 mb-3">
+                Key Deliverables & Business Benefits
               </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <div className="grid sm:grid-cols-2 gap-2.5">
                 {selectedService.benefits.map((benefit, bIdx) => (
-                  <div key={bIdx} className="flex items-start gap-2.5 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                  <div key={bIdx} className="flex items-start gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
                     <CheckCircle2 className="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5" />
-                    <span className="text-xs sm:text-sm text-slate-800 dark:text-slate-200 font-medium leading-snug">
-                      {benefit}
-                    </span>
+                    <span className="leading-snug">{benefit}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Strategic Advantages Badges */}
-            <div className="mb-8 border-t border-slate-100 dark:border-slate-800 pt-5">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
-                EG-Experts Advantages
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {selectedService.advantages.map((adv, aIdx) => (
-                  <span 
-                    key={aIdx} 
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold border border-slate-200 dark:border-slate-700"
-                  >
-                    <Sparkles className="w-3 h-3 text-[#C2A74C]" />
-                    {adv}
-                  </span>
-                ))}
-              </div>
+            <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-slate-800/40 border border-blue-100 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 mb-6 flex items-center gap-3">
+              <ShieldCheck className="w-5 h-5 text-[#1C4C96] dark:text-[#C2A74C] shrink-0" />
+              <span><strong>Operational Advantage:</strong> {selectedService.advantage}</span>
             </div>
 
-            {/* Modal Actions */}
-            <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <button
+            <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <button 
                 onClick={() => setSelectedService(null)}
-                className="w-full sm:w-auto px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-xs sm:text-sm min-h-[44px]"
+                className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs sm:text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
-                Close Window
+                Close
               </button>
-
-              <a
+              <a 
                 href={CALENDAR_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-all shadow-md text-xs sm:text-sm min-h-[44px] group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white text-xs sm:text-sm font-bold shadow-md transition-all"
               >
                 <span>Schedule a Call for {selectedService.title}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4" />
               </a>
             </div>
           </div>
         </div>
       )}
+
+      <SplitFAQSection 
+        faqs={faqs} 
+        subtitle="Frequently asked questions about our operational pods, onboarding times, and team communication."
+      />
+
+      <ScheduleCallCTA 
+        title="Ready to Delegate Your Operational Bottlenecks?"
+        subtitle="Schedule a call today to match your organization with a dedicated operational pod in 1-3 business days."
+      />
     </div>
   );
 };
@@ -1386,104 +1295,65 @@ const BpoPage = () => {
   const [openFaqIdx, setOpenFaqIdx] = useState(4);
 
   const mainOptions = [
-    {
-      icon: ThumbsUp,
-      title: "Customer Support",
-      metric: "Market Leading CSAT",
-      sub: "Highest CSAT in the market!"
-    },
-    {
-      icon: MessageSquare,
-      title: "Chat Support",
-      metric: "98% Satisfaction",
-      sub: "Omnichannel live engagement!"
-    },
-    {
-      icon: TrendingUp,
-      title: "Account Executive",
-      metric: "55% Closing Rate",
-      sub: "Enterprise closer squads!"
-    },
-    {
-      icon: Headphones,
-      title: "Cold Calling",
-      metric: "60% Conversion",
-      sub: "From appointment set to meeting!"
-    }
+    { title: "Customer Support", metric: "Highest CSAT", sub: "Market leading multichannel QA", icon: ThumbsUp },
+    { title: "Chat Support", metric: "98% CSAT", sub: "Instant live response coverage", icon: MessageSquare },
+    { title: "Account Executive", metric: "55% Closing", sub: "Elite B2B closing rate", icon: Briefcase },
+    { title: "Cold Calling", metric: "60% Conversion", sub: "From appointment set to meeting", icon: Headphones }
   ];
 
   const packages = [
     {
       name: "Professional",
-      badge: "Team Extension",
+      badge: "Core Operations",
       bestFor: "Companies with existing software needing skilled operational execution.",
       desc: "Expert execution inside your existing setup. We handle day-to-day Billing Management and HR operations using your team's current tools.",
+      popular: false,
+      footerNote: "Flexible monthly plans, zero contract lock-in.",
       features: [
         "Dedicated Billing & HR team support",
         "Seamless integration in your tech stack",
         "Standard SLAs & routine execution",
         "Direct email & chat operational support"
-      ],
-      footerNote: "Flexible monthly plans, zero contract lock-in."
+      ]
     },
     {
       name: "Premium",
       badge: "Most Popular",
-      popular: true,
       bestFor: "Growing teams wanting modern tools without software procurement headaches.",
       desc: "Complete operational support paired with modern software. We provide expert personnel and supply the enterprise technology stack for you.",
+      popular: true,
       featureHeader: "Everything in Professional, plus:",
+      footerNote: "Instant tech deployment, zero licensing hassle.",
       features: [
         "Enterprise software & tech stack included",
         "Automated workflows & custom reporting",
         "Priority onboarding & software setup"
-      ],
-      footerNote: "Instant tech deployment, zero licensing hassle."
+      ]
     },
     {
       name: "Ultimate",
-      badge: "Full Turnkey",
+      badge: "Full Governance",
       bestFor: "Busy executives wanting a 100% hands-off, high-performance back office.",
       desc: "A completely outsourced back office with guaranteed oversight. End-to-end execution, full technology suite, and dedicated team leadership.",
+      popular: false,
       featureHeader: "Everything in Premium, plus:",
+      footerNote: "100% hands-off governance, performance guaranteed.",
       features: [
         "Dedicated Team Lead & QA management supervision",
         "Custom KPI tracking & guaranteed SLA metrics",
         "Quarterly strategy & process optimization reviews"
-      ],
-      footerNote: "100% hands-off governance, performance guaranteed."
+      ]
     }
   ];
 
   const faqs = [
-    {
-      q: "Will I be locked into a long-term contract?",
-      a: "No. We believe in earning your business continually based on performance. We offer flexible monthly plans with zero contract lock-in, allowing you to scale or modify services as your needs evolve."
-    },
-    {
-      q: "How do you ensure the quality of your services, like Customer Support and Cold Calling?",
-      a: "We implement rigorous quality assurance protocols, including dedicated QA managers, regular call and ticket audits, continuous agent coaching, and weekly performance reviews tied to clear SLAs."
-    },
-    {
-      q: "Can you work with our existing software and tools?",
-      a: "Yes. Our teams are trained to seamlessly integrate into your current tech stack—whether CRM, helpdesk, VoIP, or project management software—with zero disruption to your daily operations."
-    },
-    {
-      q: "What if I want a completely hands-off approach to my back office?",
-      a: "Our Ultimate package is designed specifically for this. We provide full end-to-end management, dedicated team leadership, and automated reporting so you can focus entirely on strategic growth."
-    },
-    {
-      q: "Do you offer custom BPO services if my specific operational needs aren't listed?",
-      a: "Yes. While Customer Support, Chat Support, Account Execution, and Cold Calling are our most requested services, we routinely build custom back-office and technical support solutions tailored to your unique workflows."
-    },
-    {
-      q: "How do you handle data security and client confidentiality?",
-      a: "We enforce enterprise-grade security protocols, comprehensive NDAs, role-based access control, secure network environments, and strict compliance with global data protection standards."
-    },
-    {
-      q: "What languages do your support and sales agents speak?",
-      a: "Our global talent pool provides fluent bilingual and multilingual support, primarily in English and Arabic, with capabilities for additional languages based on your target market requirements."
-    }
+    { q: "Will I be locked into a long-term contract?", a: "No. We believe in earning your business continually based on performance. We offer highly flexible monthly plans with ZERO contract lock-in, allowing you to scale your outsourced operations with complete freedom and minimal risk." },
+    { q: "How do you ensure the quality of your services, like Customer Support and Cold Calling?", a: "We employ dedicated QA Managers for every pod who randomly audit calls, chats, and tickets daily. We measure against agreed-upon SLAs and CSAT targets, providing you with transparent weekly and monthly BI reporting." },
+    { q: "Can you work with our existing software and tools?", a: "Yes, seamlessly. Our agents are trained to integrate directly into your existing CRM, VoIP, and helpdesk ecosystem (Salesforce, Zendesk, HubSpot, Intercom, RingCentral, etc.) usually within days of kickoff." },
+    { q: "What if I want a completely hands-off approach to my back office?", a: "Our Ultimate package is specifically designed for this. We provide dedicated Team Leads and QA managers who take over day-to-day oversight, delivering weekly KPI reports without requiring your active intervention." },
+    { q: "Do you offer custom BPO services if my specific operational needs aren't listed?", a: "Yes. While Customer Support, Chat Support, Account Execution, and Cold Calling are our most requested services, we routinely build custom back-office and technical support solutions tailored to your unique workflows." },
+    { q: "How do you handle data security and client confidentiality?", a: "Security is paramount. We operate under strict enterprise-grade NDAs, utilize monitored workstation networks, enforce endpoint security, and adhere strictly to global data compliance standards." },
+    { q: "What languages do your support and sales agents speak?", a: "Our teams are fully bilingual in English and Arabic, with additional language squads available upon request for multinational operations." }
   ];
 
   return (
@@ -1498,7 +1368,7 @@ const BpoPage = () => {
         ]}
       />
       
-      {}
+      {/* High-Conversion Capabilities */}
       <section className="py-14 sm:py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
@@ -1513,29 +1383,26 @@ const BpoPage = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto">
-          {mainOptions.map((opt, idx) => (
-            <div 
-              key={idx} 
-              className="bg-white dark:bg-slate-800/90 rounded-3xl p-5 sm:p-7 border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-md hover:border-[#1C4C96]/40 dark:hover:border-[#C2A74C]/40 transition-all duration-300 flex flex-col items-center text-center group"
-            >
-              <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center mb-4 text-[#1C4C96] dark:text-[#C2A74C] group-hover:bg-[#1C4C96] group-hover:text-white dark:group-hover:bg-[#C2A74C] dark:group-hover:text-slate-950 transition-all shadow-sm">
-                <opt.icon className="w-5 h-5 sm:w-6 sm:h-6" />
+          {mainOptions.map((opt, idx) => {
+            const Icon = opt.icon;
+            return (
+              <div 
+                key={idx}
+                className="bg-white dark:bg-slate-800/90 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm text-center hover:-translate-y-1.5 hover:shadow-lg transition-all duration-300 flex flex-col items-center justify-between"
+              >
+                <div className="w-14 h-14 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center mb-4 text-[#1C4C96] dark:text-[#C2A74C] shadow-sm border border-slate-100 dark:border-slate-800">
+                  <Icon className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-slate-900 dark:text-white text-base sm:text-lg mb-1">{opt.title}</h3>
+                <div className="text-base sm:text-xl font-extrabold text-[#1C4C96] dark:text-[#C2A74C] mb-1">{opt.metric}</div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">{opt.sub}</p>
               </div>
-              <h3 className="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white mb-1.5 leading-tight">
-                {opt.title}
-              </h3>
-              <div className="text-xs sm:text-sm font-bold text-[#1C4C96] dark:text-[#C2A74C] mb-1">
-                {opt.metric}
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                {opt.sub}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
-      {}
+      {/* Service Packages */}
       <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
@@ -1617,14 +1484,14 @@ const BpoPage = () => {
               </div>
 
               <div className="bg-slate-50 dark:bg-slate-900/60 py-3 px-6 text-center text-xs text-slate-600 dark:text-slate-400 font-semibold border-t border-slate-100 dark:border-slate-700/60 tracking-wide">
-                🛡️ {pkg.footerNote}
+                {pkg.footerNote}
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {}
+      {/* Split FAQ Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-16 sm:my-24">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-14 items-start">
           <div className="lg:col-span-4 lg:sticky lg:top-28 bg-white dark:bg-slate-800/90 backdrop-blur-sm p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
@@ -1758,7 +1625,6 @@ const ContactPage = () => {
           </form>
         </div>
 
-        {}
         <div className="lg:col-span-5 flex flex-col justify-between space-y-8">
           <div>
             <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">Direct Contact</h3>
@@ -1892,8 +1758,7 @@ export default function App() {
 
   return (
     <div className={`min-h-screen bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors duration-300 font-sans flex flex-col selection:bg-[#1C4C96] selection:text-white dark:selection:bg-[#C2A74C] dark:selection:text-slate-950 overflow-x-hidden`}>
-      
-      {}
+      {/* Header */}
       <header className="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/95 dark:bg-[#0B132B]/95 border-b border-slate-200 dark:border-slate-800 shadow-sm transition-colors duration-300">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20 sm:h-24">
@@ -1902,7 +1767,6 @@ export default function App() {
               <BrandLogo />
             </div>
 
-            {}
             <nav className="hidden xl:flex items-center gap-8 font-semibold">
               <button 
                 onClick={() => navigate('home')} 
@@ -1973,7 +1837,6 @@ export default function App() {
               </a>
             </nav>
 
-            {}
             <div className="flex xl:hidden items-center gap-2 sm:gap-3">
               <button 
                 onClick={toggleTheme} 
@@ -1993,7 +1856,7 @@ export default function App() {
           </div>
         </div>
 
-        {}
+        {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
           <div className="xl:hidden bg-white/95 dark:bg-[#0B132B]/95 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 absolute w-full transition-all duration-300 shadow-2xl z-50 max-h-[calc(100vh-80px)] overflow-y-auto">
             <div className="px-5 py-6 flex flex-col gap-2">
@@ -2055,12 +1918,12 @@ export default function App() {
         )}
       </header>
 
-      {}
+      {/* Main Content Area */}
       <main className="flex-grow">
         {renderPage()}
       </main>
 
-      {}
+      {/* Footer */}
       <footer className="bg-[#080E1F] text-white pt-14 pb-10 border-t-[5px] border-[#C2A74C] mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
