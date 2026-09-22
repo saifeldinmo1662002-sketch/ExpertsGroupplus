@@ -139,58 +139,81 @@
             <i data-lucide="moon" class="w-5 h-5 text-[#1C4C96] block dark:hidden"></i>
             <i data-lucide="sun" class="w-5 h-5 text-[#C2A74C] hidden dark:block"></i>
           </button>
-          <button onclick="toggleMobileMenu()" class="text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 p-2.5 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Toggle Navigation Menu">
+          <button onclick="toggleMobileMenu()" class="text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 p-2.5 rounded-full min-h-[44px] min-w-[44px] flex items-center justify-center" aria-label="Open Navigation Menu">
             <i data-lucide="menu" class="w-6 h-6" id="mobile-menu-icon"></i>
           </button>
         </div>
       </div>
     </div>
+  </header>
 
-    <!-- Mobile Drawer -->
-    <div id="mobile-nav-drawer" class="hidden xl:hidden bg-white/98 dark:bg-[#0B132B]/98 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 absolute w-full shadow-2xl z-50 max-h-[calc(100vh-80px)] overflow-y-auto">
-      <div class="px-5 py-6 flex flex-col gap-2">
-        <button onclick="navigateTo('home')" class="text-left px-5 py-3.5 rounded-xl text-base font-bold min-h-[48px] bg-[#1C4C96]/10 text-[#1C4C96] dark:bg-slate-800 dark:text-[#C2A74C]" id="mobile-link-home">
+  <!-- Mobile Drawer Dimming Backdrop (Outside of header to avoid backdrop-filter trapping) -->
+  <div id="mobile-menu-backdrop" onclick="closeMobileMenu()" class="fixed inset-0 w-full h-full bg-black/60 z-[90] hidden transition-opacity duration-300 backdrop-blur-sm"></div>
+
+  <!-- Mobile Slide-Out Side Drawer (Outside of header, full viewport height) -->
+  <div id="mobile-nav-drawer" class="fixed top-0 right-0 h-screen h-[100dvh] w-[85%] max-w-sm bg-white dark:bg-slate-900 z-[100] shadow-2xl border-l border-slate-200 dark:border-slate-800 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between overflow-y-auto">
+    <div>
+      <!-- Drawer Header with Close Button -->
+      <div class="p-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 sticky top-0 z-10">
+        <div class="flex items-center gap-2.5">
+          <svg class="w-8 h-8 flex-shrink-0" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="36" y="14" width="28" height="28" rx="7" transform="rotate(45 50 28)" fill="#C2A74D"/>
+            <rect x="36" y="58" width="28" height="28" rx="7" transform="rotate(45 50 72)" fill="#C2A74D"/>
+            <rect x="14" y="36" width="28" height="28" rx="7" transform="rotate(45 28 50)" fill="#154695"/>
+            <rect x="58" y="36" width="28" height="28" rx="7" transform="rotate(45 72 50)" fill="#154695"/>
+          </svg>
+          <span class="font-extrabold text-sm text-[#154695] dark:text-white uppercase tracking-wider">EXPERTS GROUP</span>
+        </div>
+        <button onclick="closeMobileMenu()" aria-label="Close navigation" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="px-5 py-4 flex flex-col gap-1.5">
+        <button onclick="navigateTo('home')" class="text-left px-4 py-3 rounded-xl text-sm font-bold min-h-[44px] bg-[#1C4C96]/10 text-[#1C4C96] dark:bg-slate-800 dark:text-[#C2A74C]" id="mobile-link-home">
           Home
         </button>
-        <button onclick="navigateTo('about')" class="text-left px-5 py-3.5 rounded-xl text-base font-bold min-h-[48px] text-slate-800 dark:text-slate-200" id="mobile-link-about">
+        <button onclick="navigateTo('about')" class="text-left px-4 py-3 rounded-xl text-sm font-bold min-h-[44px] text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60" id="mobile-link-about">
           About Us
         </button>
         
-        <div class="px-5 pt-3 pb-1 text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+        <div class="px-4 pt-3 pb-1 text-[11px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">
           Our Services
         </div>
-        <div class="grid grid-cols-1 gap-1.5 pl-2">
-          <button onclick="navigateTo('training')" class="text-left px-4 py-3 rounded-xl text-sm font-bold border-l-4 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 min-h-[44px]">
+        <div class="grid grid-cols-1 gap-1 pl-2">
+          <button onclick="navigateTo('training')" class="text-left px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border-l-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-[#1C4C96] dark:hover:border-[#C2A74C] hover:text-[#1C4C96] dark:hover:text-[#C2A74C]">
             Expert Training
           </button>
-          <button onclick="navigateTo('consultation')" class="text-left px-4 py-3 rounded-xl text-sm font-bold border-l-4 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 min-h-[44px]">
+          <button onclick="navigateTo('consultation')" class="text-left px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border-l-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-[#1C4C96] dark:hover:border-[#C2A74C] hover:text-[#1C4C96] dark:hover:text-[#C2A74C]">
             Expert Consultation
           </button>
-          <button onclick="navigateTo('operations')" class="text-left px-4 py-3 rounded-xl text-sm font-bold border-l-4 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 min-h-[44px]">
+          <button onclick="navigateTo('operations')" class="text-left px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border-l-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-[#1C4C96] dark:hover:border-[#C2A74C] hover:text-[#1C4C96] dark:hover:text-[#C2A74C]">
             Expert Operations
           </button>
-          <button onclick="navigateTo('bpo')" class="text-left px-4 py-3 rounded-xl text-sm font-bold border-l-4 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 min-h-[44px]">
+          <button onclick="navigateTo('bpo')" class="text-left px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-semibold border-l-2 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-[#1C4C96] dark:hover:border-[#C2A74C] hover:text-[#1C4C96] dark:hover:text-[#C2A74C]">
             Expert BPO
           </button>
         </div>
 
-        <button onclick="navigateTo('contact')" class="text-left px-5 py-3.5 mt-2 rounded-xl text-base font-bold min-h-[48px] text-slate-800 dark:text-slate-200" id="mobile-link-contact">
+        <button onclick="navigateTo('contact')" class="text-left px-4 py-3 mt-1 rounded-xl text-sm font-bold min-h-[44px] text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60" id="mobile-link-contact">
           Contact
         </button>
-        
-        <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
-          <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="w-full px-6 py-4 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-colors shadow-md text-center flex items-center justify-center gap-2 min-h-[48px]">
-            <span>Schedule a Call</span>
-            <i data-lucide="external-link" class="w-4 h-4"></i>
-          </a>
-          <a href="tel:+201044111646" class="w-full px-6 py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-center flex items-center justify-center gap-2 text-sm min-h-[44px]">
-            <i data-lucide="phone" class="w-4 h-4 text-[#C2A74C]"></i>
-            <span>+20 104 411 1646</span>
-          </a>
-        </div>
       </div>
     </div>
-  </header>
+
+    <!-- Drawer Footer CTAs -->
+    <div class="p-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 space-y-2.5 sticky bottom-0 z-10">
+      <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3zb9w_gavqu04nfboUT0cLYoHTIJoED4yWBNYW4GgRN6msObv9zF5NQBBFpavnPoQGP34fApJ3" target="_blank" rel="noopener noreferrer" class="w-full px-5 py-3 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-colors shadow-md text-center flex items-center justify-center gap-2 text-sm min-h-[44px]">
+        <span>Schedule a Call</span>
+        <i data-lucide="external-link" class="w-4 h-4"></i>
+      </a>
+      <a href="tel:+201044111646" class="w-full px-5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-center flex items-center justify-center gap-2 text-xs min-h-[40px]">
+        <i data-lucide="phone" class="w-3.5 h-3.5 text-[#C2A74C]"></i>
+        <span>+20 104 411 1646</span>
+      </a>
+    </div>
+  </div>
 
   <!-- Main Container -->
   <main class="flex-grow">
@@ -1574,7 +1597,7 @@
       }
 
       // Close mobile drawer & dropdowns
-      document.getElementById('mobile-nav-drawer').classList.add('hidden');
+      closeMobileMenu();
       document.getElementById('services-dropdown-menu').classList.add('hidden');
       document.getElementById('dropdown-chevron').classList.remove('rotate-180');
 
@@ -1619,9 +1642,38 @@
       chevron.classList.toggle('rotate-180');
     }
 
+    function openMobileMenu() {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      const backdrop = document.getElementById('mobile-menu-backdrop');
+      if (drawer) {
+        drawer.classList.remove('translate-x-full');
+      }
+      if (backdrop) {
+        backdrop.classList.remove('hidden');
+      }
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeMobileMenu() {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      const backdrop = document.getElementById('mobile-menu-backdrop');
+      if (drawer) {
+        drawer.classList.add('translate-x-full');
+      }
+      if (backdrop) {
+        backdrop.classList.add('hidden');
+      }
+      document.body.style.overflow = 'unset';
+    }
+
     function toggleMobileMenu() {
       const drawer = document.getElementById('mobile-nav-drawer');
-      drawer.classList.toggle('hidden');
+      if (drawer && drawer.classList.contains('translate-x-full')) {
+        openMobileMenu();
+      } else {
+        closeMobileMenu();
+      }
     }
 
     // Close dropdown on outside click
