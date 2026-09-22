@@ -19,6 +19,12 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
+  <!-- Search Engine & Social Media Sharing Previews (OpenGraph & Meta) -->
+  <meta name="description" content="EG-Experts Plus is your premier B2B partner for employee training, strategic business consultation, operational delegation, and high-accuracy BPO solutions.">
+  <meta property="og:title" content="Experts Group Plus | All-In-One Managed Service Provider">
+  <meta property="og:description" content="Scale operations, upskill workforce, and streamline processes with dedicated operational pods and zero contract lock-in.">
+  <meta property="og:type" content="website">
+
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -112,6 +118,17 @@
   </style>
 </head>
 <body class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-[#1C4C96] selection:text-white dark:selection:bg-[#C2A74C] dark:selection:text-slate-950 flex flex-col min-h-screen overflow-x-hidden">
+
+  <!-- Top Reading Scroll Progress Indicator (Minimal 2.5px accent line) -->
+  <div id="scroll-progress-bar" class="fixed top-0 left-0 h-[2.5px] bg-gradient-to-r from-[#1C4C96] via-[#3b82f6] to-[#C2A74C] z-[70] transition-all duration-75 w-0 pointer-events-none"></div>
+
+  <!-- Global Action Toast (Click-to-Copy & Feedback Alerts) -->
+  <div id="global-toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[110] transform -translate-y-16 opacity-0 pointer-events-none transition-all duration-300 ease-out">
+    <div class="px-4 py-2.5 rounded-2xl bg-slate-900/95 dark:bg-slate-800/95 text-white backdrop-blur-md border border-slate-700 shadow-2xl flex items-center gap-2.5 text-xs font-semibold">
+      <i data-lucide="check-circle-2" class="w-4 h-4 text-[#C2A74C] shrink-0"></i>
+      <span id="global-toast-msg">Copied to clipboard!</span>
+    </div>
+  </div>
 
   <header class="sticky top-0 z-50 w-full backdrop-blur-xl bg-white/95 dark:bg-[#0B132B]/95 border-b border-slate-200 dark:border-slate-800 shadow-sm">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -454,6 +471,67 @@
             <div class="mt-6 pt-4 border-t border-white/15 flex items-center gap-2 text-xs font-semibold text-[#C2A74C] uppercase tracking-wider">
               <span>Regional Leadership & Impact</span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How Partnership Works: 4-Step Enterprise Roadmap -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24">
+        <div class="text-center mb-10 sm:mb-14">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] font-semibold text-xs tracking-wider uppercase mb-3">
+            Engagement Model
+          </div>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">
+            How Partnership With EG-Experts Works
+          </h2>
+          <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+            From initial strategy audit to autonomous pod execution in four streamlined stages.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <!-- Step 1 -->
+          <div class="bg-white dark:bg-slate-800/90 p-6 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm relative group hover:-translate-y-1 transition-all duration-300">
+            <div class="w-10 h-10 rounded-xl bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] flex items-center justify-center font-black text-sm mb-4 border border-[#1C4C96]/20 dark:border-[#C2A74C]/30">
+              01
+            </div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">Discovery & Audit</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              We diagnose your departmental bottlenecks, current software expenses, and unit economics on Day 1.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-white dark:bg-slate-800/90 p-6 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm relative group hover:-translate-y-1 transition-all duration-300">
+            <div class="w-10 h-10 rounded-xl bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] flex items-center justify-center font-black text-sm mb-4 border border-[#1C4C96]/20 dark:border-[#C2A74C]/30">
+              02
+            </div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">SLA & Scope Blueprint</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Transparent deliverables, guaranteed response times, and monthly contracts with zero lock-in.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-white dark:bg-slate-800/90 p-6 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm relative group hover:-translate-y-1 transition-all duration-300">
+            <div class="w-10 h-10 rounded-xl bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] flex items-center justify-center font-black text-sm mb-4 border border-[#1C4C96]/20 dark:border-[#C2A74C]/30">
+              03
+            </div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">Rapid Pod Assembly</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Vetted specialists integrate straight into your Slack, Teams, and CRM within 1–3 business days.
+            </p>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="bg-white dark:bg-slate-800/90 p-6 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm relative group hover:-translate-y-1 transition-all duration-300">
+            <div class="w-10 h-10 rounded-xl bg-[#1C4C96]/10 dark:bg-[#C2A74C]/15 text-[#1C4C96] dark:text-[#C2A74C] flex items-center justify-center font-black text-sm mb-4 border border-[#1C4C96]/20 dark:border-[#C2A74C]/30">
+              04
+            </div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white mb-1.5">Managed KPI Oversight</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Dedicated QA managers audit daily tickets and report weekly BI dashboards without requiring your active intervention.
+            </p>
           </div>
         </div>
       </div>
@@ -910,23 +988,41 @@
           </p>
         </div>
 
-        <!-- Operations Category Filter Tabs -->
-        <div class="flex flex-wrap items-center justify-center gap-2 mb-10 max-w-4xl mx-auto">
-          <button onclick="filterOperations('all')" id="op-filter-all" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#1C4C96] text-white dark:bg-[#C2A74C] dark:text-slate-950 transition-all shadow-sm">
-            All Domains (12)
-          </button>
-          <button onclick="filterOperations('Marketing')" id="op-filter-marketing" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
-            Marketing & Growth
-          </button>
-          <button onclick="filterOperations('Creative')" id="op-filter-creative" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
-            Creative & Media
-          </button>
-          <button onclick="filterOperations('Tech')" id="op-filter-tech" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
-            Tech & Intelligence
-          </button>
-          <button onclick="filterOperations('Corporate')" id="op-filter-corporate" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
-            Corporate & Logistics
-          </button>
+        <!-- Operations Search & Filter Controls -->
+        <div class="max-w-4xl mx-auto mb-10 space-y-4">
+          <!-- Live Search Bar -->
+          <div class="relative max-w-md mx-auto">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+            <input 
+              id="op-search-input" 
+              type="text" 
+              oninput="handleOperationsSearch(this.value)" 
+              placeholder="Search pods (e.g. SEO, Video, Web, Logistics, Design)..." 
+              class="w-full pl-11 pr-10 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#1C4C96] dark:focus:ring-[#C2A74C] shadow-sm transition-all"
+            />
+            <button id="op-search-clear" onclick="clearOperationsSearch()" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" aria-label="Clear search">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Category Filter Tabs -->
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <button onclick="filterOperations('all')" id="op-filter-all" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#1C4C96] text-white dark:bg-[#C2A74C] dark:text-slate-950 transition-all shadow-sm">
+              All Domains (12)
+            </button>
+            <button onclick="filterOperations('Marketing')" id="op-filter-marketing" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+              Marketing & Growth
+            </button>
+            <button onclick="filterOperations('Creative')" id="op-filter-creative" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+              Creative & Media
+            </button>
+            <button onclick="filterOperations('Tech')" id="op-filter-tech" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+              Tech & Intelligence
+            </button>
+            <button onclick="filterOperations('Corporate')" id="op-filter-corporate" class="op-filter-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all">
+              Corporate & Logistics
+            </button>
+          </div>
         </div>
 
         <!-- 12-Card Grid -->
@@ -1248,7 +1344,12 @@
               </div>
               <div>
                 <h4 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">Email Us</h4>
-                <a href="mailto:info@eg-experts.com" class="text-[#1C4C96] dark:text-[#C2A74C] hover:underline font-medium text-sm mt-0.5 block">info@eg-experts.com</a>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <a href="mailto:info@eg-experts.com" class="text-[#1C4C96] dark:text-[#C2A74C] hover:underline font-medium text-sm">info@eg-experts.com</a>
+                  <button onclick="copyToClipboard('info@eg-experts.com')" class="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200" title="Copy email">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
                 <p class="text-xs text-slate-500 mt-0.5">For corporate inquiries and RFPs.</p>
               </div>
             </div>
@@ -1259,7 +1360,12 @@
               </div>
               <div>
                 <h4 class="font-bold text-slate-900 dark:text-white text-sm sm:text-base">Call Us</h4>
-                <a href="tel:+201044111646" class="text-[#1C4C96] dark:text-[#C2A74C] hover:underline font-medium text-sm mt-0.5 block">+20 104 411 1646</a>
+                <div class="flex items-center gap-2 mt-0.5">
+                  <a href="tel:+201044111646" class="text-[#1C4C96] dark:text-[#C2A74C] hover:underline font-medium text-sm">+20 104 411 1646</a>
+                  <button onclick="copyToClipboard('+20 104 411 1646')" class="p-1 rounded text-slate-400 hover:text-slate-700 dark:hover:text-slate-200" title="Copy phone">
+                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
                 <p class="text-xs text-slate-500 mt-0.5">Available Mon-Fri, 9am - 6pm (EET).</p>
               </div>
             </div>
@@ -1381,13 +1487,23 @@
         <div>
           <h4 class="text-sm sm:text-base font-bold text-white mb-4 uppercase tracking-wider">Contact Us</h4>
           <ul class="space-y-3 text-xs sm:text-sm text-slate-400">
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="mail" class="w-4 h-4 text-[#C2A74C] shrink-0"></i>
-              <a href="mailto:info@eg-experts.com" class="hover:text-white transition-colors truncate">info@eg-experts.com</a>
+            <li class="flex items-center justify-between gap-2.5">
+              <div class="flex items-center gap-2.5 truncate">
+                <i data-lucide="mail" class="w-4 h-4 text-[#C2A74C] shrink-0"></i>
+                <a href="mailto:info@eg-experts.com" class="hover:text-white transition-colors truncate">info@eg-experts.com</a>
+              </div>
+              <button onclick="copyToClipboard('info@eg-experts.com')" class="text-slate-500 hover:text-[#C2A74C] transition-colors p-1" title="Copy email">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              </button>
             </li>
-            <li class="flex items-center gap-2.5">
-              <i data-lucide="phone" class="w-4 h-4 text-[#C2A74C] shrink-0"></i>
-              <a href="tel:+201044111646" class="hover:text-white transition-colors">+20 104 411 1646</a>
+            <li class="flex items-center justify-between gap-2.5">
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="phone" class="w-4 h-4 text-[#C2A74C] shrink-0"></i>
+                <a href="tel:+201044111646" class="hover:text-white transition-colors">+20 104 411 1646</a>
+              </div>
+              <button onclick="copyToClipboard('+20 104 411 1646')" class="text-slate-500 hover:text-[#C2A74C] transition-colors p-1" title="Copy phone">
+                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              </button>
             </li>
             <li class="flex items-center gap-2.5">
               <i data-lucide="map-pin" class="w-4 h-4 text-[#C2A74C] shrink-0"></i>
@@ -1735,10 +1851,19 @@
       if (chevron) chevron.classList.remove('rotate-180');
     }
 
-    // Single Page Router
-    function navigateTo(pageId) {
+    // Single Page Router with Browser History & Deep Linking Support
+    function navigateTo(pageId, updateHistory = true) {
       closeMobileMenu();
       closeServicesDropdown();
+
+      // Normalize pageId
+      const validPages = ['home', 'about', 'training', 'consultation', 'operations', 'bpo', 'contact'];
+      if (!validPages.includes(pageId)) pageId = 'home';
+
+      // Update URL hash without forcing hard reload
+      if (updateHistory && window.location.hash !== `#${pageId}`) {
+        history.pushState(null, '', `#${pageId}`);
+      }
 
       // Hide all page views
       document.querySelectorAll('.page-view').forEach(view => {
@@ -1782,7 +1907,66 @@
       }
     }
 
+    // Click-to-Copy with Safe Fallback and Visual Toast Notification
+    function copyToClipboard(text, customMessage = "Copied to clipboard!") {
+      try {
+        const tempTextArea = document.createElement("textarea");
+        tempTextArea.value = text;
+        tempTextArea.style.position = "fixed";
+        tempTextArea.style.left = "-9999px";
+        document.body.appendChild(tempTextArea);
+        tempTextArea.focus();
+        tempTextArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempTextArea);
+        showGlobalToast(`${text} copied to clipboard!`);
+      } catch (err) {
+        showGlobalToast(text);
+      }
+    }
+
+    let toastTimeout = null;
+    function showGlobalToast(msg) {
+      const toast = document.getElementById('global-toast');
+      const toastMsg = document.getElementById('global-toast-msg');
+      if (!toast || !toastMsg) return;
+
+      toastMsg.textContent = msg;
+      toast.classList.remove('-translate-y-16', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('-translate-y-16', 'opacity-0', 'pointer-events-none');
+        toast.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+      }, 3000);
+      if (window.lucide) lucide.createIcons();
+    }
+
     let currentOpFilter = 'all';
+    let opSearchQuery = '';
+
+    function handleOperationsSearch(query) {
+      opSearchQuery = query.toLowerCase().trim();
+      const clearBtn = document.getElementById('op-search-clear');
+      if (clearBtn) {
+        if (opSearchQuery) {
+          clearBtn.classList.remove('hidden');
+        } else {
+          clearBtn.classList.add('hidden');
+        }
+      }
+      buildOperationsGrid();
+    }
+
+    function clearOperationsSearch() {
+      const searchInput = document.getElementById('op-search-input');
+      const clearBtn = document.getElementById('op-search-clear');
+      if (searchInput) searchInput.value = '';
+      if (clearBtn) clearBtn.classList.add('hidden');
+      opSearchQuery = '';
+      buildOperationsGrid();
+    }
 
     function filterOperations(category) {
       currentOpFilter = category;
@@ -1799,19 +1983,43 @@
       buildOperationsGrid();
     }
 
-    // Operations 12-Card Grid Builder with Filtering Support
+    // Operations 12-Card Grid Builder with Live Search & Filtering Support
     function buildOperationsGrid() {
       const grid = document.getElementById('operations-grid');
       if (!grid) return;
 
       const filtered = operationsData.filter(op => {
-        if (currentOpFilter === 'all') return true;
-        if (currentOpFilter === 'Marketing') return op.tag === 'Marketing' || op.tag === 'Growth';
-        if (currentOpFilter === 'Creative') return op.tag === 'Creative' || op.tag === 'Media';
-        if (currentOpFilter === 'Tech') return op.tag === 'Tech' || op.tag === 'Intelligence';
-        if (currentOpFilter === 'Corporate') return op.tag === 'Corporate' || op.tag === 'HR' || op.tag === 'Logistics';
-        return true;
+        // Category filter
+        let matchesCategory = true;
+        if (currentOpFilter === 'Marketing') matchesCategory = op.tag === 'Marketing' || op.tag === 'Growth';
+        else if (currentOpFilter === 'Creative') matchesCategory = op.tag === 'Creative' || op.tag === 'Media';
+        else if (currentOpFilter === 'Tech') matchesCategory = op.tag === 'Tech' || op.tag === 'Intelligence';
+        else if (currentOpFilter === 'Corporate') matchesCategory = op.tag === 'Corporate' || op.tag === 'HR' || op.tag === 'Logistics';
+
+        // Search query filter
+        let matchesSearch = true;
+        if (opSearchQuery) {
+          const haystack = `${op.title} ${op.tag} ${op.desc} ${op.detailedDesc} ${op.benefits.join(' ')}`.toLowerCase();
+          matchesSearch = haystack.includes(opSearchQuery);
+        }
+
+        return matchesCategory && matchesSearch;
       });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center bg-white dark:bg-slate-800/60 rounded-3xl border border-dashed border-slate-300 dark:border-slate-700 p-8">
+            <i data-lucide="search-x" class="w-10 h-10 mx-auto text-slate-400 mb-3"></i>
+            <h4 class="text-base font-bold text-slate-800 dark:text-slate-200 mb-1">No services match "${opSearchQuery}"</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Try searching for keywords like "SEO", "Video", "Logistics", or reset filters.</p>
+            <button onclick="clearOperationsSearch(); filterOperations('all')" class="px-4 py-2 rounded-xl text-xs font-bold bg-[#1C4C96] text-white hover:bg-[#153a75] transition-all">
+              Reset Filters
+            </button>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
 
       grid.innerHTML = filtered.map((op) => {
         const actualIndex = operationsData.findIndex(item => item.title === op.title);
@@ -1846,11 +2054,21 @@
       }
     }
 
-    // Floating Quick-Action Bar Scroll Listener
+    // Scroll Progress Bar and Floating Quick-Action Bar Scroll Listener
     window.addEventListener('scroll', () => {
+      // Reading Progress Bar
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrollPercent = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+      const progressBar = document.getElementById('scroll-progress-bar');
+      if (progressBar) {
+        progressBar.style.width = `${scrollPercent}%`;
+      }
+
+      // Floating Call Bar
       const floatingBar = document.getElementById('floating-cta-bar');
       if (!floatingBar) return;
-      if (window.scrollY > 400) {
+      if (scrollTop > 400) {
         floatingBar.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
         floatingBar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
       } else {
@@ -2224,13 +2442,14 @@
       const msg = document.getElementById('contact-success-msg');
       if (msg) msg.classList.remove('hidden');
       e.target.reset();
+      showGlobalToast("Thank you for reaching out! We'll reply within 24 hours.");
       setTimeout(() => {
         if (msg) msg.classList.add('hidden');
       }, 5000);
       lucide.createIcons();
     }
 
-    // Initialize Page Content on Load
+    // Initialize Page Content on Load with Hash-based Router
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
       const yearEl = document.getElementById('current-year');
@@ -2247,6 +2466,21 @@
       renderConsultationSlide();
       setupSliderInteractions();
       startSliderTimer();
+
+      // Check initial URL Hash for deep-linking (e.g. #operations, #bpo, #about)
+      const initialHash = window.location.hash.replace('#', '');
+      const validPages = ['home', 'about', 'training', 'consultation', 'operations', 'bpo', 'contact'];
+      if (initialHash && validPages.includes(initialHash)) {
+        navigateTo(initialHash, false);
+      } else {
+        navigateTo('home', false);
+      }
+
+      // Listen for browser Back/Forward navigation
+      window.addEventListener('popstate', () => {
+        const hash = window.location.hash.replace('#', '') || 'home';
+        navigateTo(hash, false);
+      });
 
       lucide.createIcons();
     });
