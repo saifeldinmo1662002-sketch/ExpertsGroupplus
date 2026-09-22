@@ -59,6 +59,56 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* Carousel Swoosh Slide Animations */
+    @keyframes swooshNext {
+      0% {
+        opacity: 0;
+        transform: translateX(50px) scale(0.97);
+        filter: blur(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0px);
+      }
+    }
+
+    @keyframes swooshPrev {
+      0% {
+        opacity: 0;
+        transform: translateX(-50px) scale(0.97);
+        filter: blur(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+        filter: blur(0px);
+      }
+    }
+
+    @keyframes categoryFade {
+      0% {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-swoosh-next {
+      animation: swooshNext 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-swoosh-prev {
+      animation: swooshPrev 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-category-fade {
+      animation: categoryFade 0.28s ease-out forwards;
+    }
   </style>
 </head>
 <body class="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans selection:bg-[#1C4C96] selection:text-white dark:selection:bg-[#C2A74C] dark:selection:text-slate-950 flex flex-col min-h-screen overflow-x-hidden">
@@ -75,11 +125,11 @@
             <rect x="14" y="36" width="28" height="28" rx="7" transform="rotate(45 28 50)" fill="#154695"/>
             <rect x="58" y="36" width="28" height="28" rx="7" transform="rotate(45 72 50)" fill="#154695"/>
           </svg>
-          <div class="flex flex-col uppercase font-black leading-[0.82] tracking-tight">
-            <span class="text-[#154695] dark:text-white text-lg sm:text-2xl">EXPERTS</span>
-            <div class="flex items-baseline -mt-0.5 sm:-mt-1">
-              <span class="text-[#154695] dark:text-white text-lg sm:text-2xl">GROUP</span>
-              <span class="text-[#C2A74D] text-[9px] sm:text-[11px] ml-1 font-extrabold tracking-wider">PLUS</span>
+          <div class="flex flex-col uppercase font-black tracking-tight select-none">
+            <span class="text-[#154695] dark:text-white text-lg sm:text-2xl leading-none">EXPERTS</span>
+            <div class="flex items-baseline" style="margin-top: -0.22em;">
+              <span class="text-[#154695] dark:text-white text-lg sm:text-2xl leading-none">GROUP</span>
+              <span class="text-[#C2A74D] text-[9px] sm:text-[11px] ml-1 font-extrabold tracking-wider leading-none">PLUS</span>
             </div>
           </div>
         </a>
@@ -162,7 +212,13 @@
             <rect x="14" y="36" width="28" height="28" rx="7" transform="rotate(45 28 50)" fill="#154695"/>
             <rect x="58" y="36" width="28" height="28" rx="7" transform="rotate(45 72 50)" fill="#154695"/>
           </svg>
-          <span class="font-extrabold text-sm text-[#154695] dark:text-white uppercase tracking-wider">EXPERTS GROUP</span>
+          <div class="flex flex-col uppercase font-black tracking-tight select-none">
+            <span class="text-[#154695] dark:text-white text-sm leading-none">EXPERTS</span>
+            <div class="flex items-baseline" style="margin-top: -0.22em;">
+              <span class="text-[#154695] dark:text-white text-sm leading-none">GROUP</span>
+              <span class="text-[#C2A74D] text-[8px] ml-0.5 font-extrabold tracking-wider leading-none">PLUS</span>
+            </div>
+          </div>
         </div>
         <button onclick="closeMobileMenu()" aria-label="Close navigation" class="p-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
           <i data-lucide="x" class="w-5 h-5"></i>
@@ -707,7 +763,7 @@
         </div>
 
         <!-- Slider Card with Touch Events -->
-        <div id="consultation-slider-card" class="max-w-4xl mx-auto relative bg-white dark:bg-slate-800/90 rounded-3xl border border-slate-200 dark:border-slate-700/80 p-6 sm:p-12 shadow-lg transition-all select-none touch-pan-y">
+        <div id="consultation-slider-card" class="max-w-4xl mx-auto relative bg-white dark:bg-slate-800/90 rounded-3xl border border-slate-200 dark:border-slate-700/80 p-6 sm:p-12 shadow-lg transition-all select-none touch-pan-y overflow-hidden">
           <div class="flex items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100 dark:border-slate-700/70">
             <span id="slider-category" class="text-[11px] sm:text-xs font-bold tracking-widest uppercase text-[#1C4C96] dark:text-[#C2A74C]">
               Finance & Margin Expansion
@@ -722,13 +778,15 @@
             </div>
           </div>
 
-          <div class="min-h-[120px] sm:min-h-[140px] flex flex-col justify-center text-center px-2 sm:px-10">
-            <h3 id="slider-title" class="text-xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
-              Financial & Unit Economics Strategy
-            </h3>
-            <p id="slider-desc" class="text-slate-600 dark:text-slate-300 text-xs sm:text-base leading-relaxed max-w-2xl mx-auto">
-              Build 12-to-36 month cash flow models, optimize pricing structures, and improve unit margins to ensure long-term financial health.
-            </p>
+          <div class="overflow-hidden py-1">
+            <div id="slider-content" class="min-h-[120px] sm:min-h-[140px] flex flex-col justify-center text-center px-2 sm:px-10">
+              <h3 id="slider-title" class="text-xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white tracking-tight mb-3">
+                Financial & Unit Economics Strategy
+              </h3>
+              <p id="slider-desc" class="text-slate-600 dark:text-slate-300 text-xs sm:text-base leading-relaxed max-w-2xl mx-auto">
+                Build 12-to-36 month cash flow models, optimize pricing structures, and improve unit margins to ensure long-term financial health.
+              </p>
+            </div>
           </div>
 
           <div class="flex flex-col sm:flex-row items-center justify-between gap-5 mt-8 sm:mt-12 pt-6 border-t border-slate-100 dark:border-slate-700/70">
@@ -1260,18 +1318,18 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
         <div class="sm:col-span-2">
-          <div class="flex items-center gap-3 mb-4">
+          <div class="flex items-center gap-3 mb-4 select-none">
             <svg class="w-9 h-9 sm:w-11 sm:h-11 flex-shrink-0" viewBox="0 0 100 100" fill="none">
               <rect x="36" y="14" width="28" height="28" rx="7" transform="rotate(45 50 28)" fill="#C2A74D"/>
               <rect x="36" y="58" width="28" height="28" rx="7" transform="rotate(45 50 72)" fill="#C2A74D"/>
-              <rect x="14" y="36" width="28" height="28" rx="7" transform="rotate(45 28 50)" fill="#2563EB"/>
-              <rect x="58" y="36" width="28" height="28" rx="7" transform="rotate(45 72 50)" fill="#2563EB"/>
+              <rect x="14" y="36" width="28" height="28" rx="7" transform="rotate(45 28 50)" fill="#154695"/>
+              <rect x="58" y="36" width="28" height="28" rx="7" transform="rotate(45 72 50)" fill="#154695"/>
             </svg>
-            <div class="flex flex-col uppercase font-black leading-[0.82] tracking-tight">
-              <span class="text-white text-lg sm:text-2xl">EXPERTS</span>
-              <div class="flex items-baseline -mt-0.5 sm:-mt-1">
-                <span class="text-white text-lg sm:text-2xl">GROUP</span>
-                <span class="text-[#C2A74D] text-[9px] sm:text-[11px] ml-1 font-extrabold tracking-wider">PLUS</span>
+            <div class="flex flex-col uppercase font-black tracking-tight select-none">
+              <span class="text-white text-lg sm:text-2xl leading-none">EXPERTS</span>
+              <div class="flex items-baseline" style="margin-top: -0.22em;">
+                <span class="text-white text-lg sm:text-2xl leading-none">GROUP</span>
+                <span class="text-[#C2A74D] text-[9px] sm:text-[11px] ml-1 font-extrabold tracking-wider leading-none">PLUS</span>
               </div>
             </div>
           </div>
@@ -1583,130 +1641,218 @@
       { q: "What languages do your support and sales agents speak?", a: "Our teams are fully bilingual in English and Arabic, with additional language squads available upon request for multinational operations." }
     ];
 
-    // State
-    let currentSlide = 0;
-    let isSliderPaused = false;
-    let sliderTimer = null;
-    let touchStartX = 0;
-    let touchEndX = 0;
-    function navigateTo(pageId) {
-      document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
-      const target = document.getElementById('view-' + pageId);
-      if (target) {
-        target.classList.remove('hidden');
-      }
-
-      // Close mobile drawer & dropdowns
-      closeMobileMenu();
-      document.getElementById('services-dropdown-menu').classList.add('hidden');
-      document.getElementById('dropdown-chevron').classList.remove('rotate-180');
-
-      // Update active nav styles
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('text-[#1C4C96]', 'dark:text-[#C2A74C]', 'font-bold');
-        btn.classList.add('text-slate-600', 'dark:text-slate-300');
-      });
-      const activeBtn = document.getElementById('nav-link-' + pageId);
-      if (activeBtn) {
-        activeBtn.classList.add('text-[#1C4C96]', 'dark:text-[#C2A74C]', 'font-bold');
-        activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
-      }
-
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-      // Refresh icons
-      setTimeout(() => { lucide.createIcons(); }, 50);
-    }
-
-    function toggleTheme() {
-      const isDark = document.documentElement.classList.toggle('dark');
-      try {
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      } catch (e) {}
-    }
-
+    // Theme Management
     function initTheme() {
       const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
       } else {
         document.documentElement.classList.remove('dark');
       }
     }
 
-    function toggleServicesDropdown() {
-      const menu = document.getElementById('services-dropdown-menu');
-      const chevron = document.getElementById('dropdown-chevron');
-      menu.classList.toggle('hidden');
-      chevron.classList.toggle('rotate-180');
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
     }
 
-    function openMobileMenu() {
-      const drawer = document.getElementById('mobile-nav-drawer');
+    // Mobile Drawer Navigation
+    function toggleMobileMenu() {
       const backdrop = document.getElementById('mobile-menu-backdrop');
-      if (drawer) {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      if (!drawer) return;
+      const isOpen = !drawer.classList.contains('translate-x-full');
+      if (isOpen) {
+        closeMobileMenu();
+      } else {
+        if (backdrop) backdrop.classList.remove('hidden');
         drawer.classList.remove('translate-x-full');
+        document.body.style.overflow = 'hidden';
       }
-      if (backdrop) {
-        backdrop.classList.remove('hidden');
-      }
-      document.body.style.overflow = 'hidden';
-      lucide.createIcons();
     }
 
     function closeMobileMenu() {
-      const drawer = document.getElementById('mobile-nav-drawer');
       const backdrop = document.getElementById('mobile-menu-backdrop');
-      if (drawer) {
-        drawer.classList.add('translate-x-full');
-      }
-      if (backdrop) {
-        backdrop.classList.add('hidden');
-      }
-      document.body.style.overflow = 'unset';
-    }
-
-    function toggleMobileMenu() {
       const drawer = document.getElementById('mobile-nav-drawer');
-      if (drawer && drawer.classList.contains('translate-x-full')) {
-        openMobileMenu();
+      if (backdrop) backdrop.classList.add('hidden');
+      if (drawer) drawer.classList.add('translate-x-full');
+      document.body.style.overflow = '';
+    }
+
+    // Desktop Services Dropdown
+    function toggleServicesDropdown() {
+      const menu = document.getElementById('services-dropdown-menu');
+      const chevron = document.getElementById('dropdown-chevron');
+      if (!menu) return;
+      const isClosed = menu.classList.contains('hidden');
+      if (isClosed) {
+        menu.classList.remove('hidden');
+        if (chevron) chevron.classList.add('rotate-180');
       } else {
-        closeMobileMenu();
+        menu.classList.add('hidden');
+        if (chevron) chevron.classList.remove('rotate-180');
       }
     }
 
-    // Close dropdown on outside click
-    document.addEventListener('click', (e) => {
-      const container = document.getElementById('services-dropdown-container');
-      if (container && !container.contains(e.target)) {
-        document.getElementById('services-dropdown-menu').classList.add('hidden');
-        document.getElementById('dropdown-chevron').classList.remove('rotate-180');
+    function closeServicesDropdown() {
+      const menu = document.getElementById('services-dropdown-menu');
+      const chevron = document.getElementById('dropdown-chevron');
+      if (menu) menu.classList.add('hidden');
+      if (chevron) chevron.classList.remove('rotate-180');
+    }
+
+    // Single Page Router
+    function navigateTo(pageId) {
+      closeMobileMenu();
+      closeServicesDropdown();
+
+      // Hide all page views
+      document.querySelectorAll('.page-view').forEach(view => {
+        view.classList.add('hidden');
+      });
+
+      // Show target page view
+      const targetView = document.getElementById(`view-${pageId}`);
+      if (targetView) {
+        targetView.classList.remove('hidden');
       }
-    });
 
-    // Build Service Heroes
-    function buildServiceHeroes() {
-      document.querySelectorAll('.service-hero-wrapper').forEach(wrapper => {
-        const crumb = wrapper.getAttribute('data-crumb');
-        const title = wrapper.getAttribute('data-title');
-        const subtitle = wrapper.getAttribute('data-subtitle');
-        const b1Icon = wrapper.getAttribute('data-b1-icon');
-        const b1Label = wrapper.getAttribute('data-b1-label');
-        const b1Value = wrapper.getAttribute('data-b1-value');
-        const b2Icon = wrapper.getAttribute('data-b2-icon');
-        const b2Label = wrapper.getAttribute('data-b2-label');
-        const b2Value = wrapper.getAttribute('data-b2-value');
-
-        const titleWords = title.split(' ').map((word) => {
-          if (word.toLowerCase() === 'expert') {
-            return `<span class="text-transparent bg-clip-text bg-gradient-to-r from-[#1C4C96] to-[#3b82f6] dark:from-[#C2A74C] dark:to-[#fef08a] mr-2 sm:mr-3">${word}</span>`;
+      // Update desktop navigation button states
+      const navLinks = ['home', 'about', 'contact'];
+      navLinks.forEach(id => {
+        const link = document.getElementById(`nav-link-${id}`);
+        if (link) {
+          if (id === pageId) {
+            link.className = 'nav-btn transition-colors px-2 py-1 rounded-md text-sm text-[#1C4C96] dark:text-[#C2A74C] font-bold';
+          } else {
+            link.className = 'nav-btn transition-colors px-2 py-1 rounded-md text-sm text-slate-600 hover:text-[#1C4C96] dark:text-slate-300 dark:hover:text-[#C2A74C]';
           }
-          return `<span class="mr-2 sm:mr-3">${word}</span>`;
-        }).join('');
+        }
+      });
 
-        wrapper.innerHTML = `
-          <div class="relative bg-slate-50 dark:bg-[#0B132B] overflow-hidden pt-16 pb-14 sm:pt-24 sm:pb-20 lg:pt-28 lg:pb-24 border-b border-slate-200 dark:border-slate-800/80">
+      // Update mobile links styling
+      navLinks.forEach(id => {
+        const mLink = document.getElementById(`mobile-link-${id}`);
+        if (mLink) {
+          if (id === pageId) {
+            mLink.className = 'text-left px-4 py-3 rounded-xl text-sm font-bold min-h-[44px] bg-[#1C4C96]/10 text-[#1C4C96] dark:bg-slate-800 dark:text-[#C2A74C]';
+          } else {
+            mLink.className = 'text-left px-4 py-3 rounded-xl text-sm font-bold min-h-[44px] text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800/60';
+          }
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    // Operations 12-Card Grid Builder
+    function buildOperationsGrid() {
+      const grid = document.getElementById('operations-grid');
+      if (!grid) return;
+
+      grid.innerHTML = operationsData.map((op, idx) => `
+        <div onclick="openOperationsModal(${idx})" class="bg-white dark:bg-slate-800/90 p-6 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:-translate-y-1.5 hover:border-[#1C4C96]/50 dark:hover:border-[#C2A74C]/50 transition-all duration-300 flex flex-col justify-between group cursor-pointer">
+          <div>
+            <div class="flex items-center justify-between mb-5">
+              <div class="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center text-[#1C4C96] dark:text-[#C2A74C] group-hover:bg-[#1C4C96] dark:group-hover:bg-[#C2A74C] group-hover:text-white dark:group-hover:text-slate-950 transition-all shadow-sm border border-slate-100 dark:border-slate-800">
+                <i data-lucide="${op.icon}" class="w-6 h-6"></i>
+              </div>
+              <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700/70 text-slate-600 dark:text-slate-300">
+                ${op.tag}
+              </span>
+            </div>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C] transition-colors">
+              ${op.title}
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+              ${op.desc}
+            </p>
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C]">
+            <span>View Details</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Operations Modal Controllers
+    function openOperationsModal(index) {
+      const op = operationsData[index];
+      if (!op) return;
+
+      const modal = document.getElementById('operations-modal');
+      const iconContainer = document.getElementById('modal-icon-container');
+      const tagEl = document.getElementById('modal-tag');
+      const titleEl = document.getElementById('modal-title');
+      const descEl = document.getElementById('modal-desc');
+      const benefitsContainer = document.getElementById('modal-benefits');
+      const advantageEl = document.getElementById('modal-advantage');
+      const ctaBtn = document.getElementById('modal-cta-btn');
+
+      if (iconContainer) iconContainer.innerHTML = `<i data-lucide="${op.icon}" class="w-6 h-6"></i>`;
+      if (tagEl) tagEl.textContent = op.tag;
+      if (titleEl) titleEl.textContent = op.title;
+      if (descEl) descEl.textContent = op.detailedDesc;
+      if (advantageEl) advantageEl.textContent = op.advantage;
+      if (ctaBtn) {
+        ctaBtn.innerHTML = `<span>Schedule a Call for ${op.title}</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+      }
+
+      if (benefitsContainer) {
+        benefitsContainer.innerHTML = op.benefits.map(b => `
+          <div class="flex items-start gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
+            <span class="leading-snug">${b}</span>
+          </div>
+        `).join('');
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      }
+
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    function closeOperationsModal() {
+      const modal = document.getElementById('operations-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+    }
+
+    // Dynamic Service Hero Generator
+    function buildServiceHeroes() {
+      const heroWrappers = document.querySelectorAll('.service-hero-wrapper');
+      heroWrappers.forEach(el => {
+        const crumb = el.dataset.crumb || '';
+        const title = el.dataset.title || '';
+        const subtitle = el.dataset.subtitle || '';
+        const b1Icon = el.dataset.b1Icon || 'check';
+        const b1Label = el.dataset.b1Label || '';
+        const b1Value = el.dataset.b1Value || '';
+        const b2Icon = el.dataset.b2Icon || 'check';
+        const b2Label = el.dataset.b2Label || '';
+        const b2Value = el.dataset.b2Value || '';
+
+        const crumbs = crumb.split('/').map(c => c.trim()).filter(Boolean);
+        const crumbsHtml = crumbs.map((c, i) => `
+          <span class="${i === crumbs.length - 1 ? 'text-[#1C4C96] dark:text-[#C2A74C]' : ''}">${c}</span>
+          ${i < crumbs.length - 1 ? '<i data-lucide="chevron-right" class="w-3.5 h-3.5 shrink-0 opacity-60"></i>' : ''}
+        `).join('');
+
+        el.innerHTML = `
+          <div class="relative bg-slate-50 dark:bg-[#0B132B] overflow-hidden pt-16 pb-14 sm:pt-24 sm:pb-20 lg:pt-28 lg:pb-24 border-b border-slate-200 dark:border-slate-800/80 transition-colors">
             <div class="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:20px_20px] sm:bg-[size:28px_28px] opacity-60 dark:opacity-100"></div>
             <div class="absolute top-0 right-0 w-72 sm:w-[500px] h-72 sm:h-[500px] bg-[#1C4C96]/10 dark:bg-[#1C4C96]/25 rounded-full blur-[80px] sm:blur-[120px] -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
             <div class="absolute bottom-0 left-0 w-64 sm:w-[450px] h-64 sm:h-[450px] bg-[#C2A74C]/10 dark:bg-[#C2A74C]/15 rounded-full blur-[70px] sm:blur-[100px] translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
@@ -1715,12 +1861,10 @@
               <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                 <div class="lg:col-span-7">
                   <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4 sm:mb-6 uppercase tracking-wider">
-                    <span>Home</span>
-                    <i data-lucide="chevron-right" class="w-3.5 h-3.5 opacity-60"></i>
-                    <span class="text-[#1C4C96] dark:text-[#C2A74C]">${crumb}</span>
+                    ${crumbsHtml}
                   </div>
                   <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white mb-4 sm:mb-6 leading-[1.15] tracking-tight">
-                    ${titleWords}
+                    ${title}
                   </h1>
                   <p class="text-sm sm:text-base lg:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
                     ${subtitle}
@@ -1729,7 +1873,7 @@
 
                 <div class="lg:col-span-5 flex justify-center lg:justify-end">
                   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 sm:gap-4 w-full max-w-md">
-                    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 rounded-2xl shadow-sm hover:shadow-md flex items-center gap-4 transition-all duration-300">
                       <div class="w-11 h-11 sm:w-12 sm:h-12 bg-slate-100 dark:bg-slate-900/90 rounded-xl flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[#1C4C96] dark:text-[#C2A74C]">
                         <i data-lucide="${b1Icon}" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                       </div>
@@ -1738,8 +1882,7 @@
                         <div class="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">${b1Value}</div>
                       </div>
                     </div>
-
-                    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 rounded-2xl shadow-sm flex items-center gap-4">
+                    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-700/80 p-4 sm:p-5 rounded-2xl shadow-sm hover:shadow-md flex items-center gap-4 transition-all duration-300">
                       <div class="w-11 h-11 sm:w-12 sm:h-12 bg-slate-100 dark:bg-slate-900/90 rounded-xl flex items-center justify-center shrink-0 border border-slate-200 dark:border-slate-800 text-[#1C4C96] dark:text-[#C2A74C]">
                         <i data-lucide="${b2Icon}" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                       </div>
@@ -1757,52 +1900,62 @@
       });
     }
 
-    // Build ScheduleCallCTA
+    // Schedule a Call Banner Injector
     function buildScheduleCTA() {
-      const html = `
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-14 sm:my-20">
-          <div class="relative rounded-3xl overflow-hidden bg-gradient-to-br sm:bg-gradient-to-r from-[#1C4C96] via-[#163e7c] to-[#0b1e3f] p-7 sm:p-12 md:p-14 text-white shadow-xl border border-blue-400/20">
-            <div class="absolute top-0 right-0 w-80 h-80 bg-[#C2A74C]/15 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
-            <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 text-center md:text-left">
-              <div class="max-w-2xl">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[#C2A74C] font-semibold text-xs uppercase tracking-wider mb-3 border border-white/10">
-                  <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-                  Let's Collaborate
+      const containers = document.querySelectorAll('.schedule-cta-container');
+      containers.forEach(container => {
+        container.innerHTML = `
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-14 sm:my-20">
+            <div class="relative rounded-3xl overflow-hidden bg-gradient-to-br sm:bg-gradient-to-r from-[#1C4C96] via-[#163e7c] to-[#0b1e3f] p-7 sm:p-12 md:p-14 text-white shadow-xl border border-blue-400/20">
+              <div class="absolute top-0 right-0 w-80 h-80 bg-[#C2A74C]/15 rounded-full blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+              <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 text-center md:text-left">
+                <div class="max-w-2xl">
+                  <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-[#C2A74C] font-semibold text-xs uppercase tracking-wider mb-3 border border-white/10">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                    <span>Let's Collaborate</span>
+                  </div>
+                  <h3 class="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-2 sm:mb-3">
+                    Ready to Scale Your Enterprise Operations?
+                  </h3>
+                  <p class="text-blue-100 text-xs sm:text-sm md:text-base leading-relaxed">
+                    Schedule a call with our senior leadership team to map out a customized operational roadmap.
+                  </p>
                 </div>
-                <h3 class="text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-2 sm:mb-3">
-                  Ready to Supercharge Your Operations?
-                </h3>
-                <p class="text-blue-100 text-xs sm:text-sm md:text-base leading-relaxed">
-                  Schedule a call with our senior leadership team to discover how EG-Experts can streamline your business.
-                </p>
+                <a href="${CALENDAR_LINK}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-4 rounded-xl bg-[#C2A74C] hover:bg-[#d8be5e] text-slate-950 font-bold transition-all duration-300 shadow-lg shadow-black/20 group text-sm sm:text-base min-h-[48px]">
+                  <span>Schedule a Call</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform"></i>
+                </a>
               </div>
-              <a href="${CALENDAR_LINK}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto shrink-0 inline-flex items-center justify-center gap-2 px-7 py-3.5 sm:py-4 rounded-xl bg-[#C2A74C] hover:bg-[#d8be5e] text-slate-950 font-bold transition-all shadow-lg text-sm sm:text-base min-h-[48px] group">
-                <span>Schedule a Call</span>
-                <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform"></i>
-              </a>
             </div>
           </div>
-        </div>
-      `;
-      document.querySelectorAll('.schedule-cta-container').forEach(el => el.innerHTML = html);
+        `;
+      });
     }
-    // Build Split FAQ Sections
-    function buildSplitFAQ(containerClass, faqs, subtitle) {
-      const itemsHtml = faqs.map((faq, idx) => `
-        <div class="faq-card bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm overflow-hidden" data-idx="${idx}">
-          <button onclick="toggleFAQ(this)" class="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between focus:outline-none min-h-[52px]">
-            <span class="faq-question font-bold text-sm sm:text-base pr-3 text-slate-900 dark:text-white">${faq.q}</span>
-            <div class="faq-icon-box w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300">
-              <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300"></i>
+
+    // Split FAQ Component Builder
+    function buildSplitFAQ(selector, faqs, subtitle) {
+      const container = document.querySelector(selector);
+      if (!container) return;
+
+      const faqsHtml = faqs.map((f, i) => `
+        <div class="faq-item bg-white dark:bg-slate-800/90 rounded-2xl border border-slate-200 dark:border-slate-700/80 shadow-sm overflow-hidden transition-all duration-200" data-idx="${i}">
+          <button onclick="toggleFaqAccordion(this)" class="w-full text-left px-5 sm:px-6 py-4 sm:py-5 flex items-center justify-between focus:outline-none min-h-[52px]">
+            <span class="faq-question font-bold text-sm sm:text-base pr-3 transition-colors ${i === 0 ? 'text-[#1C4C96] dark:text-[#C2A74C]' : 'text-slate-900 dark:text-white'}">
+              ${f.q}
+            </span>
+            <div class="faq-chevron-box w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${i === 0 ? 'bg-[#1C4C96] text-white dark:bg-[#C2A74C] dark:text-slate-950' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300'}">
+              <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300 ${i === 0 ? 'rotate-180' : ''}"></i>
             </div>
           </button>
-          <div class="faq-answer hidden px-5 sm:px-6 pb-5 pt-1 text-slate-600 dark:text-slate-300 leading-relaxed text-xs sm:text-sm border-t border-slate-100 dark:border-slate-700/60">
-            ${faq.a}
+          <div class="faq-answer overflow-hidden transition-all duration-300 ease-in-out ${i === 0 ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}">
+            <p class="px-5 sm:px-6 pb-5 pt-1 text-slate-600 dark:text-slate-300 leading-relaxed text-xs sm:text-sm border-t border-slate-100 dark:border-slate-700/60">
+              ${f.a}
+            </p>
           </div>
         </div>
       `).join('');
 
-      const html = `
+      container.innerHTML = `
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 my-16 sm:my-24">
           <div class="grid lg:grid-cols-12 gap-8 lg:gap-14 items-start">
             <div class="lg:col-span-4 lg:sticky lg:top-28 bg-white dark:bg-slate-800/90 backdrop-blur-sm p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm">
@@ -1815,134 +1968,103 @@
               <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mb-6 leading-relaxed">
                 ${subtitle}
               </p>
-              <a href="${CALENDAR_LINK}" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-all shadow-md text-xs sm:text-sm group min-h-[44px]">
+              <a href="${CALENDAR_LINK}" target="_blank" rel="noopener noreferrer" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-[#1C4C96] hover:bg-[#153a75] text-white font-bold transition-all duration-300 shadow-md shadow-[#1C4C96]/20 text-xs sm:text-sm group min-h-[44px]">
                 <span>Schedule a Call</span>
                 <i data-lucide="external-link" class="w-4 h-4 group-hover:scale-110 transition-transform"></i>
               </a>
             </div>
-
             <div class="lg:col-span-8 space-y-3.5">
-              ${itemsHtml}
+              ${faqsHtml}
             </div>
           </div>
         </div>
       `;
-
-      document.querySelectorAll(containerClass).forEach(el => el.innerHTML = html);
     }
 
-    function toggleFAQ(button) {
-      const card = button.closest('.faq-card');
-      const answer = card.querySelector('.faq-answer');
-      const chevron = card.querySelector('.faq-icon-box i');
-      const question = card.querySelector('.faq-question');
-      const iconBox = card.querySelector('.faq-icon-box');
+    // Toggle FAQ Accordion Item
+    function toggleFaqAccordion(btn) {
+      const item = btn.closest('.faq-item');
+      if (!item) return;
+      const answer = item.querySelector('.faq-answer');
+      const question = item.querySelector('.faq-question');
+      const chevronBox = item.querySelector('.faq-chevron-box');
+      const chevron = chevronBox ? chevronBox.querySelector('i, svg') : null;
+      if (!answer) return;
 
-      const isHidden = answer.classList.contains('hidden');
+      const isExpanded = !answer.classList.contains('max-h-0');
 
-      // Close all in this group
-      const parentContainer = card.parentElement;
-      parentContainer.querySelectorAll('.faq-answer').forEach(ans => ans.classList.add('hidden'));
-      parentContainer.querySelectorAll('.faq-card').forEach(c => {
-        c.classList.remove('border-[#1C4C96]/50', 'dark:border-[#C2A74C]/50', 'ring-1', 'ring-[#1C4C96]/20', 'dark:ring-[#C2A74C]/20');
-        c.querySelector('.faq-question').classList.remove('text-[#1C4C96]', 'dark:text-[#C2A74C]');
-        c.querySelector('.faq-question').classList.add('text-slate-900', 'dark:text-white');
-        const iBox = c.querySelector('.faq-icon-box');
-        iBox.classList.remove('bg-[#1C4C96]', 'text-white', 'dark:bg-[#C2A74C]', 'dark:text-slate-950');
-        iBox.classList.add('bg-slate-100', 'dark:bg-slate-700', 'text-slate-500', 'dark:text-slate-300');
-        const icon = c.querySelector('i');
-        if (icon) icon.classList.remove('rotate-180');
-      });
-
-      if (isHidden) {
-        answer.classList.remove('hidden');
-        card.classList.add('border-[#1C4C96]/50', 'dark:border-[#C2A74C]/50', 'ring-1', 'ring-[#1C4C96]/20', 'dark:ring-[#C2A74C]/20');
-        question.classList.add('text-[#1C4C96]', 'dark:text-[#C2A74C]');
-        question.classList.remove('text-slate-900', 'dark:text-white');
-        iconBox.classList.add('bg-[#1C4C96]', 'text-white', 'dark:bg-[#C2A74C]', 'dark:text-slate-950');
-        iconBox.classList.remove('bg-slate-100', 'dark:bg-slate-700', 'text-slate-500', 'dark:text-slate-300');
+      if (isExpanded) {
+        answer.classList.add('max-h-0', 'opacity-0');
+        answer.classList.remove('max-h-[500px]', 'opacity-100');
+        if (question) {
+          question.className = 'faq-question font-bold text-sm sm:text-base pr-3 transition-colors text-slate-900 dark:text-white';
+        }
+        if (chevronBox) {
+          chevronBox.className = 'faq-chevron-box w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 transition-colors bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300';
+        }
+        if (chevron) chevron.classList.remove('rotate-180');
+      } else {
+        answer.classList.remove('max-h-0', 'opacity-0');
+        answer.classList.add('max-h-[500px]', 'opacity-100');
+        if (question) {
+          question.className = 'faq-question font-bold text-sm sm:text-base pr-3 transition-colors text-[#1C4C96] dark:text-[#C2A74C]';
+        }
+        if (chevronBox) {
+          chevronBox.className = 'faq-chevron-box w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 transition-colors bg-[#1C4C96] text-white dark:bg-[#C2A74C] dark:text-slate-950';
+        }
         if (chevron) chevron.classList.add('rotate-180');
       }
     }
-    // Build 12 Operations Cards
-    function buildOperationsGrid() {
-      const grid = document.getElementById('operations-grid');
-      if (!grid) return;
 
-      grid.innerHTML = operationsData.map((op, idx) => `
-        <div onclick="openOperationsModal(${idx})" class="bg-white dark:bg-slate-800/90 p-6 rounded-3xl border border-slate-200 dark:border-slate-700/80 shadow-sm hover:shadow-xl hover:-translate-y-1.5 hover:border-[#1C4C96]/50 dark:hover:border-[#C2A74C]/50 transition-all flex flex-col justify-between group cursor-pointer">
-          <div>
-            <div class="flex items-center justify-between mb-5">
-              <div class="w-12 h-12 bg-slate-50 dark:bg-slate-900 rounded-2xl flex items-center justify-center text-[#1C4C96] dark:text-[#C2A74C] group-hover:bg-[#1C4C96] dark:group-hover:bg-[#C2A74C] group-hover:text-white dark:group-hover:text-slate-950 transition-all shadow-sm border border-slate-100 dark:border-slate-800">
-                <i data-lucide="${op.icon}" class="w-6 h-6"></i>
-              </div>
-              <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700/70 text-slate-600 dark:text-slate-300">
-                ${op.tag}
-              </span>
-            </div>
-            <h3 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2 leading-tight group-hover:text-[#1C4C96] dark:group-hover:text-[#C2A74C] transition-colors">
-              ${op.title}
-            </h3>
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              ${op.desc}
-            </p>
-          </div>
-
-          <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between text-xs font-bold text-[#1C4C96] dark:text-[#C2A74C]">
-            <span>View Details</span>
-            <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function openOperationsModal(idx) {
-      const op = operationsData[idx];
-      if (!op) return;
-
-      document.getElementById('modal-icon-container').innerHTML = `<i data-lucide="${op.icon}" class="w-6 h-6"></i>`;
-      document.getElementById('modal-tag').textContent = op.tag;
-      document.getElementById('modal-title').textContent = op.title;
-      document.getElementById('modal-desc').textContent = op.detailedDesc;
-      document.getElementById('modal-advantage').textContent = op.advantage;
-      document.getElementById('modal-cta-btn').setAttribute('href', CALENDAR_LINK);
-
-      const benefitsContainer = document.getElementById('modal-benefits');
-      benefitsContainer.innerHTML = op.benefits.map(b => `
-        <div class="flex items-start gap-2 text-xs sm:text-sm text-slate-700 dark:text-slate-300">
-          <i data-lucide="check-circle-2" class="w-4 h-4 text-[#1C4C96] dark:text-[#C2A74C] shrink-0 mt-0.5"></i>
-          <span class="leading-snug">${b}</span>
-        </div>
-      `).join('');
-
-      document.getElementById('operations-modal').classList.remove('hidden');
-      document.getElementById('operations-modal').classList.add('flex');
-      document.body.style.overflow = 'hidden';
-
-      lucide.createIcons();
-    }
-
-    function closeOperationsModal() {
-      document.getElementById('operations-modal').classList.add('hidden');
-      document.getElementById('operations-modal').classList.remove('flex');
-      document.body.style.overflow = 'unset';
-    }
-
-    // Escape key listener for modal
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeOperationsModal();
+    // Close Dropdowns on Click Outside and Keydown
+    document.addEventListener('click', (e) => {
+      const dropdownContainer = document.getElementById('services-dropdown-container');
+      if (dropdownContainer && !dropdownContainer.contains(e.target)) {
+        closeServicesDropdown();
       }
     });
 
-    function renderConsultationSlide() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeOperationsModal();
+        closeMobileMenu();
+        closeServicesDropdown();
+      }
+    });
+
+    // State
+    let currentSlide = 0;
+    let isSliderPaused = false;
+    let sliderTimer = null;
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function renderConsultationSlide(direction = 'next') {
       const item = consultationOptions[currentSlide];
       if (!item) return;
 
-      document.getElementById('slider-category').textContent = item.category;
-      document.getElementById('slider-title').textContent = item.title;
-      document.getElementById('slider-desc').textContent = item.desc;
-      document.getElementById('slider-counter').textContent = `0${currentSlide + 1} / 0${consultationOptions.length}`;
+      const catEl = document.getElementById('slider-category');
+      const titleEl = document.getElementById('slider-title');
+      const descEl = document.getElementById('slider-desc');
+      const counterEl = document.getElementById('slider-counter');
+      const contentBox = document.getElementById('slider-content');
+
+      if (catEl) {
+        catEl.textContent = item.category;
+        catEl.classList.remove('animate-category-fade');
+        void catEl.offsetWidth; // Trigger reflow
+        catEl.classList.add('animate-category-fade');
+      }
+
+      if (titleEl) titleEl.textContent = item.title;
+      if (descEl) descEl.textContent = item.desc;
+      if (counterEl) counterEl.textContent = `0${currentSlide + 1} / 0${consultationOptions.length}`;
+
+      if (contentBox) {
+        contentBox.classList.remove('animate-swoosh-next', 'animate-swoosh-prev');
+        void contentBox.offsetWidth; // Trigger reflow
+        contentBox.classList.add(direction === 'prev' ? 'animate-swoosh-prev' : 'animate-swoosh-next');
+      }
 
       const dotsContainer = document.getElementById('slider-dots');
       if (dotsContainer) {
@@ -1956,17 +2078,18 @@
 
     function nextConsultationSlide() {
       currentSlide = (currentSlide + 1) % consultationOptions.length;
-      renderConsultationSlide();
+      renderConsultationSlide('next');
     }
 
     function prevConsultationSlide() {
       currentSlide = (currentSlide - 1 + consultationOptions.length) % consultationOptions.length;
-      renderConsultationSlide();
+      renderConsultationSlide('prev');
     }
 
     function goToConsultationSlide(idx) {
+      const direction = idx >= currentSlide ? 'next' : 'prev';
       currentSlide = idx;
-      renderConsultationSlide();
+      renderConsultationSlide(direction);
     }
 
     function startSliderTimer() {
