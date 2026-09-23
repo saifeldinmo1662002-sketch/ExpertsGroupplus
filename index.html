@@ -584,9 +584,34 @@
         </div>
       </div>
 
-      <!-- Testimonials Section -->
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
-        <div id="testimonials-container" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <!-- Testimonials 3-Card Carousel Section -->
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-blue/10 dark:bg-brand-gold/15 text-brand-blue dark:text-brand-gold font-semibold text-[11px] tracking-wider uppercase mb-2">
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i>
+              <span>Verified Client Testimonials</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">Enterprise Client Reviews</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Real operational feedback from executives scaling with Experts Group Plus.</p>
+          </div>
+          
+          <!-- Carousel Navigation Controls on the Right -->
+          <div class="flex items-center gap-3 self-end sm:self-auto">
+            <span id="review-counter" class="text-xs font-bold text-slate-400 font-mono">01 - 03 of 06</span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="prevReviewSlide()" aria-label="Previous review slide" class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+              </button>
+              <button onclick="nextReviewSlide()" aria-label="Next review slide" class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Card Carousel Display Grid Container -->
+        <div id="testimonials-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 transition-all"></div>
       </div>
 
       <div class="schedule-cta-container" data-service="about"></div>
@@ -1315,18 +1340,9 @@
             Your premier B2B Managed Service Provider for sustainable business scaling, professional workforce upskilling, and dedicated operational outsourcing.
           </p>
 
-          <!-- Footer Actions & Admin Portal Trigger -->
+          <!-- Footer Actions & Admin Portal Trigger (Cleaned up: Only Admin Portal preserved) -->
           <div class="flex flex-wrap items-center gap-2 mt-6">
-            <button onclick="openDownloadModal('corporate')" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-brand-gold text-xs font-bold transition-colors flex items-center gap-1.5 border border-slate-700">
-              <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-              <span>Download PDF Deck</span>
-            </button>
-            <a href="https://www.eg-experts.com/" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors flex items-center gap-1.5 border border-slate-700">
-              <i data-lucide="globe" class="w-3.5 h-3.5 text-brand-gold"></i>
-              <span>eg-experts.com</span>
-            </a>
-            <!-- Admin Portal Login Trigger Button -->
-            <button onclick="openAdminLoginModal()" class="px-3.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-brand-blue text-slate-300 hover:text-white text-xs font-bold transition-all flex items-center gap-1.5 border border-slate-700 shadow-sm" title="Restricted Admin Control Center">
+            <button onclick="openAdminLoginModal()" class="px-4 py-2 rounded-xl bg-slate-800/90 hover:bg-brand-blue text-slate-200 hover:text-white text-xs font-bold transition-all flex items-center gap-2 border border-slate-700 shadow-sm" title="Restricted Admin Control Center">
               <i data-lucide="lock" class="w-3.5 h-3.5 text-brand-gold"></i>
               <span>Admin Portal</span>
             </button>
@@ -1710,10 +1726,35 @@
         quote: "Their 3-week diagnostic identified $140,000 in redundant SaaS software subscriptions and unified four fragmented operational pipelines into an automated CRM flow.",
         initials: "MS",
         rating: 5
+      },
+      {
+        id: 'rev-4',
+        role: "Customer Operations Lead",
+        company: "FLAIRSTECH Global",
+        quote: "Their bilingual Egyptian support squads handled over 40,000 tickets in Q4 without missing a single SLA. Flawless onboarding and zero ramp-up friction.",
+        initials: "FG",
+        rating: 5
+      },
+      {
+        id: 'rev-5',
+        role: "Chief Executive Officer",
+        company: "The Outsource Group",
+        quote: "Eliminated 62% of our administrative overhead within 60 days. The weekly BI governance and QA ticket inspections give us complete executive transparency.",
+        initials: "OG",
+        rating: 5
+      },
+      {
+        id: 'rev-6',
+        role: "Logistics Director",
+        company: "Madrid Enterprise Logistics",
+        quote: "From regional carrier rate negotiations to warehouse dispatch coordination, Experts Group Plus acts as a seamless extension of our internal team.",
+        initials: "ML",
+        rating: 5
       }
     ];
 
     let reviewsData = JSON.parse(localStorage.getItem('eg_reviews_data')) || [...DEFAULT_REVIEWS];
+    let currentReviewStartIdx = 0;
 
     // Leads & Activity Logs
     const DEFAULT_LEADS = [
@@ -2188,21 +2229,52 @@
       }
     }
 
-    function renderTestimonials() {
+    function renderTestimonials(direction = 'next') {
       const container = document.getElementById('testimonials-container');
+      const counterEl = document.getElementById('review-counter');
       if (!container) return;
 
-      container.innerHTML = reviewsData.map(rev => `
-        <div class="bg-white dark:bg-brand-carddark p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
+      const total = reviewsData.length;
+      if (total === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-10 text-center bg-white dark:bg-brand-carddark rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 p-8 text-xs text-slate-500">
+            No client reviews published yet. Add reviews from the Admin Portal.
+          </div>
+        `;
+        if (counterEl) counterEl.textContent = "0 of 0";
+        return;
+      }
+
+      // Show 3 reviews in the visible window
+      const countToShow = Math.min(3, total);
+      const visibleReviews = [];
+      for (let i = 0; i < countToShow; i++) {
+        const itemIdx = (currentReviewStartIdx + i) % total;
+        visibleReviews.push(reviewsData[itemIdx]);
+      }
+
+      // Update counter e.g. 01 - 03 of 06
+      if (counterEl) {
+        const startNum = currentReviewStartIdx + 1;
+        const endNum = Math.min(currentReviewStartIdx + countToShow, total);
+        counterEl.textContent = `${String(startNum).padStart(2, '0')} - ${String(endNum).padStart(2, '0')} of ${String(total).padStart(2, '0')}`;
+      }
+
+      // Render cards with dynamic slide animation
+      const animClass = direction === 'next' ? 'animate-slide-left' : 'animate-slide-right';
+      container.className = `grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 transition-all ${animClass}`;
+
+      container.innerHTML = visibleReviews.map(rev => `
+        <div class="bg-white dark:bg-brand-carddark p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
           <div>
             <div class="flex text-brand-gold gap-0.5 mb-3">
               ${Array(rev.rating || 5).fill(0).map(() => `<i data-lucide="star" class="w-4 h-4 fill-current"></i>`).join('')}
             </div>
-            <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 italic mb-4 leading-relaxed">"${rev.quote}"</p>
+            <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 italic mb-4 leading-relaxed line-clamp-4">"${rev.quote}"</p>
           </div>
           <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-brand-blue/15 text-brand-blue dark:text-brand-gold flex items-center justify-center font-bold text-xs">
-              ${rev.initials}
+            <div class="w-8 h-8 rounded-full bg-brand-blue/15 text-brand-blue dark:text-brand-gold flex items-center justify-center font-bold text-xs shrink-0">
+              ${rev.initials || 'EP'}
             </div>
             <div>
               <div class="text-xs font-bold text-slate-900 dark:text-white">${rev.role}</div>
@@ -2213,6 +2285,18 @@
       `).join('');
 
       if (window.lucide) lucide.createIcons();
+    }
+
+    function nextReviewSlide() {
+      if (reviewsData.length <= 3) return;
+      currentReviewStartIdx = (currentReviewStartIdx + 1) % reviewsData.length;
+      renderTestimonials('next');
+    }
+
+    function prevReviewSlide() {
+      if (reviewsData.length <= 3) return;
+      currentReviewStartIdx = (currentReviewStartIdx - 1 + reviewsData.length) % reviewsData.length;
+      renderTestimonials('prev');
     }
 
     function openDownloadModal(serviceKey = 'corporate') {
@@ -2747,6 +2831,7 @@
       localStorage.setItem('eg_reviews_data', JSON.stringify(reviewsData));
       closeAddReviewModal();
       e.target.reset();
+      currentReviewStartIdx = 0;
       renderTestimonials();
       initAdminDashboard();
       showGlobalToast("Review published to About Us!");
@@ -2755,6 +2840,7 @@
     function handleAdminDeleteReview(index) {
       reviewsData.splice(index, 1);
       localStorage.setItem('eg_reviews_data', JSON.stringify(reviewsData));
+      currentReviewStartIdx = 0;
       renderTestimonials();
       initAdminDashboard();
       showGlobalToast("Review removed.");
