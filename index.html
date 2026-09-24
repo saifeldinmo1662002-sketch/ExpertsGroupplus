@@ -339,28 +339,28 @@
           <!-- Enterprise Trust 4-Pill Metric Strip -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto pt-4 border-t border-slate-200/80 dark:border-slate-800/80">
             <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-carddark border border-slate-200/80 dark:border-slate-800 flex items-center justify-center gap-2.5 shadow-sm">
-              <i data-lucide="clock" class="w-5 h-5 text-brand-gold shrink-0"></i>
+              <i data-lucide="clock" class="w-5 h-5 text-brand-blue dark:text-brand-gold shrink-0"></i>
               <div class="text-left">
                 <div id="hero-pill-1" class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">&lt; 24h Quote</div>
                 <div class="text-[10px] text-slate-500 dark:text-slate-400">Fast Turnaround</div>
               </div>
             </div>
             <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-carddark border border-slate-200/80 dark:border-slate-800 flex items-center justify-center gap-2.5 shadow-sm">
-              <i data-lucide="calendar-check" class="w-5 h-5 text-brand-gold shrink-0"></i>
+              <i data-lucide="calendar-check" class="w-5 h-5 text-brand-blue dark:text-brand-gold shrink-0"></i>
               <div class="text-left">
                 <div id="hero-pill-2" class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">Free Consultation</div>
                 <div class="text-[10px] text-slate-500 dark:text-slate-400">No-Obligation Call</div>
               </div>
             </div>
             <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-carddark border border-slate-200/80 dark:border-slate-800 flex items-center justify-center gap-2.5 shadow-sm">
-              <i data-lucide="shield-check" class="w-5 h-5 text-brand-gold shrink-0"></i>
+              <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue dark:text-brand-gold shrink-0"></i>
               <div class="text-left">
                 <div id="hero-pill-3" class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">Guaranteed Quality</div>
                 <div class="text-[10px] text-slate-500 dark:text-slate-400">Strict QA Oversight</div>
               </div>
             </div>
             <div class="p-3.5 rounded-2xl bg-white dark:bg-brand-carddark border border-slate-200/80 dark:border-slate-800 flex items-center justify-center gap-2.5 shadow-sm">
-              <i data-lucide="building-2" class="w-5 h-5 text-brand-gold shrink-0"></i>
+              <i data-lucide="building-2" class="w-5 h-5 text-brand-blue dark:text-brand-gold shrink-0"></i>
               <div class="text-left">
                 <div id="hero-pill-4" class="text-xs sm:text-sm font-black text-slate-900 dark:text-white">200+ Clients</div>
                 <div class="text-[10px] text-slate-500 dark:text-slate-400">Regional Impact</div>
@@ -1547,7 +1547,7 @@
       </div>
 
       <div class="p-4 rounded-2xl bg-blue-50/70 dark:bg-slate-800/40 border border-blue-100 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-300 mb-6 flex items-center gap-3">
-        <i data-lucide="shield-check" class="w-5 h-5 text-brand-gold shrink-0"></i>
+        <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue dark:text-brand-gold shrink-0"></i>
         <span><strong>Operational Advantage:</strong> <span id="modal-op-advantage"></span></span>
       </div>
 
@@ -2299,6 +2299,44 @@
       renderTestimonials('prev');
     }
 
+    const pdfServiceContent = {
+      corporate: {
+        eyebrow: 'CORPORATE CAPABILITIES', headline: 'One partner across the operating stack.',
+        summary: 'Experts Group Plus combines training, strategic consultation, operational delegation, and BPO under one managed-service model for growing enterprises.',
+        pillars: [['Training','Employee academies, departmental upskilling, and executive coaching.'],['Consultation','Structured diagnostics, unit economics, and embedded advisory.'],['Operations','Specialized delivery pods across growth, creative, intelligence, tech, and corporate support.'],['BPO','Customer support, sales, appointment setting, and multichannel execution.']],
+        outcomes: ['Faster deployment without building every function in-house','Clear ownership, QA oversight, and executive reporting','Flexible capacity that can scale with business demand']
+      },
+      training: {
+        eyebrow: 'DIVISION I • EXPERT TRAINING', headline: 'Build capability before you scale capacity.',
+        summary: 'Practical corporate learning programs designed around the tools, workflows, and leadership behaviors your teams need to perform consistently.',
+        pillars: [['Employee Training','Structured onboarding, tool fluency, culture workshops, and practical case studies.'],['Department Training','Targeted upskilling for customer service, sales, and operations teams.'],['Management Training','OKR planning, delegation, conflict alignment, and executive communication.'],['Delivery Models','Virtual classrooms, Cairo/GCC on-site workshops, and hybrid programs.']],
+        outcomes: ['Shorter onboarding cycles and clearer role expectations','Standardized execution through practical playbooks','Programs tailored to team size, schedule, and operating context']
+      },
+      consultation: {
+        eyebrow: 'DIVISION II • EXPERT CONSULTATION', headline: 'Turn operational friction into an executable plan.',
+        summary: 'A structured diagnostic and advisory model covering workflows, economics, technology, organization, revenue operations, and supply chain decisions.',
+        pillars: [['21-Day Diagnostic','A 360-degree review of organizational, workflow, and financial friction.'],['Unit Economics','Cash-flow, pricing, margin, and cost structures translated into decisions.'],['Growth & Revenue','GTM, sales pipeline, conversion, and market-expansion diagnostics.'],['Embedded Advisory','Senior guidance through weekly execution reviews for up to six months.']],
+        outcomes: ['A prioritized view of the bottlenecks worth solving first','Decision-ready models and operating recommendations','Hands-on support translating strategy into execution']
+      },
+      operations: {
+        eyebrow: 'DIVISION III • EXPERT OPERATIONS', headline: 'Delegate specialist work without losing control.',
+        summary: 'Twelve specialized operational pods can be deployed individually or combined into a cross-functional delivery model, with structured onboarding and QA oversight.',
+        pillars: [],
+        outcomes: ['1–3 business-day onboarding into supported workflows','Cross-functional pods that combine complementary capabilities','Daily quality oversight with clear deliverables and accountability']
+      },
+      bpo: {
+        eyebrow: 'DIVISION IV • EXPERT BPO', headline: 'Scale customer operations without scaling fixed overhead.',
+        summary: 'Multichannel BPO teams for customer support, sales, appointment setting, and operational back-office work, delivered with structured QA and flexible capacity.',
+        pillars: [['Customer Support','Live chat, email, and multichannel support with structured QA.'],['Sales Support','Lead qualification, outbound follow-up, and appointment setting.'],['Operations Support','Repeatable administrative and back-office workflows delegated to specialist teams.'],['Flexible Capacity','Scale coverage around demand without a long-term lock-in model.']],
+        outcomes: ['Extended coverage without rebuilding an internal team','Measured service quality with defined QA standards','Flexible staffing capacity aligned to demand and workload']
+      }
+    };
+
+    // Preload the PDF engine so downloads remain synchronous with the user's click.
+    if (!(window.jspdf && window.jspdf.jsPDF)) {
+      ensureJsPDF();
+    }
+
     function openDownloadModal(serviceKey = 'corporate') {
       const modal = document.getElementById('download-deck-modal');
       const profile = deckProfiles[serviceKey] || deckProfiles.corporate;
@@ -2325,12 +2363,32 @@
       }
     }
 
+    async function ensureJsPDF() {
+      if (window.jspdf && window.jspdf.jsPDF) return true;
+      const sources = ['https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js','https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js'];
+      for (const src of sources) {
+        try {
+          await new Promise((resolve,reject)=>{ const script=document.createElement('script'); script.src=src; script.async=true; script.onload=resolve; script.onerror=reject; document.head.appendChild(script); });
+          if (window.jspdf && window.jspdf.jsPDF) return true;
+        } catch (err) {}
+      }
+      return false;
+    }
+
     function handleDownloadSubmit(e) {
       e.preventDefault();
       const serviceKey = document.getElementById('modal-deck-service').value || 'corporate';
       const name = document.getElementById('deck-lead-name').value || "Executive";
       const company = document.getElementById('deck-lead-company').value || "Enterprise Partner";
       const email = document.getElementById('deck-lead-email').value || "client@company.com";
+
+      // Keep PDF generation inside the original user click/submit gesture.
+      // Awaiting a dynamically loaded script here can cause browsers to block the download.
+      if (!(window.jspdf && window.jspdf.jsPDF)) {
+        showGlobalToast("PDF engine is still loading. Please wait a moment and try again.");
+        ensureJsPDF();
+        return;
+      }
 
       // Record Lead into Log
       leadsData.unshift({
@@ -2358,111 +2416,116 @@
       }
 
       const { jsPDF } = window.jspdf;
-      // Initialize in A4 Landscape: 841.89 x 595.28 pt
       const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
       const profile = deckProfiles[serviceKey] || deckProfiles.corporate;
-      const pageWidth = 842;
-      const pageHeight = 595;
+      const content = pdfServiceContent[serviceKey] || pdfServiceContent.corporate;
+      const pageWidth = 842, pageHeight = 595;
+      const navy = [8, 14, 31], blue = [21, 70, 149], gold = [194, 167, 77];
+      const slate = [71, 85, 105], light = [248, 250, 252];
 
-      // Slide 1: Cover Slide
-      doc.setFillColor(8, 14, 31); // Dark Navy
-      doc.rect(0, 0, pageWidth, pageHeight, 'F');
+      const addFooter = (pageNo, total) => {
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(120, 135, 155);
+        doc.text('Experts Group Plus  •  Confidential Capabilities Profile', 50, 565);
+        doc.text(`${pageNo} / ${total}`, 792, 565, { align: 'right' });
+      };
+      const addHeader = (title, subtitle, pageNo, total) => {
+        doc.setFillColor(...light); doc.rect(0, 0, pageWidth, pageHeight, 'F');
+        doc.setFillColor(...blue); doc.rect(0, 0, pageWidth, 7, 'F');
+        drawVectorEmblem(doc, 62, 48, 13);
+        doc.setFont('helvetica','bold'); doc.setFontSize(17); doc.setTextColor(...navy); doc.text(title, 95, 49);
+        doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(110,125,145); doc.text(subtitle, 95, 66);
+        doc.setDrawColor(220,226,234); doc.line(50, 86, 792, 86);
+        addFooter(pageNo, total);
+      };
+      const card = (x,y,w,h,title,desc,accent=blue) => {
+        doc.setFillColor(255,255,255); doc.setDrawColor(225,230,237); doc.roundedRect(x,y,w,h,10,10,'FD');
+        doc.setFillColor(...accent); doc.roundedRect(x,y,5,h,3,3,'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.setTextColor(...navy); doc.text(title,x+16,y+24);
+        doc.setFont('helvetica','normal'); doc.setFontSize(8.6); doc.setTextColor(...slate);
+        doc.text(doc.splitTextToSize(desc,w-30),x+16,y+43,{lineHeightFactor:1.35});
+      };
+      const bulletList = (items,x,y,w) => {
+        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...slate);
+        let yy=y;
+        items.forEach(item=>{
+          doc.setFillColor(...gold); doc.circle(x+3,yy-3,2,'F');
+          const lines=doc.splitTextToSize(item,w-18); doc.text(lines,x+14,yy,{lineHeightFactor:1.35}); yy += Math.max(24, lines.length*13+8);
+        });
+      };
 
-      // Top Gold Accent Bar
-      doc.setFillColor(194, 167, 77);
-      doc.rect(0, 0, pageWidth, 8, 'F');
+      const totalPages = serviceKey === 'operations' ? 5 : 4;
+      // Cover
+      doc.setFillColor(...navy); doc.rect(0,0,pageWidth,pageHeight,'F');
+      doc.setFillColor(...gold); doc.rect(0,0,pageWidth,8,'F');
+      drawVectorEmblem(doc, 421, 135, 30);
+      doc.setFont('helvetica','bold'); doc.setFontSize(31); doc.setTextColor(255,255,255); doc.text('EXPERTS GROUP PLUS',421,210,{align:'center'});
+      doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...gold); doc.text(content.eyebrow,421,241,{align:'center'});
+      doc.setFont('helvetica','bold'); doc.setFontSize(23); doc.setTextColor(255,255,255); doc.text(doc.splitTextToSize(content.headline,650),421,285,{align:'center',lineHeightFactor:1.25});
+      doc.setFont('helvetica','normal'); doc.setFontSize(11); doc.setTextColor(190,205,225); doc.text(doc.splitTextToSize(content.summary,620),421,350,{align:'center',lineHeightFactor:1.45});
+      doc.setFillColor(...blue); doc.roundedRect(205,425,432,54,12,12,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255); doc.text(`PREPARED FOR  ${String(lead.name).toUpperCase()}  •  ${String(lead.company).toUpperCase()}`,421,457,{align:'center'});
+      doc.setFontSize(8.5); doc.setFont('helvetica','normal'); doc.setTextColor(135,155,180); doc.text('Cairo, Egypt  •  info@eg-experts.com  •  +20 104 411 1646  •  eg-experts.com',421,548,{align:'center'});
 
-      // Brand Logo Diamond Emblems
-      drawVectorEmblem(doc, 421, 160, 24);
+      // Page 2 — value proposition
+      doc.addPage(); addHeader('Why Experts Group Plus', 'A managed operating layer built around your business—not a generic outsourcing catalogue.', 2, totalPages);
+      doc.setFont('helvetica','bold'); doc.setFontSize(18); doc.setTextColor(...navy); doc.text('The operating model',50,120);
+      doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(...slate); doc.text(doc.splitTextToSize(content.summary,730),50,143,{lineHeightFactor:1.45});
+      const pillars = content.pillars.length ? content.pillars : DEFAULT_OPERATIONS.slice(0,4).map(o=>[o.title,o.desc]);
+      pillars.slice(0,4).forEach((p,i)=>{ const x=50+(i%2)*380, y=195+Math.floor(i/2)*125; card(x,y,355,105,p[0],p[1],i%2?gold:blue); });
+      doc.setFillColor(238,243,249); doc.roundedRect(50,465,742,58,10,10,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...blue); doc.text('DESIGNED FOR',68,488);
+      doc.setFont('helvetica','normal'); doc.setTextColor(...slate); doc.text('Growing enterprises that need specialist execution, clearer accountability, and scalable capacity.',145,488);
 
-      doc.setTextColor(255, 255, 255);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(32);
-      doc.text("EXPERTS GROUP PLUS", pageWidth / 2, 230, { align: "center" });
+      // Page 3 — service specifics
+      doc.addPage(); addHeader(profile.title, 'Capabilities, delivery standards, and the practical outcomes clients can expect.', 3, totalPages);
+      if(serviceKey === 'operations'){
+        doc.setFont('helvetica','bold'); doc.setFontSize(17); doc.setTextColor(...navy); doc.text('12 specialist operational pods',50,118);
+        doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...slate); doc.text('Choose individual capabilities or combine complementary pods into one managed delivery layer.',50,138);
+        DEFAULT_OPERATIONS.forEach((op,i)=>{ const col=i%3,row=Math.floor(i/3); const x=50+col*250,y=160+row*84; card(x,y,230,68,op.title,op.desc, i%2?gold:blue); });
+      } else {
+        doc.setFont('helvetica','bold'); doc.setFontSize(17); doc.setTextColor(...navy); doc.text('What the engagement includes',50,120);
+        bulletList(content.outcomes,55,155,340);
+        doc.setFillColor(255,255,255); doc.setDrawColor(225,230,237); doc.roundedRect(430,115,362,270,12,12,'FD');
+        doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(...blue); doc.text('Delivery principles',450,145);
+        const principles=['Tailored to your operating context','Clear scope, owners, and deliverables','Integrated with existing tools where possible','Ongoing QA and executive visibility'];
+        bulletList(principles,455,178,315);
+        doc.setFillColor(8,14,31); doc.roundedRect(50,395,742,95,12,12,'F');
+        doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(...gold); doc.text('A practical partner, not a handoff.',72,425);
+        doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(205,220,240); doc.text(doc.splitTextToSize('Our teams work inside defined workflows and reporting rhythms so your internal leaders retain visibility while specialist work gets executed.',700),72,448,{lineHeightFactor:1.4});
+      }
 
-      doc.setTextColor(194, 167, 77);
-      doc.setFontSize(14);
-      doc.text(profile.title.toUpperCase(), pageWidth / 2, 260, { align: "center" });
+      // Page 4 — engagement roadmap
+      doc.addPage(); addHeader('How We Work Together', 'A simple path from discovery to managed execution.', 4, totalPages);
+      const steps=[['01','Discovery','Map priorities, bottlenecks, tools, and the operating context.'],['02','Scope & SLA','Define deliverables, ownership, cadence, and commercial scope.'],['03','Onboarding','Integrate specialists into the relevant tools and workflows.'],['04','Governance','Run QA, reporting, reviews, and continuous optimization.']];
+      steps.forEach((st,i)=>{ const x=50+i*185; doc.setFillColor(...(i===0?blue:255)); doc.setDrawColor(225,230,237); doc.roundedRect(x,145,165,150,12,12,'FD'); doc.setFont('helvetica','bold'); doc.setFontSize(20); doc.setTextColor(...(i===0?gold:blue)); doc.text(st[0],x+18,178); doc.setFontSize(11); doc.setTextColor(...navy); doc.text(st[1],x+18,205); doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...slate); doc.text(doc.splitTextToSize(st[2],128),x+18,225,{lineHeightFactor:1.35}); });
+      doc.setFillColor(...blue); doc.roundedRect(50,335,742,155,14,14,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(19); doc.setTextColor(255,255,255); doc.text('Ready to discuss your operating priorities?',421,375,{align:'center'});
+      doc.setFont('helvetica','normal'); doc.setFontSize(10); doc.setTextColor(215,230,250); doc.text('Schedule an executive discovery call or contact our team directly.',421,400,{align:'center'});
+      doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...gold); doc.text(`Phone: ${siteSettings.phone}   •   Email: ${siteSettings.email}`,421,435,{align:'center'});
+      doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(205,220,240); doc.text('Scheduling: Google Calendar appointment link available from the website.',421,460,{align:'center'});
 
-      doc.setTextColor(200, 215, 240);
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(12);
-      doc.text("ALL-IN-ONE MANAGED SERVICE PROVIDER (MSP) & BPO PROFILE", pageWidth / 2, 285, { align: "center" });
+      if(serviceKey === 'operations'){
+        // Page 5 — operations detail matrix
+        doc.addPage(); addHeader('Operations Pod Reference', 'A concise reference of the twelve specialist capabilities available today.', 5, totalPages);
+        DEFAULT_OPERATIONS.forEach((op,i)=>{ const col=i%2,row=Math.floor(i/2); const x=50+col*380,y=110+row*70; card(x,y,355,56,op.title,`${op.tag}  •  ${op.advantage}`,i%2?gold:blue); });
+      }
 
-      // Prepared For Capsule
-      doc.setFillColor(21, 70, 149);
-      doc.roundedRect(pageWidth / 2 - 190, 325, 380, 48, 8, 8, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(10);
-      doc.text(`PREPARED EXCLUSIVELY FOR: ${lead.name.toUpperCase()} (${lead.company.toUpperCase()})`, pageWidth / 2, 354, { align: "center" });
-
-      // Footer Credentials
-      doc.setFontSize(9);
-      doc.setTextColor(140, 160, 190);
-      doc.text("Cairo Headquarters, Egypt  |  info@eg-experts.com  |  +20 104 411 1646  |  www.eg-experts.com", pageWidth / 2, 545, { align: "center" });
-
-      // Slide 2: Strategic Mandate & Value Proposition
-      doc.addPage('a4', 'landscape');
-      drawSlideTemplate(doc, "The Experts Group Plus Advantage", "Strategic Nearshore Operational Arbitrage");
-
-      doc.setFontSize(11);
-      doc.setTextColor(50, 65, 85);
-      const intro = "Experts Group Plus acts as your embedded Managed Service Provider (MSP). We solve bottlenecks, eliminate recruitment delays, and engineer cost-efficient operations for enterprises across EMEA and North America.";
-      doc.text(doc.splitTextToSize(intro, 740), 50, 130);
-
-      // 4 Strategic Pillars Cards
-      drawLandscapeCard(doc, 50, 175, 170, 150, "Division I: Training", "Structured employee academies, departmental upskilling, and executive management coaching with NDA protection.");
-      drawLandscapeCard(doc, 240, 175, 170, 150, "Division II: Consultation", "Guaranteed 3-week 360-degree diagnostic, unit economics modeling, and 6-month continuous hands-on advisory.");
-      drawLandscapeCard(doc, 430, 175, 170, 150, "Division III: Operations", "12 specialized delegation pods across marketing, design, tech, and logistics. Rapid 1–3 day Slack/Jira onboarding.");
-      drawLandscapeCard(doc, 620, 175, 170, 150, "Division IV: BPO", "Multichannel live support, 55% closing sales closers, and outbound campaigns backed by strict QA with zero lock-in.");
-
-      // Key Metrics Box
-      doc.setFillColor(241, 245, 249);
-      doc.roundedRect(50, 350, 742, 160, 10, 10, 'F');
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(12);
-      doc.setTextColor(21, 70, 149);
-      doc.text("Verified Enterprise Performance Commitments", 75, 380);
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(10);
-      doc.setTextColor(50, 65, 85);
-      doc.text("• < 24-Hour Scope Turnaround: Receive custom B2B proposals and SLAs within 1 business day.", 75, 410);
-      doc.text("• 55%–70% Overhead Arbitrage: Eliminate payroll taxes, health insurance, hardware procurement, and office leases.", 75, 435);
-      doc.text("• 98% Live Chat CSAT: Market-leading multichannel QA monitoring by dedicated Egyptian managers.", 75, 460);
-      doc.text("• Zero Contract Lock-In: Flexible monthly retainers driven purely by operational performance and customer ROI.", 75, 485);
-
-      // Slide 3: Roadmap & Direct Scheduling
-      doc.addPage('a4', 'landscape');
-      drawSlideTemplate(doc, "Engagement Roadmap & Executive Contact", "From Discovery to Autonomous Execution in 4 Steps");
-
-      drawLandscapeCard(doc, 50, 140, 170, 130, "01. Discovery Audit", "30-min strategy audit mapping bottlenecks, software redundancy, and primary organizational goals.");
-      drawLandscapeCard(doc, 240, 140, 170, 130, "02. SLA Blueprint", "Custom proposal delivered within 24 hours with transparent rates and zero contract lock-in.");
-      drawLandscapeCard(doc, 430, 140, 170, 130, "03. Pod Assembly", "Specialists screened and onboarded into your Slack, Teams, and Jira in 1 to 3 business days.");
-      drawLandscapeCard(doc, 620, 140, 170, 130, "04. Governance", "Autonomous daily execution with QA monitoring and weekly executive progress reviews.");
-
-      // Executive Booking Block
-      doc.setFillColor(21, 70, 149);
-      doc.roundedRect(50, 300, 742, 200, 12, 12, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(18);
-      doc.text("Ready to Scale Your Enterprise Operations?", pageWidth / 2, 345, { align: "center" });
-
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(210, 230, 255);
-      doc.text("Schedule an executive consultation call directly on our Google Calendar:", pageWidth / 2, 375, { align: "center" });
-
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(194, 167, 77);
-      doc.text(siteSettings.calendar, pageWidth / 2, 405, { align: "center" });
-
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(12);
-      doc.text(`Direct Hotline: ${siteSettings.phone}   |   Email: ${siteSettings.email}`, pageWidth / 2, 455, { align: "center" });
-
-      doc.save(profile.fileName);
+      // Use jsPDF's native save() while still inside the user gesture.
+      // This is more reliable than creating/clicking a Blob URL after async work.
+      try {
+        doc.save(profile.fileName);
+      } catch (err) {
+        // Fallback for browsers that block the native saver.
+        const dataUri = doc.output('datauristring');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = dataUri;
+        downloadLink.download = profile.fileName;
+        downloadLink.target = '_blank';
+        downloadLink.rel = 'noopener';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+      }
     }
 
     function drawVectorEmblem(doc, cx, cy, size) {
@@ -3136,19 +3199,10 @@
             </div>
             <div class="lg:col-span-8 space-y-3">
               ${faqs.map((f, i) => `
-                <details class="faq-item group bg-white dark:bg-brand-carddark rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
-                  <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer select-none list-none [&::-webkit-details-marker]:hidden">
-                    <span class="font-bold text-sm text-slate-900 dark:text-white leading-relaxed">${f.q}</span>
-                    <span class="shrink-0 w-8 h-8 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-brand-blue dark:text-brand-gold transition-transform duration-200 group-open:rotate-180">
-                      <i data-lucide="chevron-down" class="w-4 h-4"></i>
-                    </span>
-                  </summary>
-                  <div class="px-5 pb-5">
-                    <div class="pt-4 border-t border-slate-100 dark:border-slate-800">
-                      <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">${f.a}</p>
-                    </div>
-                  </div>
-                </details>
+                <div class="bg-white dark:bg-brand-carddark rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm">
+                  <div class="font-bold text-sm text-slate-900 dark:text-white mb-1.5">${f.q}</div>
+                  <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">${f.a}</p>
+                </div>
               `).join('')}
             </div>
           </div>
