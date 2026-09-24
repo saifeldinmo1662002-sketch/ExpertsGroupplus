@@ -850,7 +850,7 @@
 
         <!-- Filter Chips -->
         <div class="flex items-center justify-center gap-2 overflow-x-auto no-scrollbar pb-6 mb-4">
-          <button onclick="filterOperations('all')" id="op-filter-all" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-gold text-slate-950 transition-all shrink-0">
+          <button onclick="filterOperations('all')" id="op-filter-all" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-blue dark:bg-brand-gold text-white dark:text-slate-950 transition-all shrink-0">
             All Domains (<span id="op-total-count">12</span>)
           </button>
           <button onclick="filterOperations('Marketing')" id="op-filter-Marketing" class="px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-brand-carddark text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:text-slate-900 dark:hover:text-white transition-all shrink-0">
@@ -2096,7 +2096,7 @@
         const btn = document.getElementById(`op-filter-${c}`);
         if (btn) {
           if (c === category) {
-            btn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-gold text-slate-950 transition-all shrink-0';
+            btn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-brand-blue dark:bg-brand-gold text-white dark:text-slate-950 transition-all shrink-0';
           } else {
             btn.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-white dark:bg-brand-carddark text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-800 hover:text-slate-900 dark:hover:text-white transition-all shrink-0';
           }
@@ -2414,9 +2414,12 @@
       const key = staticPdfFiles[serviceKey] ? serviceKey : 'corporate';
       const href = staticPdfFiles[key];
       const filename = deckProfiles[key].fileName;
+      // Use a real same-origin file link so the browser handles the download directly.
+      // This avoids jsPDF/CDN/runtime dependencies entirely.
       const link = document.createElement('a');
       link.href = href;
-      link.download = filename;
+      link.setAttribute('download', filename);
+      link.setAttribute('aria-label', `Download ${filename}`);
       link.rel = 'noopener';
       document.body.appendChild(link);
       link.click();
@@ -3047,16 +3050,24 @@
               </a>
             </div>
             <div class="lg:col-span-8 space-y-3">
-              ${faqs.map((f, i) => `
-                <div class="bg-white dark:bg-brand-carddark rounded-2xl border border-slate-200/80 dark:border-slate-800 p-5 shadow-sm">
-                  <div class="font-bold text-sm text-slate-900 dark:text-white mb-1.5">${f.q}</div>
-                  <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">${f.a}</p>
-                </div>
+              ${faqs.map((f) => `
+                <details class="faq-item group bg-white dark:bg-brand-carddark rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm overflow-hidden">
+                  <summary class="list-none cursor-pointer select-none p-5 flex items-center justify-between gap-4 font-bold text-sm text-slate-900 dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue dark:focus-visible:ring-brand-gold">
+                    <span>${f.q}</span>
+                    <span class="faq-chevron shrink-0 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center transition-transform duration-200 group-open:rotate-180">
+                      <i data-lucide="chevron-down" class="w-4 h-4 text-brand-blue dark:text-brand-gold"></i>
+                    </span>
+                  </summary>
+                  <div class="px-5 pb-5 pt-0 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    ${f.a}
+                  </div>
+                </details>
               `).join('')}
             </div>
           </div>
         </div>
       `;
+      if (window.lucide) lucide.createIcons();
     }
 
     function handleContactSubmit(e) {
