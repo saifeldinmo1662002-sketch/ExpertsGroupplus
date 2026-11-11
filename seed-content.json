@@ -1,0 +1,247 @@
+{
+  "operations": [
+    {
+      "icon": "share-2",
+      "tag": "Marketing",
+      "title": "Social Media Management",
+      "desc": "End-to-end brand management, community engagement, and viral content scheduling.",
+      "benefits": [
+        "Daily multi-channel publishing",
+        "Community response < 15 mins",
+        "Custom branded graphic assets",
+        "Monthly ROI growth dashboards"
+      ],
+      "advantage": "Dedicated social manager + copywriter per account."
+    },
+    {
+      "icon": "search",
+      "tag": "Growth",
+      "title": "SEO Optimization",
+      "desc": "Data-driven organic search ranking strategies and technical site health auditing.",
+      "benefits": [
+        "Technical Core Web Vitals audit",
+        "Intent-based keyword clustering",
+        "On-page schema optimization",
+        "Transparent rank tracking"
+      ],
+      "advantage": "100% white-hat Google algorithm compliant."
+    },
+    {
+      "icon": "bar-chart-2",
+      "tag": "Intelligence",
+      "title": "Data Analysis & BI",
+      "desc": "Transforming raw metrics into actionable executive dashboards and predictive pipelines.",
+      "benefits": [
+        "PowerBI / Tableau executive reports",
+        "Cross-platform ETL synthesis",
+        "Churn risk identification",
+        "Weekly actionable summaries"
+      ],
+      "advantage": "Fast integration with major CRMs and SQL databases."
+    },
+    {
+      "icon": "palette",
+      "tag": "Creative",
+      "title": "Graphic Design",
+      "desc": "Premium visual assets, vector kits, presentations, and UI/UX design systems.",
+      "benefits": [
+        "Pixel-perfect marketing collateral",
+        "Complete brand identity guidelines",
+        "24-48h rapid turnaround",
+        "All vector source files provided"
+      ],
+      "advantage": "Unlimited revisions within dedicated pod retainer."
+    },
+    {
+      "icon": "file-text",
+      "tag": "Creative",
+      "title": "Content Writing",
+      "desc": "SEO-optimized, conversion-focused copywriting for blogs, corporate PR, and whitepapers.",
+      "benefits": [
+        "100% human-crafted editorial copy",
+        "Bilingual English/Arabic writers",
+        "Organic keyword integration",
+        "Industry thought-leadership"
+      ],
+      "advantage": "Writers with verified B2B and SaaS domain expertise."
+    },
+    {
+      "icon": "user-plus",
+      "tag": "Corporate",
+      "title": "Talent Acquisition",
+      "desc": "Sourcing, technical pre-screening, and headhunting elite industry professionals globally.",
+      "benefits": [
+        "Resume screening & technical vetting",
+        "Structured interview scorecards",
+        "Passive executive talent access",
+        "30-day replacement warranty"
+      ],
+      "advantage": "End-to-end recruitment cycle management."
+    },
+    {
+      "icon": "video",
+      "tag": "Creative",
+      "title": "Video Editing",
+      "desc": "High-retention corporate video, Reels/Shorts, and commercial production.",
+      "benefits": [
+        "Dynamic pacing & sound engineering",
+        "Animated captions & kinetic type",
+        "Multi-aspect ratio formatting",
+        "Cloud review links"
+      ],
+      "advantage": "High-volume social shorts workflows supported."
+    },
+    {
+      "icon": "box",
+      "tag": "Creative",
+      "title": "3D Animation",
+      "desc": "Immersive product visualizations, mechanical renders, and motion graphics.",
+      "benefits": [
+        "Photorealistic 3D lighting",
+        "Exploded-view mechanical renders",
+        "Commercial motion design",
+        "4K video exports"
+      ],
+      "advantage": "Blender, Cinema4D, and Unreal Engine certified."
+    },
+    {
+      "icon": "calendar",
+      "tag": "Corporate",
+      "title": "Corporate Event Planning",
+      "desc": "End-to-end logistics and management for corporate summits, retreats, and launches.",
+      "benefits": [
+        "Budget control & venue sourcing",
+        "Keynote speaker hospitality",
+        "Live streaming production",
+        "Real-time check-in handling"
+      ],
+      "advantage": "Seamless hybrid in-person and virtual summit setups."
+    },
+    {
+      "icon": "megaphone",
+      "tag": "Marketing",
+      "title": "Paid Advertising",
+      "desc": "Precision media buying across Meta, Google, LinkedIn, and TikTok focused on ROAS.",
+      "benefits": [
+        "CAPI & advanced conversion tracking",
+        "Creative A/B testing matrix",
+        "Strict budget spend guardrails",
+        "Weekly strategic syncs"
+      ],
+      "advantage": "Certified media buyers managing six-figure budgets."
+    },
+    {
+      "icon": "code",
+      "tag": "Tech",
+      "title": "Web Development",
+      "desc": "Secure, scalable, and responsive web platforms and customer portals.",
+      "benefits": [
+        "Custom Next.js, React, WordPress",
+        "Sub-second mobile loading speeds",
+        "Enterprise SSL & security",
+        "Continuous technical maintenance"
+      ],
+      "advantage": "Clean documented code with third-party API integration."
+    },
+    {
+      "icon": "truck",
+      "tag": "Corporate",
+      "title": "Logistics & Supply Chain",
+      "desc": "Supply chain streamlining, carrier contract auditing, and fulfillment optimization.",
+      "benefits": [
+        "Carrier rate renegotiations",
+        "Warehouse pick/pack optimization",
+        "Customs documentation compliance",
+        "Shipment tracking integration"
+      ],
+      "advantage": "Direct freight forwarder relationships in EMEA."
+    }
+  ],
+  "reviews": [
+    {
+      "id": "rev-1",
+      "role": "Head of Operations",
+      "company": "BE FORWARD E-Commerce",
+      "quote": "Experts Group Plus scaled our live customer support coverage to 24/7 in 6 days. Our first-response time dropped from 45 minutes to 90 seconds while maintaining a 98% CSAT.",
+      "initials": "BF",
+      "rating": 5
+    },
+    {
+      "id": "rev-2",
+      "role": "Managing Director",
+      "company": "PSEO Agency EMEA",
+      "quote": "Delegating our high-volume graphic design and video editing pods to Experts Group reduced our asset delivery turnaround from 5 days to 24 hours with an immediate 58% overhead reduction.",
+      "initials": "PA",
+      "rating": 5
+    },
+    {
+      "id": "rev-3",
+      "role": "VP of Supply Chain",
+      "company": "Mountains Solutions",
+      "quote": "Their 3-week diagnostic identified $140,000 in redundant SaaS software subscriptions and unified four fragmented operational pipelines into an automated CRM flow.",
+      "initials": "MS",
+      "rating": 5
+    },
+    {
+      "id": "rev-4",
+      "role": "Customer Operations Lead",
+      "company": "FLAIRSTECH Global",
+      "quote": "Their bilingual Egyptian support squads handled over 40,000 tickets in Q4 without missing a single SLA. Flawless onboarding and zero ramp-up friction.",
+      "initials": "FG",
+      "rating": 5
+    },
+    {
+      "id": "rev-5",
+      "role": "Chief Executive Officer",
+      "company": "The Outsource Group",
+      "quote": "Eliminated 62% of our administrative overhead within 60 days. The weekly BI governance and QA ticket inspections give us complete executive transparency.",
+      "initials": "OG",
+      "rating": 5
+    },
+    {
+      "id": "rev-6",
+      "role": "Logistics Director",
+      "company": "Madrid Enterprise Logistics",
+      "quote": "From regional carrier rate negotiations to warehouse dispatch coordination, Experts Group Plus acts as a seamless extension of our internal team.",
+      "initials": "ML",
+      "rating": 5
+    }
+  ],
+  "consultation": [
+    {
+      "title": "Financial & Unit Economics Strategy",
+      "category": "FINANCE & MARGIN EXPANSION",
+      "desc": "Build 12-to-36 month dynamic cash flow projections, optimize pricing structures, and improve gross unit margins to ensure long-term stability."
+    },
+    {
+      "title": "Operational & Process Diagnostics",
+      "category": "WORKFLOW & SCALABILITY",
+      "desc": "Identify and eliminate departmental bottlenecks, remove redundant software subscriptions, and standardize repeatable SOPs across your company."
+    },
+    {
+      "title": "Market Expansion & Regional GTM",
+      "category": "GROWTH & MARKET PENETRATION",
+      "desc": "Target high-intent customer segments, test agile go-to-market channels, and outmaneuver regional competition with backed empirical data."
+    },
+    {
+      "title": "Organizational Structure & Team Scaling",
+      "category": "EXECUTIVE GOVERNANCE",
+      "desc": "Design scalable organizational charts, establish clear accountability matrices, and transition founders smoothly into executive leadership."
+    },
+    {
+      "title": "Digital Transformation & Tech Stack Audit",
+      "category": "TECHNOLOGY ARCHITECTURE",
+      "desc": "Audit SaaS software expenses, eradicate software bloat, and build unified, automated tech ecosystems across sales and operations."
+    },
+    {
+      "title": "Sales Pipeline & Revenue Operations",
+      "category": "REVENUE & CONVERSION",
+      "desc": "Re-engineer your sales stages, train high-converting account executives, and institute predictable monthly pipeline forecasting."
+    },
+    {
+      "title": "Supply Chain & Vendor Cost Optimization",
+      "category": "PROCUREMENT & FULFILLMENT",
+      "desc": "Audit vendor agreements, renegotiate tier pricing, and streamline end-to-end fulfillment pipelines to maximize bottom-line profit."
+    }
+  ]
+}
