@@ -161,7 +161,7 @@ app.get('/api/admin/dashboard',requireAdmin,async(req,res)=>{try{
  pool.query('SELECT content_type,COUNT(*)::int AS count FROM content_items GROUP BY content_type')]);
  res.json({leads:leads.rows,admins:admins.rows,counts:counts.rows});
  }catch(e){console.error(e);res.status(500).json({error:'Could not load dashboard.'})}});
-// Basic first-party analytics: anonymous visitor counts, page views and button presses only.
+// Basic first-party analytics: anonymous visitor counts, page views, button presses and active-page time.
 const analyticsLimiter=rateLimit({windowMs:60000,limit:90,standardHeaders:true,legacyHeaders:false});
 app.post('/api/analytics/event',analyticsLimiter,async(req,res)=>{
  try{
@@ -169,11 +169,15 @@ app.post('/api/analytics/event',analyticsLimiter,async(req,res)=>{
   const visitor=String(b.visitorId||'');
   const session=String(b.sessionId||'');
   const event=String(b.eventName||'page_view');
-  if(!/^[a-f0-9-]{36}$/i.test(visitor)||!/^[a-f0-9-]{36}$/i.test(session)||!['page_view','button_press'].includes(event)){
+  if(!/^[a-f0-9-]{36}$/i.test(visitor)||!/^[a-f0-9-]{36}$/i.test(session)||!['page_view','button_press','engaged_time'].includes(event)){
    return res.status(400).json({error:'Invalid analytics event.'});
   }
   const page=String(b.pagePath||'/').slice(0,300);
   const label=String(b.eventLabel||'').trim().slice(0,160)||null;
+  const durationMs=event==='engaged_time'?Math.round(Number(b.durationMs)):null;
+  if(event==='engaged_time'&&(!Number.isFinite(durationMs)||durationMs<250||durationMs>30000)){
+   return res.status(400).json({error:'Invalid engagement duration.'});
+  }
   await pool.query(
    'INSERT INTO analytics_visitors(visitor_id,first_seen,last_seen,first_path) VALUES($1,NOW(),NOW(),$2) ON CONFLICT(visitor_id) DO UPDATE SET last_seen=NOW()',
    [visitor,page]
@@ -183,8 +187,8 @@ app.post('/api/analytics/event',analyticsLimiter,async(req,res)=>{
    [session,visitor,page]
   );
   await pool.query(
-   'INSERT INTO analytics_events(session_id,visitor_id,event_name,event_label,page_path,created_at) VALUES($1,$2,$3,$4,$5,NOW())',
-   [session,visitor,event,label,page]
+   'INSERT INTO analytics_events(session_id,visitor_id,event_name,event_label,page_path,duration_ms,created_at) VALUES($1,$2,$3,$4,$5,$6,NOW())',
+   [session,visitor,event,label,page,durationMs]
   );
   res.status(202).json({ok:true});
  }catch(error){
@@ -196,10 +200,13 @@ app.get('/api/admin/analytics',requireAdmin,async(req,res)=>{
  const days=[7,28,90].includes(Number(req.query.days))?Number(req.query.days):28;
  const period="NOW()-($1::int*INTERVAL '1 day')";
  try{
+  const summarySql='SELECT COUNT(DISTINCT visitor_id)::int AS visitors, COUNT(DISTINCT session_id) FILTER(WHERE event_name=\\'page_view\\')::int AS visits, COUNT(*) FILTER(WHERE event_name=\\'page_view\\')::int AS page_views, COUNT(*) FILTER(WHERE event_name=\\'button_press\\')::int AS button_presses, COALESCE(SUM(duration_ms) FILTER(WHERE event_name=\\'engaged_time\\'),0)::bigint AS engaged_ms, COALESCE(ROUND(COALESCE(SUM(duration_ms) FILTER(WHERE event_name=\\'engaged_time\\'),0)::numeric/NULLIF(COUNT(DISTINCT session_id) FILTER(WHERE event_name=\\'page_view\\'),0)),0)::bigint AS average_visit_ms FROM analytics_events WHERE created_at>='+period;
+  const pagesSql='WITH page_views AS (SELECT page_path,COUNT(*)::int AS views FROM analytics_events WHERE event_name=\\'page_view\\' AND created_at>='+period+' GROUP BY page_path), page_times AS (SELECT page_path,SUM(duration_ms)::bigint AS engaged_ms FROM analytics_events WHERE event_name=\\'engaged_time\\' AND created_at>='+period+' GROUP BY page_path) SELECT v.page_path,v.views,COALESCE(t.engaged_ms,0)::bigint AS engaged_ms,COALESCE(ROUND(COALESCE(t.engaged_ms,0)::numeric/NULLIF(v.views,0)),0)::bigint AS average_page_ms FROM page_views v LEFT JOIN page_times t ON t.page_path=v.page_path ORDER BY v.views DESC LIMIT 20';
+  const buttonsSql='SELECT COALESCE(event_label,\\'Unlabelled button\\') AS button,page_path,COUNT(*)::int AS presses FROM analytics_events WHERE event_name=\\'button_press\\' AND created_at>='+period+' GROUP BY event_label,page_path ORDER BY presses DESC LIMIT 30';
   const [summary,pages,buttons]=await Promise.all([
-   pool.query(`SELECT COUNT(DISTINCT visitor_id)::int AS visitors,COUNT(DISTINCT session_id)::int AS visits,COUNT(*) FILTER(WHERE event_name='page_view')::int AS page_views,COUNT(*) FILTER(WHERE event_name='button_press')::int AS button_presses FROM analytics_events WHERE created_at>=${period}`,[days]),
-   pool.query(`SELECT page_path,COUNT(*)::int AS views FROM analytics_events WHERE event_name='page_view' AND created_at>=${period} GROUP BY page_path ORDER BY views DESC LIMIT 20`,[days]),
-   pool.query(`SELECT COALESCE(event_label,'Unlabelled button') AS button,page_path,COUNT(*)::int AS presses FROM analytics_events WHERE event_name='button_press' AND created_at>=${period} GROUP BY event_label,page_path ORDER BY presses DESC LIMIT 30`,[days])
+   pool.query(summarySql,[days]),
+   pool.query(pagesSql,[days]),
+   pool.query(buttonsSql,[days])
   ]);
   res.json({ok:true,days,summary:summary.rows[0]||{},pages:pages.rows,buttons:buttons.rows});
  }catch(error){
