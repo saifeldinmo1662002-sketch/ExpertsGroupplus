@@ -36,7 +36,7 @@
     const submit=form.querySelector('[type="submit"]');if(submit){submit.disabled=true;submit.dataset.oldText=submit.textContent;submit.textContent=routeInfo().lang==='ar'?'جارٍ الإرسال...':'Sending...'}
     try{
       const body={name:get('contact-name'),email:get('contact-email'),company:get('contact-company'),scope:get('contact-scope'),message:form.querySelector('textarea')?.value||'',language:routeInfo().lang,website:form.querySelector('[name="website"]')?.value||''};
-      const res=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await res.json();if(!res.ok)throw new Error(data.error||'Submission failed');form.reset();if(typeof showGlobalToast==='function')showGlobalToast(routeInfo().lang==='ar'?'تم استلام طلبك بنجاح. سنتواصل معك قريبًا.':'Thank you. Your inquiry has been received.');
+      const res=await fetch('/api/contact',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const data=await res.json();if(!res.ok)throw new Error(data.error||'Submission failed');form.reset();if(window.EGPAnalytics)window.EGPAnalytics.track('contact_submit','Contact form submitted');if(typeof showGlobalToast==='function')showGlobalToast(routeInfo().lang==='ar'?'تم استلام طلبك بنجاح. سنتواصل معك قريبًا.':'Thank you. Your inquiry has been received.');
     }catch(err){if(typeof showGlobalToast==='function')showGlobalToast(err.message||'Could not submit your inquiry.');else alert(err.message)}finally{if(submit){submit.disabled=false;submit.textContent=submit.dataset.oldText||'Submit'}}
   };
 
