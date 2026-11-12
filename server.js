@@ -6,7 +6,6 @@ const helmet = require('helmet');
 const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 const bcrypt = require('bcryptjs');
-const {BetaAnalyticsDataClient}=require('@google-analytics/data');
 const rateLimit = require('express-rate-limit');
 const pool = require('./db');
 const app = express();
@@ -162,37 +161,14 @@ app.get('/api/admin/dashboard',requireAdmin,async(req,res)=>{try{
  pool.query('SELECT content_type,COUNT(*)::int AS count FROM content_items GROUP BY content_type')]);
  res.json({leads:leads.rows,admins:admins.rows,counts:counts.rows});
  }catch(e){console.error(e);res.status(500).json({error:'Could not load dashboard.'})}});
-let gaClient;
-function getAnalyticsClient(){
- if(!process.env.GA4_PROPERTY_ID||!process.env.GA4_SERVICE_ACCOUNT_JSON)return null;
- if(!gaClient){let credentials;try{credentials=JSON.parse(process.env.GA4_SERVICE_ACCOUNT_JSON)}catch{throw new Error('GA4_SERVICE_ACCOUNT_JSON must contain valid service-account JSON.')}gaClient=new BetaAnalyticsDataClient({credentials,projectId:credentials.project_id});}
- return gaClient;
-}
-app.get('/api/admin/analytics',requireAdmin,async(req,res)=>{
- const client=getAnalyticsClient();
- if(!client)return res.json({configured:false,missing:['GA4_PROPERTY_ID','GA4_SERVICE_ACCOUNT_JSON']});
- const range=String(req.query.range||'28')==='7'?'7':'28';
- const startDate=range==='7'?'7daysAgo':'28daysAgo';
- const property='properties/'+String(process.env.GA4_PROPERTY_ID).replace(/^properties\//,'');
- const report=async(dimensions,metrics,limit=10)=>{
-  const [response]=await client.runReport({property,dateRanges:[{startDate,endDate:'today'}],dimensions:dimensions.map(name=>({name})),metrics:metrics.map(name=>({name})),limit});
-  return (response.rows||[]).map(row=>Object.fromEntries([...dimensions.map((name,i)=>[name,row.dimensionValues?.[i]?.value||'—']),...metrics.map((name,i)=>[name,Number(row.metricValues?.[i]?.value||0)])]));
- };
- try{
-  const [summary,pages,sources,countries,cities,devices,ages,genders]=await Promise.all([
-   report([],['activeUsers','sessions','screenPageViews','newUsers','keyEvents'],1),
-   report(['pagePath'],['screenPageViews'],10),
-   report(['sessionSourceMedium'],['sessions'],10),
-   report(['country'],['activeUsers'],10),
-   report(['city'],['activeUsers'],10),
-   report(['deviceCategory'],['activeUsers'],10),
-   report(['userAgeBracket'],['activeUsers'],10),
-   report(['userGender'],['activeUsers'],10)
-  ]);
-  res.json({configured:true,range,summary:summary[0]||{},pages,sources,countries,cities,devices,ages,genders});
- }catch(error){console.error('GA4 reporting failed:',error);res.status(502).json({configured:true,error:'Google Analytics could not return reports. Check the GA4 property ID, service-account access, and Google Analytics Data API.'})}
-});
-
+// Independent first-party analytics. No Google SDK, external analytics API, or raw IP storage.
+const analyticsLimiter=rateLimit({windowMs:60000,limit:90,standardHeaders:true,legacyHeaders:false});
+function analyticsDevice(ua){return /tablet|ipad/i.test(ua)?'tablet':/mobile|android|iphone|ipod/i.test(ua)?'mobile':'desktop'}
+function analyticsBrowser(ua){return /Edg\\//.test(ua)?'Edge':/OPR\\//.test(ua)?'Opera':/Firefox\\//.test(ua)?'Firefox':/Chrome\\//.test(ua)?'Chrome':/Safari\\//.test(ua)?'Safari':'Other'}
+function analyticsOS(ua){return /Windows/i.test(ua)?'Windows':/Android/i.test(ua)?'Android':/(iPhone|iPad|iPod)/i.test(ua)?'iOS':/Mac OS/i.test(ua)?'macOS':/Linux/i.test(ua)?'Linux':'Other'}
+function analyticsSource(ref,utm){if(utm.utm_source||utm.utm_medium)return {source:utm.utm_source||'unknown',medium:utm.utm_medium||'unknown',campaign:utm.utm_campaign||null};if(!ref)return {source:'Direct',medium:'(none)',campaign:null};try{const host=new URL(ref).hostname.replace(/^www\\./,'');const social=/facebook|instagram|linkedin|tiktok|twitter|x\\.com|youtube/i.test(host);const search=/google\\.|bing\\.|yahoo\\.|duckduckgo\\./i.test(host);return {source:host,medium:social?'social':search?'organic':'referral',campaign:null}}catch{return {source:'Direct',medium:'(none)',campaign:null}}}
+app.post('/api/analytics/event',analyticsLimiter,async(req,res)=>{try{const b=req.body||{},visitor=String(b.visitorId||''),session=String(b.sessionId||''),event=String(b.eventName||'page_view');if(!/^[a-f0-9-]{36}$/i.test(visitor)||!/^[a-f0-9-]{36}$/i.test(session)||!['page_view','contact_submit'].includes(event))return res.status(400).json({error:'Invalid analytics event.'});const page=String(b.pagePath||'/').slice(0,300),ref=String(b.referrer||'').slice(0,500),ua=String(req.get('user-agent')||'').slice(0,500),utm=b.utm&&typeof b.utm==='object'?b.utm:{},src=analyticsSource(ref,utm),country=String(req.get('cf-ipcountry')||'').slice(0,2).toUpperCase()||null,device=analyticsDevice(ua),browser=analyticsBrowser(ua),os=analyticsOS(ua);await pool.query('INSERT INTO analytics_visitors(visitor_id,first_seen,last_seen,first_path,first_referrer,country_code,device_category,browser,operating_system) VALUES($1,NOW(),NOW(),$2,$3,$4,$5,$6,$7) ON CONFLICT(visitor_id) DO UPDATE SET last_seen=NOW()',[visitor,page,ref||null,country,device,browser,os]);const srcName=String(src.source||'Direct').slice(0,120),medium=String(src.medium||'(none)').slice(0,80),campaign=String(src.campaign||'').slice(0,120)||null;await pool.query('INSERT INTO analytics_sessions(session_id,visitor_id,started_at,last_seen,landing_page,referrer,source,medium,campaign,country_code,device_category,browser,operating_system) VALUES($1,$2,NOW(),NOW(),$3,$4,$5,$6,$7,$8,$9,$10,$11) ON CONFLICT(session_id) DO UPDATE SET last_seen=NOW()',[session,visitor,page,ref||null,srcName,medium,campaign,country,device,browser,os]);await pool.query('INSERT INTO analytics_events(session_id,visitor_id,event_name,page_path,referrer,created_at) VALUES($1,$2,$3,$4,$5,NOW())',[session,visitor,event,page,ref||null]);res.status(202).json({ok:true})}catch(e){console.error('Analytics event failed:',e.message);res.status(500).json({error:'Could not record analytics event.'})}});
+app.get('/api/admin/analytics',requireAdmin,async(req,res)=>{const days=[7,28,90].includes(Number(req.query.days))?Number(req.query.days):28;try{const q=async(sql)=>pool.query(sql,[days]);const [summary,pages,sources,countries,devices,browsers,trend]=await Promise.all([q("SELECT COUNT(*) FILTER(WHERE event_name='page_view')::int AS page_views,COUNT(DISTINCT visitor_id)::int AS visitors,COUNT(DISTINCT session_id)::int AS sessions,COUNT(DISTINCT visitor_id) FILTER(WHERE first_seen>=NOW()-($1::int*INTERVAL '1 day'))::int AS new_visitors,(SELECT COUNT(*)::int FROM analytics_events WHERE event_name='contact_submit' AND created_at>=NOW()-($1::int*INTERVAL '1 day')) AS contact_submissions FROM analytics_events WHERE created_at>=NOW()-($1::int*INTERVAL '1 day')"),q("SELECT page_path,COUNT(*)::int AS views,COUNT(DISTINCT visitor_id)::int AS visitors FROM analytics_events WHERE event_name='page_view' AND created_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY page_path ORDER BY views DESC LIMIT 12"),q("SELECT COALESCE(source,'Direct') AS source,COALESCE(medium,'(none)') AS medium,COUNT(*)::int AS sessions FROM analytics_sessions WHERE started_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY 1,2 ORDER BY sessions DESC LIMIT 12"),q("SELECT COALESCE(country_code,'Unknown') AS country,COUNT(DISTINCT visitor_id)::int AS visitors FROM analytics_sessions WHERE started_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY 1 ORDER BY visitors DESC LIMIT 12"),q("SELECT device_category AS device,COUNT(DISTINCT visitor_id)::int AS visitors FROM analytics_sessions WHERE started_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY 1 ORDER BY visitors DESC"),q("SELECT browser,COUNT(DISTINCT visitor_id)::int AS visitors FROM analytics_sessions WHERE started_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY 1 ORDER BY visitors DESC LIMIT 8"),q("SELECT TO_CHAR(day,'YYYY-MM-DD') AS day,COALESCE(v.visitors,0)::int AS visitors,COALESCE(p.page_views,0)::int AS page_views FROM generate_series(CURRENT_DATE-($1::int-1),CURRENT_DATE,INTERVAL '1 day') day LEFT JOIN (SELECT DATE(first_seen) day,COUNT(*) visitors FROM analytics_visitors WHERE first_seen>=CURRENT_DATE-($1::int-1) GROUP BY 1) v ON v.day=day::date LEFT JOIN (SELECT DATE(created_at) day,COUNT(*) page_views FROM analytics_events WHERE event_name='page_view' AND created_at>=CURRENT_DATE-($1::int-1) GROUP BY 1) p ON p.day=day::date ORDER BY day")]);res.json({ok:true,days,summary:summary.rows[0]||{},pages:pages.rows,sources:sources.rows,countries:countries.rows,devices:devices.rows,browsers:browsers.rows,trend:trend.rows})}catch(e){console.error('Analytics dashboard failed:',e);res.status(500).json({error:'Could not load website analytics.'})}});
 app.post('/api/admin/leads/:id/notify',requireAdmin,async(req,res)=>{try{const result=await notifySavedLead(req.params.id);res.status(result.ok?200:502).json(result)}catch(e){console.error(e);res.status(500).json({error:'Could not retry the email notification.'})}});
 app.get('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});const q=await pool.query('SELECT item_key,data,sort_order FROM content_items WHERE content_type=$1 ORDER BY sort_order,id',[type]);res.json(q.rows.map(r=>({...r.data,_key:r.item_key,_sort:r.sort_order}))) });
 app.post('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});try{const data=req.body||{};const key=String(data.id||`${type}-${Date.now()}`).slice(0,100);delete data._key;delete data._sort;data.id=key;const q=await pool.query('INSERT INTO content_items(content_type,item_key,data,sort_order) VALUES($1,$2,$3,COALESCE((SELECT MAX(sort_order)+1 FROM content_items WHERE content_type=$1),0)) RETURNING item_key',[type,key,data]);res.status(201).json({ok:true,id:q.rows[0].item_key})}catch(e){if(e.code==='23505')return res.status(409).json({error:'That item ID already exists.'});console.error(e);res.status(500).json({error:'Could not save content.'})}});
