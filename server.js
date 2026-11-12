@@ -110,7 +110,7 @@ function addHead(html,lang,page){
  '\n<script type="application/ld+json">'+JSON.stringify({'@context':'https://schema.org','@graph':graph})+'</script>';
  let output=html.replace(/<title>[^<]*<\/title>/i,`<title>${title}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`);
  // Make the requested route's content visible in the initial HTML response, not only after client-side JavaScript runs.
- output=output.replace(/(<section\\b[^>]*id=[\"']view-([^\"']+)[\"'][^>]*class=[\"'])([^\"']*)([\"'])/gi,(whole,start,view,classes,end)=>{const tokens=classes.split(/\\s+/).filter(Boolean).filter(token=>token!=='hidden');if(view!==page)tokens.unshift('hidden');return start+tokens.join(' ')+end;});
+ output=output.replace(/(<section\b[^>]*id=[\"']view-([^\"']+)[\"'][^>]*class=[\"'])([^\"']*)([\"'])/gi,(whole,start,view,classes,end)=>{const tokens=classes.split(/\s+/).filter(Boolean).filter(token=>token!=='hidden');if(view!==page)tokens.unshift('hidden');return start+tokens.join(' ')+end;});
  output=output.replace('</head>',head+'\n</head>');
  if(lang==='ar')output=translateArabicHtml(output);
  return output;
