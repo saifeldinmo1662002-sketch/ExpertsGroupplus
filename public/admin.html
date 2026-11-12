@@ -1,9 +1,91 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>EGP Admin Portal</title><style>
 :root{--navy:#071a36;--blue:#154695;--gold:#c2a74d;--ink:#172033;--muted:#667085;--line:#e5e9f0;--bg:#f5f7fb}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}.brand{display:flex;align-items:center;gap:12px;font-weight:900;color:white;letter-spacing:.03em}.mark{width:34px;height:34px;background:conic-gradient(from 45deg,var(--gold) 0 25%,#154695 0 50%,var(--gold) 0 75%,#154695 0);transform:rotate(0deg);border-radius:7px}.auth-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(135deg,#06152e,#153e78)}.auth-card{background:white;width:min(440px,100%);padding:32px;border-radius:22px;box-shadow:0 24px 80px #0004}.auth-card h1{margin:22px 0 4px;font-size:25px}.muted{color:var(--muted)}.field{display:grid;gap:6px;margin:14px 0}.field label{font-size:12px;font-weight:700;color:#344054}.field input,.field textarea,.field select{width:100%;border:1px solid #d0d5dd;border-radius:10px;padding:11px 12px;background:#fff;color:#172033;outline:none}.field input:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #15469518}.field textarea{min-height:100px;resize:vertical}.btn{border:0;border-radius:10px;padding:11px 15px;font-weight:750}.primary{background:var(--blue);color:white}.gold{background:var(--gold);color:#171717}.light{background:#eef2f7;color:#27364d}.danger{background:#fee4e2;color:#b42318}.full{width:100%}.auth-links{display:flex;justify-content:space-between;gap:10px;margin-top:16px}.text-btn{background:none;border:0;color:var(--blue);font-weight:700;padding:4px}.alert{padding:11px 13px;border-radius:10px;background:#fff4e5;color:#854d0e;margin:12px 0}.alert.error{background:#fee4e2;color:#912018}.app{min-height:100vh}.topbar{height:68px;background:var(--navy);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 max(22px,calc((100vw - 1400px)/2));position:sticky;top:0;z-index:5}.top-actions{display:flex;gap:10px;align-items:center}.shell{max-width:1400px;margin:auto;padding:26px 22px;display:grid;grid-template-columns:225px minmax(0,1fr);gap:24px}.side{background:white;border:1px solid var(--line);border-radius:16px;padding:14px;height:max-content;position:sticky;top:90px}.side button{display:flex;width:100%;align-items:center;text-align:left;border:0;background:transparent;padding:12px;border-radius:9px;color:#344054;font-weight:700;margin:2px 0}.side button.active,.side button:hover{background:#edf2fa;color:var(--blue)}.main{min-width:0}.heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:20px}.heading h1{margin:0;font-size:25px}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:20px}.stat{background:white;border:1px solid var(--line);border-radius:14px;padding:18px}.stat b{display:block;font-size:25px;color:var(--navy)}.panel{background:white;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px;overflow:hidden}.panel h2{font-size:16px;margin:0 0 14px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:650px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #edf0f4;vertical-align:top;font-size:13px}th{color:#667085;font-size:11px;text-transform:uppercase;letter-spacing:.05em;background:#fafbfc}td .sub{display:block;color:#667085;font-size:11px;margin-top:3px}.pill{display:inline-block;padding:4px 8px;border-radius:30px;background:#eef2f7;color:#344054;font-size:11px;font-weight:750}.pill.pending,.pill.new{background:#fff2cc;color:#855b00}.pill.approved,.pill.closed{background:#dcfae6;color:#067647}.pill.rejected,.pill.spam{background:#fee4e2;color:#b42318}.actions{display:flex;gap:6px;flex-wrap:wrap}.small{padding:7px 9px;font-size:11px}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.empty{padding:30px;text-align:center;color:#667085}.modal-back{position:fixed;inset:0;background:#071a3680;z-index:10;display:grid;place-items:center;padding:20px}.modal{background:white;border-radius:18px;width:min(650px,100%);max-height:90vh;overflow:auto;padding:24px}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal-head h2{margin:0}.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.modal-grid .wide{grid-column:1/-1}.note{font-size:12px;color:#667085}.mobile-nav{display:none}@media(max-width:850px){.shell{grid-template-columns:1fr}.side{position:static;display:flex;overflow:auto;gap:5px}.side button{white-space:nowrap;width:auto}.cards{grid-template-columns:1fr 1fr}.topbar{padding:0 14px}}@media(max-width:560px){.cards{grid-template-columns:1fr}.auth-card{padding:24px}.topbar{height:60px}.shell{padding:16px 12px}.heading{align-items:flex-start;flex-direction:column}.modal-grid{grid-template-columns:1fr}.modal-grid .wide{grid-column:auto}}
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap');
+:root{--navy:#080E1F;--deep:#0E2F66;--blue:#154695;--gold:#C2A74D;--light-gold:#DFC87B;--ink:#0F172A;--muted:#64748B;--line:#E2E8F0;--bg:#F8FAFC;--surface:#fff;--card-dark:#0D152F;--radius:16px}
+*{box-sizing:border-box}
+body{font-family:Inter,"Noto Sans Arabic",sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+button,input,select,textarea{font-family:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #C2A74D80;outline-offset:2px}
+.brand{gap:12px;letter-spacing:-.035em;font-weight:900}
+.brand .mark{width:40px;height:40px;flex:0 0 40px;background:none;border-radius:0;transform:none;display:block;position:relative}
+.mark svg{display:block;width:100%;height:100%}
+.brand-wordmark{display:flex;flex-direction:column;line-height:.88;font-size:18px;font-weight:900;letter-spacing:-.045em}
+.brand-wordmark .plus{color:var(--gold);font-size:9px;letter-spacing:.22em;margin-left:5px}
+.auth-wrap{background:radial-gradient(circle at 15% 20%,#154695 0,transparent 34%),linear-gradient(135deg,#080E1F 0%,#0E2F66 100%);position:relative;overflow:hidden}
+.auth-wrap:before{content:"";position:absolute;width:420px;height:420px;border:1px solid #ffffff16;transform:rotate(45deg);border-radius:70px;right:-170px;top:-210px}
+.auth-card{position:relative;width:min(460px,100%);padding:38px;border:1px solid #ffffff80;border-radius:24px;box-shadow:0 30px 90px #02081766}
+.auth-card h1{font-size:28px;letter-spacing:-.04em;color:var(--navy);margin:28px 0 6px}
+.auth-card .brand{color:var(--blue)!important}
+.auth-card .brand-wordmark{font-size:19px}
+.auth-card .brand-wordmark .plus{font-size:10px}
+.auth-card .muted{font-size:14px;line-height:1.65}
+.field{gap:7px;margin:16px 0}
+.field label{font-size:12px;font-weight:700;color:#334155}
+.field input,.field textarea,.field select{min-height:46px;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:#fff;transition:border-color .2s,box-shadow .2s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 4px #15469516;outline:0}
+.btn{min-height:42px;border-radius:12px;padding:10px 16px;font-weight:700;transition:background .2s,transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-1px)}
+.primary{background:var(--blue);color:white;box-shadow:0 5px 14px #15469522}
+.primary:hover{background:var(--deep);box-shadow:0 7px 18px #15469530}
+.gold{background:var(--gold);color:var(--navy)}
+.light{background:#F1F5F9;color:#334155;border:1px solid var(--line)}
+.danger{background:#FEF2F2;color:#B42318}
+.text-btn{color:var(--blue)}
+.alert{border-radius:12px}
+.topbar{height:76px;background:#fff;color:var(--navy);border-bottom:1px solid var(--line);box-shadow:0 2px 8px #0f172a08;padding:0 max(24px,calc((100vw - 1440px)/2))}
+.topbar .brand{color:var(--blue)}
+.topbar .brand-wordmark{font-size:16px}
+.topbar .brand-wordmark .plus{font-size:9px}
+.topbar .note{color:var(--muted)!important}
+.topbar .light{background:#F8FAFC}
+.top-actions{gap:14px}
+.shell{max-width:1440px;padding:30px 26px;grid-template-columns:248px minmax(0,1fr);gap:28px}
+.side{background:var(--navy);border:0;border-radius:20px;padding:18px 12px;top:98px;box-shadow:0 12px 30px #080e1f20}
+.side:before{content:"WORKSPACE";display:block;color:#DFC87B;font-size:10px;font-weight:800;letter-spacing:.18em;padding:8px 13px 14px}
+.side button{color:#C9D4E5;padding:12px 13px;border-radius:12px;font-size:13px;gap:12px;margin:3px 0;transition:all .2s}
+.side button:before{content:"";width:6px;height:6px;border-radius:50%;background:#64748B;display:inline-block;flex:0 0 6px}
+.side button.active,.side button:hover{background:#154695;color:#fff;box-shadow:inset 3px 0 0 var(--gold)}
+.side button.active:before{background:var(--gold);box-shadow:0 0 0 4px #C2A74D22}
+.heading{margin-bottom:24px;align-items:center}
+.heading h1{font-size:30px;letter-spacing:-.045em;color:var(--navy);font-weight:800}
+.heading .muted{margin-top:5px;font-size:13px}
+.cards{gap:16px;margin-bottom:22px}
+.stat{border:1px solid var(--line);border-radius:18px;padding:21px;background:linear-gradient(135deg,#fff,#fbfdff);box-shadow:0 3px 12px #0f172a06;position:relative;overflow:hidden}
+.stat:after{content:"";position:absolute;right:-22px;top:-25px;width:78px;height:78px;border-radius:22px;transform:rotate(45deg);background:#C2A74D18}
+.stat b{font-size:30px;color:var(--blue);letter-spacing:-.04em;margin-top:7px}
+.stat .muted{font-size:12px;font-weight:600}
+.panel{border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:20px;box-shadow:0 3px 14px #0f172a06;background:var(--surface)}
+.panel h2{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:16px}
+table{min-width:680px}
+th,td{padding:14px 12px;border-bottom:1px solid #EDF2F7}
+th{background:#F8FAFC;color:#64748B;font-size:10px;letter-spacing:.09em}
+td{font-size:13px;color:#334155}
+td b{color:var(--navy)}
+.pill{border:1px solid transparent;padding:5px 10px;font-size:10px;letter-spacing:.02em}
+.pill.pending,.pill.new{background:#FFFBEB;color:#92400E;border-color:#FDE68A}
+.pill.approved,.pill.closed{background:#ECFDF3;color:#067647;border-color:#ABEFC6}
+.pill.rejected,.pill.spam{background:#FEF3F2;color:#B42318;border-color:#FECDCA}
+.actions{gap:8px}
+.small{min-height:34px;padding:7px 11px;border-radius:10px}
+.toolbar{gap:10px}
+.empty{padding:42px 20px;color:#64748B}
+.modal-back{background:#080E1F99;backdrop-filter:blur(5px)}
+.modal{border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:0 24px 80px #080e1f44}
+.modal-head h2{font-size:20px;color:var(--navy);font-weight:800}
+.note{color:#64748B}
+@media(max-width:850px){.shell{grid-template-columns:1fr;padding:20px 16px;gap:18px}.side{display:flex;flex-wrap:nowrap;overflow:auto;border-radius:14px;padding:9px}.side:before{display:none}.side button{white-space:nowrap;flex:0 0 auto;width:auto}.side button:before{display:none}.topbar{padding:0 16px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.auth-card{padding:25px 22px}.topbar{height:66px}.topbar .brand-wordmark{font-size:13px}.brand .mark{width:34px;height:34px;flex-basis:34px}.top-actions{gap:6px}.top-actions #userLabel{display:none}.shell{padding:16px 12px}.heading h1{font-size:25px}.cards{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:15px}.stat b{font-size:25px}.panel{padding:15px;border-radius:16px}.modal{padding:20px}}
+[dir=rtl] body{font-family:"Noto Sans Arabic",Inter,sans-serif}
+[dir=rtl] .shell{direction:rtl}
+[dir=rtl] .side button{text-align:right}
+[dir=rtl] th,[dir=rtl] td{text-align:right}
+[dir=rtl] .top-actions{flex-direction:row-reverse}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 </style></head><body>
-<div id="auth" class="auth-wrap"><div class="auth-card"><div class="brand" style="color:#071a36"><span class="mark"></span><span>EXPERTS GROUP PLUS<br><small style="font-size:10px;color:#a88c32;letter-spacing:.2em">ADMIN PORTAL</small></span></div><h1 id="authTitle">Admin sign in</h1><p class="muted" id="authIntro">Sign in with your approved administrator account.</p><div id="authAlert" class="alert hidden"></div><form id="loginForm"><div class="field"><label>Email address</label><input name="email" type="email" autocomplete="username" required></div><div class="field"><label>Password</label><input name="password" type="password" autocomplete="current-password" required></div><button class="btn primary full">Sign in securely</button></form><form id="requestForm" class="hidden"><div class="field"><label>Full name</label><input name="name" required minlength="2"></div><div class="field"><label>Work email</label><input name="email" type="email" required></div><div class="field"><label>Password (minimum 14 characters)</label><input name="password" type="password" minlength="14" required></div><button class="btn primary full">Request admin access</button></form><div class="auth-links"><button id="toggleRequest" class="text-btn">Request access</button><a href="/en/" class="text-btn">Back to website</a></div><p class="note" style="margin-top:20px">New accounts remain pending until approved by the platform owner. Do not share administrator credentials.</p></div></div>
-<div id="app" class="app hidden"><header class="topbar"><div class="brand"><span class="mark"></span><span>EXPERTS GROUP PLUS <small style="color:#d9c47b;font-size:10px"> / ADMIN</small></span></div><div class="top-actions"><span id="userLabel" class="note" style="color:#d8e0ed"></span><button id="logout" class="btn light small">Sign out</button></div></header><div class="shell"><nav class="side"><button data-tab="overview" class="active">Overview</button><button data-tab="reviews">Reviews</button><button data-tab="operations">Operation services</button><button data-tab="consultation">Consultation options</button><button data-tab="leads">Contact submissions</button><button data-tab="links">Button links</button><button data-tab="admins" id="adminsNav" class="hidden">Admin approvals</button><button data-tab="security">Security</button></nav><main class="main" id="content"></main></div></div>
+<div id="auth" class="auth-wrap"><div class="auth-card"><div class="brand" style="color:#071a36"><span class="mark"><svg viewBox="0 0 100 100" aria-hidden="true"><rect x="38" y="14" width="24" height="24" rx="6" transform="rotate(45 50 26)" fill="#C2A74D"/><rect x="38" y="62" width="24" height="24" rx="6" transform="rotate(45 50 74)" fill="#C2A74D"/><rect x="14" y="38" width="24" height="24" rx="6" transform="rotate(45 26 50)" fill="#154695"/><rect x="62" y="38" width="24" height="24" rx="6" transform="rotate(45 74 50)" fill="#154695"/></svg></span><span class="brand-wordmark">EXPERTS<br>GROUP<span class="plus">PLUS</span></span><span class="brand-wordmark" style="font-size:10px;letter-spacing:.16em;color:#64748B;margin-left:4px">ADMIN PORTAL</span></div><h1 id="authTitle">Admin sign in</h1><p class="muted" id="authIntro">Sign in with your approved administrator account.</p><div id="authAlert" class="alert hidden"></div><form id="loginForm"><div class="field"><label>Email address</label><input name="email" type="email" autocomplete="username" required></div><div class="field"><label>Password</label><input name="password" type="password" autocomplete="current-password" required></div><button class="btn primary full">Sign in securely</button></form><form id="requestForm" class="hidden"><div class="field"><label>Full name</label><input name="name" required minlength="2"></div><div class="field"><label>Work email</label><input name="email" type="email" required></div><div class="field"><label>Password (minimum 14 characters)</label><input name="password" type="password" minlength="14" required></div><button class="btn primary full">Request admin access</button></form><div class="auth-links"><button id="toggleRequest" class="text-btn">Request access</button><a href="/en/" class="text-btn">Back to website</a></div><p class="note" style="margin-top:20px">New accounts remain pending until approved by the platform owner. Do not share administrator credentials.</p></div></div>
+<div id="app" class="app hidden"><header class="topbar"><div class="brand"><span class="mark"><svg viewBox="0 0 100 100" aria-hidden="true"><rect x="38" y="14" width="24" height="24" rx="6" transform="rotate(45 50 26)" fill="#C2A74D"/><rect x="38" y="62" width="24" height="24" rx="6" transform="rotate(45 50 74)" fill="#C2A74D"/><rect x="14" y="38" width="24" height="24" rx="6" transform="rotate(45 26 50)" fill="#154695"/><rect x="62" y="38" width="24" height="24" rx="6" transform="rotate(45 74 50)" fill="#154695"/></svg></span><span class="brand-wordmark">EXPERTS<br>GROUP<span class="plus">PLUS</span></span><span style="font-size:10px;letter-spacing:.14em;color:#64748B;font-weight:800">ADMIN</span></div><div class="top-actions"><span id="userLabel" class="note" style="color:#d8e0ed"></span><button id="logout" class="btn light small">Sign out</button></div></header><div class="shell"><nav class="side"><button data-tab="overview" class="active">Overview</button><button data-tab="reviews">Reviews</button><button data-tab="operations">Operation services</button><button data-tab="consultation">Consultation options</button><button data-tab="leads">Contact submissions</button><button data-tab="links">Button links</button><button data-tab="admins" id="adminsNav" class="hidden">Admin approvals</button><button data-tab="security">Security</button></nav><main class="main" id="content"></main></div></div>
 <div id="modalBack" class="modal-back hidden"><div class="modal"><div class="modal-head"><h2 id="modalTitle">Edit item</h2><button class="btn light small" id="modalClose">Close</button></div><form id="itemForm"><div id="modalFields" class="modal-grid"></div><div class="actions" style="justify-content:flex-end;margin-top:18px"><button type="button" id="modalCancel" class="btn light">Cancel</button><button class="btn primary">Save changes</button></div></form></div></div>
 <script>
 const $=s=>document.querySelector(s);let me=null,activeTab='overview',cache={};
