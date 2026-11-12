@@ -33,6 +33,12 @@ const seed = require('./seed-content.json');
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS notification_id TEXT;
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS notification_error TEXT;
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS notification_sent_at TIMESTAMPTZ;
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS apollo_sync_status TEXT NOT NULL DEFAULT 'pending';
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS apollo_sync_error TEXT;
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS apollo_contact_id TEXT;
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS apollo_deal_id TEXT;
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS apollo_task_id TEXT;
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS apollo_synced_at TIMESTAMPTZ;
   `);
   for (const [type, rows] of Object.entries({review:seed.reviews, operation:seed.operations, consultation:seed.consultation})) {
     for (let i=0;i<rows.length;i++) {
