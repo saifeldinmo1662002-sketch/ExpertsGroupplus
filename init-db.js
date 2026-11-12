@@ -33,6 +33,7 @@ const seed = require('./seed-content.json');
     CREATE TABLE IF NOT EXISTS analytics_events(id BIGSERIAL PRIMARY KEY,session_id TEXT NOT NULL REFERENCES analytics_sessions(session_id) ON DELETE CASCADE,visitor_id TEXT NOT NULL REFERENCES analytics_visitors(visitor_id) ON DELETE CASCADE,event_name TEXT NOT NULL,page_path TEXT,referrer TEXT,created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
     CREATE INDEX IF NOT EXISTS analytics_events_created_idx ON analytics_events(created_at DESC);
     CREATE INDEX IF NOT EXISTS analytics_events_page_idx ON analytics_events(page_path,created_at DESC);
+    ALTER TABLE analytics_events ADD COLUMN IF NOT EXISTS event_label TEXT;
     CREATE INDEX IF NOT EXISTS analytics_sessions_started_idx ON analytics_sessions(started_at DESC);
     CREATE INDEX IF NOT EXISTS content_items_type_order_idx ON content_items(content_type,sort_order);
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS archived_at TIMESTAMPTZ;
