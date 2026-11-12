@@ -27,7 +27,7 @@
   function route(lang,page,replace=false){if(!pageNames.includes(page))page='home';const url=pathFor(lang,page);history[replace?'replaceState':'pushState']({page,lang},'',url);showPage(page);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';try{localStorage.setItem('eg_language',lang)}catch(e){}updateSeo(lang,page);if(typeof window.egApplyTranslations==='function')window.egApplyTranslations(lang,false);}
   window.navigateTo=function(page,updateHistory=true){const r=routeInfo();route(r.lang,page,!updateHistory);};
   window.applySiteLanguage=function(lang,announce=false){const r=routeInfo(),next=lang==='ar'?'ar':'en';if(next!==r.lang){location.assign(pathFor(next,r.page));return;}route(next,r.page,false);if(announce&&typeof showGlobalToast==='function')showGlobalToast(next==='ar'?'تم تفعيل اللغة العربية':'English language enabled');};
-  window.toggleLanguage=function(){const r=routeInfo();location.assign(pathFor(r.lang==='en'?'ar':'en',r.page));};
+  window.toggleLanguage=function(){const r=routeInfo();const next=r.lang==='en'?'ar':'en';window.location.href=pathFor(next,r.page);};
   window.addEventListener('popstate',()=>{const r=routeInfo();showPage(r.page);document.documentElement.lang=r.lang;document.documentElement.dir=r.lang==='ar'?'rtl':'ltr';try{localStorage.setItem('eg_language',r.lang)}catch(e){}updateSeo(r.lang,r.page);if(typeof window.egApplyTranslations==='function')window.egApplyTranslations(r.lang,false)});
 
   // Replace the browser-only lead capture with a server-persisted submission.
@@ -53,13 +53,35 @@
   };
   function refineArabic(root=document.body){if(document.documentElement.lang!=='ar')return;const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while(n=walker.nextNode()){let v=n.nodeValue;for(const [a,b] of Object.entries(arabicRefinements))v=v.replaceAll(a,b);if(v!==n.nodeValue)n.nodeValue=v}}
 
-  const escapeContent = value => typeof value==='string' ? value.replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c])) : value;
-  const safeItems = rows => rows.map(item=>Object.fromEntries(Object.entries(item).map(([k,v])=>[k,Array.isArray(v)?v.map(escapeContent):escapeContent(v)])));
+  function decodeCmsEntities(value) {
+    let decoded = String(value);
+    const pattern = /&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp|copy|mdash|ndash|rsquo|lsquo);/gi;
+    for (let pass = 0; pass < 3; pass++) {
+      const next = decoded.replace(pattern, (match, entity) => {
+        if (entity[0] === '#') {
+          const number = entity[1].toLowerCase() === 'x' ? parseInt(entity.slice(2), 16) : parseInt(entity.slice(1), 10);
+          try { return Number.isFinite(number) ? String.fromCodePoint(number) : match; } catch (_) { return match; }
+        }
+        const named = { amp:'&', lt:'<', gt:'>', quot:'"', apos:"'", nbsp:'\u00a0', copy:'©', mdash:'—', ndash:'–', rsquo:'’', lsquo:'‘' };
+        return named[entity.toLowerCase()] ?? match;
+      });
+      if (next === decoded) break;
+      decoded = next;
+    }
+    return decoded;
+  }
+  const escapeContent = value => typeof value === 'string'
+    ? decodeCmsEntities(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+    : value;
+  const safeItems = rows => rows.map(item => Object.fromEntries(Object.entries(item).map(([k,v]) => [k,Array.isArray(v)?v.map(escapeContent):escapeContent(v)])));
+
   async function loadPublicContent(){try{const r=await fetch('/api/public/content');if(!r.ok)return;const data=await r.json();
     if(Array.isArray(data.operations)&&data.operations.length){operationsData=safeItems(data.operations);buildOperationsGrid()}
     if(Array.isArray(data.reviews)){reviewsData=safeItems(data.reviews);currentReviewStartIdx=0;renderTestimonials()}
     if(Array.isArray(data.consultation)&&data.consultation.length){consultationOptions=safeItems(data.consultation);currentConsultationIdx=0;renderConsultationSlide()}
     linkMap=data.links||{};applyLinks();
+    if(typeof window.egApplyTranslations==='function')window.egApplyTranslations(routeInfo().lang,false);
+    refineArabic();
   }catch(e){console.warn('CMS content unavailable; displaying built-in website content.',e)}}
   document.addEventListener('DOMContentLoaded',()=>{
     const r=routeInfo();route(r.lang,r.page,true);updateSeo(r.lang,r.page);

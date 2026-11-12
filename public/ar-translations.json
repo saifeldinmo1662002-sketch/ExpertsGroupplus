@@ -434,5 +434,15 @@
   "Please provide a valid name and email.": "يرجى إدخال الاسم وعنوان البريد الإلكتروني بصورة صحيحة.",
   "Sending...": "جارٍ الإرسال...",
   "Thank you. Your inquiry has been received.": "شكرًا لتواصلك معنا. تم استلام استفسارك بنجاح.",
-  "Could not submit your inquiry.": "تعذّر إرسال استفسارك. يرجى المحاولة مرة أخرى."
+  "Could not submit your inquiry.": "تعذّر إرسال استفسارك. يرجى المحاولة مرة أخرى.",
+  "All Domains": "جميع المجالات",
+  "Operational service filters": "خيارات تصفية الخدمات التشغيلية",
+  "Paused": "متوقف مؤقتًا",
+  "Slide 1": "الشريحة 1",
+  "Slide 2": "الشريحة 2",
+  "Slide 3": "الشريحة 3",
+  "Slide 4": "الشريحة 4",
+  "Slide 5": "الشريحة 5",
+  "Slide 6": "الشريحة 6",
+  "Slide 7": "الشريحة 7"
 }

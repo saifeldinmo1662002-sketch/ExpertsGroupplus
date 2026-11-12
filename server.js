@@ -268,7 +268,7 @@ app.patch('/api/admin/admins/:id/approval',requireOwner,async(req,res)=>{const s
 
 app.use('/assets',express.static(PUBLIC,{maxAge:'1d'}));
 app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-age=0, must-revalidate');res.sendFile(path.join(PUBLIC,'admin.html'))});
-app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.type('html').send(addHead(html,route.lang,route.page))});
+app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');res.type('html').send(addHead(html,route.lang,route.page))});
 app.get('*',(req,res)=>{if(req.path.includes('.'))return res.status(404).send('Not found');res.redirect(302,'/en/')});
 
 app.listen(PORT,()=>console.log(`Experts Group Plus platform listening on ${PORT}`));
