@@ -83,7 +83,31 @@ function pageFromPath(url){const m=url.match(/^\/(en|ar)(?:\/([^/?#]+))?\/?$/);r
 function addHead(html,lang,page){
  const pageMetaAr={home:['خبراء جروب بلس | حلول متكاملة للأعمال','حلول متكاملة في التدريب والاستشارات والعمليات وخدمات التعهيد لدعم نمو الشركات.'],about:['من نحن | خبراء جروب بلس','تعرّف على خبراء جروب بلس ومنهجية العمل والخدمات التي نقدمها للشركات.'],training:['التدريب المؤسسي | خبراء جروب بلس','برامج تدريب عملية للموظفين والإدارات والقيادات لتحسين أداء الأعمال.'],consultation:['الاستشارات الإدارية والاستراتيجية | خبراء جروب بلس','تشخيص الأعمال وتطوير الاستراتيجيات وتحسين العمليات لتحقيق نمو مستدام.'],operations:['خدمات العمليات | خبراء جروب بلس','خدمات تشغيل متخصصة في التسويق والإبداع والتقنية والوظائف المؤسسية.'],bpo:['خدمات تعهيد العمليات التجارية | خبراء جروب بلس','حلول مرنة لدعم العملاء والمبيعات والعمليات الإدارية والمساندة.'],contact:['تواصل مع خبراء جروب بلس','تواصل مع فريق خبراء جروب بلس لمناقشة التدريب والاستشارات والعمليات وخدمات التعهيد.']};
  const [title,desc]=(lang==='ar'?pageMetaAr:pageMeta)[page]; const url=SITE_URL+canonicalPath(lang,page);
- const head=`\n<meta name="description" content="${desc.replace(/"/g,'&quot;')}">\n<meta name="robots" content="index,follow,max-image-preview:large">\n<link rel="canonical" href="${url}">\n<link rel="alternate" hreflang="en" href="${SITE_URL+canonicalPath('en',page)}">\n<link rel="alternate" hreflang="ar" href="${SITE_URL+canonicalPath('ar',page)}">\n<link rel="alternate" hreflang="x-default" href="${SITE_URL+canonicalPath('en',page)}">\n<meta property="og:type" content="website"><meta property="og:site_name" content="Experts Group Plus"><meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:url" content="${url}">\n<meta name="twitter:card" content="summary_large_image">\n<script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'Organization','name':'Experts Group Plus','url':SITE_URL,'email':'info@expertsgp.com','telephone':'+201044111646','address':{'@type':'PostalAddress','addressLocality':'Cairo','addressCountry':'EG'},'sameAs':['https://www.linkedin.com/company/112247034','https://www.instagram.com/experts.group.plus?exln=OHVrOGIxY2xhMnBo','https://www.tiktok.com/@experts_group_plus?_r=1']})}</script>`;
+ const serviceMeta={
+  training:['Corporate Training','Corporate training programs for employees, departments and managers.'],
+  consultation:['Business Consulting','Business diagnostics, strategic advisory and operational improvement.'],
+  operations:['Business Operations Services','Specialist business operations across marketing, creative, technology and corporate functions.'],
+  bpo:['Business Process Outsourcing','Customer support, sales support and back-office outsourcing services.']
+ };
+ const orgId=SITE_URL+'/#organization',siteId=SITE_URL+'/#website';
+ const graph=[
+  {'@type':'Organization','@id':orgId,'name':'Experts Group Plus','url':SITE_URL,'email':'info@expertsgp.com','telephone':'+201044111646','address':{'@type':'PostalAddress','addressLocality':'Cairo','addressCountry':'EG'},'sameAs':['https://www.linkedin.com/company/112247034','https://www.instagram.com/experts.group.plus?exln=OHVrOGIxY2xhMnBo','https://www.tiktok.com/@experts_group_plus?_r=1']},
+  {'@type':'WebSite','@id':siteId,'name':'Experts Group Plus','url':SITE_URL,'inLanguage':['en','ar'],'publisher':{'@id':orgId}},
+  {'@type':'WebPage','@id':url+'#webpage','url':url,'name':title,'description':desc,'inLanguage':lang,'isPartOf':{'@id':siteId},'about':{'@id':orgId}}
+ ];
+ if(serviceMeta[page]){
+  const [serviceName,serviceDescription]=serviceMeta[page];
+  graph.push({'@type':'Service','@id':url+'#service','name':lang==='ar'?title:serviceName,'description':lang==='ar'?desc:serviceDescription,'url':url,'provider':{'@id':orgId},'mainEntityOfPage':{'@id':url+'#webpage'}});
+ }
+ const head='\n<meta name="description" content="'+desc.replace(/"/g,'&quot;')+'">'+
+ '\n<meta name="robots" content="index,follow,max-image-preview:large">'+
+ '\n<link rel="canonical" href="'+url+'">'+
+ '\n<link rel="alternate" hreflang="en" href="'+SITE_URL+canonicalPath('en',page)+'">'+
+ '\n<link rel="alternate" hreflang="ar" href="'+SITE_URL+canonicalPath('ar',page)+'">'+
+ '\n<link rel="alternate" hreflang="x-default" href="'+SITE_URL+canonicalPath('en',page)+'">'+
+ '\n<meta property="og:type" content="website"><meta property="og:site_name" content="Experts Group Plus"><meta property="og:title" content="'+title+'"><meta property="og:description" content="'+desc+'"><meta property="og:url" content="'+url+'"><meta property="og:locale" content="'+(lang==='ar'?'ar_EG':'en_US')+'"><meta property="og:locale:alternate" content="'+(lang==='ar'?'en_US':'ar_EG')+'">'+
+ '\n<meta name="twitter:card" content="summary"><meta name="twitter:title" content="'+title+'"><meta name="twitter:description" content="'+desc+'">'+
+ '\n<script type="application/ld+json">'+JSON.stringify({'@context':'https://schema.org','@graph':graph})+'</script>';
  let output=html.replace(/<title>[^<]*<\/title>/i,`<title>${title}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`).replace('</head>',head+'\n</head>');
  if(lang==='ar')output=translateArabicHtml(output);
  return output;
@@ -95,8 +119,17 @@ function safeUrl(raw){try{const u=new URL(raw);return ['https:','http:','mailto:
 app.post('/api/auth/password',requireAdmin,async(req,res)=>{try{const current=String(req.body.currentPassword||''),next=String(req.body.newPassword||'');if(next.length<14||next.length>128)return res.status(400).json({error:'New password must be at least 14 characters.'});const q=await pool.query('SELECT password_hash FROM admins WHERE id=$1',[req.session.admin.id]);if(!q.rows[0]||!(await bcrypt.compare(current,q.rows[0].password_hash)))return res.status(400).json({error:'Current password is incorrect.'});const hash=await bcrypt.hash(next,12);await pool.query('UPDATE admins SET password_hash=$1 WHERE id=$2',[hash,req.session.admin.id]);res.json({ok:true})}catch(e){console.error(e);res.status(500).json({error:'Could not update password.'})}});
 app.post('/api/admin/links/bulk',requireAdmin,async(req,res)=>{try{const items=Array.isArray(req.body.items)?req.body.items.slice(0,250):[];let count=0;for(const item of items){const key=String(item.key||'').slice(0,120),label=String(item.label||key).slice(0,160),url=safeUrl(String(item.url||''));if(!/^[a-zA-Z0-9_.:-]+$/.test(key)||!url)continue;await pool.query(`INSERT INTO site_links(link_key,label,url) VALUES($1,$2,$3) ON CONFLICT(link_key) DO NOTHING`,[key,label,url]);count++}res.json({ok:true,count})}catch(e){console.error(e);res.status(500).json({error:'Could not import links.'})}});
 app.get('/health',(req,res)=>res.json({ok:true}));
-app.get('/robots.txt',(req,res)=>res.type('text/plain').send(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nSitemap: ${SITE_URL}/sitemap.xml\n`));
-app.get('/sitemap.xml',(req,res)=>{const pages=['home','about','training','consultation','operations','bpo','contact'];const urls=pages.flatMap(p=>['en','ar'].map(l=>`<url><loc>${SITE_URL+canonicalPath(l,p)}</loc><changefreq>monthly</changefreq><priority>${p==='home'?'1.0':'0.8'}</priority></url>`)).join('');res.type('application/xml').send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls}</urlset>`)});
+app.get('/robots.txt',(req,res)=>res.set('Cache-Control','public, max-age=3600').type('text/plain').send('User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nSitemap: '+SITE_URL+'/sitemap.xml\n'));
+app.get('/sitemap.xml',(req,res)=>{
+ const pages=['home','about','training','consultation','operations','bpo','contact'],langs=['en','ar'];
+ const urls=pages.flatMap(p=>langs.map(l=>{
+  const loc=SITE_URL+canonicalPath(l,p);
+  const alternates=langs.map(a=>'<xhtml:link rel="alternate" hreflang="'+a+'" href="'+SITE_URL+canonicalPath(a,p)+'"/>').join('')+
+   '<xhtml:link rel="alternate" hreflang="x-default" href="'+SITE_URL+canonicalPath('en',p)+'"/>';
+  return '<url><loc>'+loc+'</loc>'+alternates+'</url>';
+ })).join('');
+ res.set('Cache-Control','public, max-age=3600').type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+urls+'</urlset>');
+});
 
 // Public content consumed by the bilingual website.
 app.get('/api/public/content',async(req,res)=>{try{
