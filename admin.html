@@ -140,6 +140,59 @@ td .sub{display:block;color:#64748B;font-size:11px;margin-top:4px}
   .site-header .admin-nav{gap:16px}
   .site-header .header-actions{gap:6px}
 }
+
+/* Admin workspace: stable vertical navigation for a multi-section control panel. */
+.site-header{height:82px;min-height:82px}
+.site-header .header-inner{height:82px;min-height:82px;display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:16px}
+.site-header .brand{flex:0 0 auto;min-width:max-content}
+.site-header .brand-badge{margin-right:auto}
+.site-header .header-actions{margin-left:auto;flex:0 0 auto;min-width:max-content}
+.app-main{padding:30px 0 76px}
+.workspace-layout{display:grid;grid-template-columns:238px minmax(0,1fr);align-items:start;gap:28px}
+.admin-sidebar{position:sticky;top:108px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px 12px;box-shadow:var(--shadow);min-width:0}
+.sidebar-label{font-size:10px;letter-spacing:.16em;font-weight:850;color:var(--brand-gold);padding:7px 12px 14px}
+.admin-nav{display:flex;flex-direction:column;align-items:stretch;gap:4px;min-width:0;width:100%}
+.admin-nav button{position:relative;display:flex;align-items:center;gap:11px;width:100%;min-width:0;flex:0 0 auto;border:0;border-radius:12px;background:transparent;padding:12px 13px;text-align:left;color:#475569;font-size:13px;font-weight:700;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .18s,color .18s}
+.admin-nav button:hover{background:#F1F5F9;color:var(--brand-blue)}
+.admin-nav button.active{color:var(--brand-blue);background:#EFF5FF;box-shadow:inset 3px 0 0 var(--brand-gold)}
+.nav-dot{display:inline-block;width:8px;height:8px;flex:0 0 8px;border-radius:3px;background:#CBD5E1;transform:rotate(45deg)}
+.admin-nav button.active .nav-dot{background:var(--brand-gold);box-shadow:0 0 0 4px rgba(194,167,77,.13)}
+.sidebar-foot{margin:18px 7px 3px;padding:14px 7px 2px;border-top:1px solid var(--line);font-size:11px;font-weight:750;color:var(--brand-blue);line-height:1.7}
+.sidebar-foot span{font-weight:500;color:var(--muted)}
+.workspace-content{min-width:0}
+.workspace-intro{padding:5px 0 22px;margin-bottom:22px;border-bottom:1px solid var(--line)}
+.workspace-intro .eyebrow{margin-bottom:14px}
+.workspace-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px}
+.workspace-heading h1{font-size:clamp(28px,2.8vw,36px);line-height:1.08;letter-spacing:-.05em;margin:0;color:var(--navy);font-weight:900}
+.workspace-heading p{color:var(--body);margin:8px 0 0;font-size:13px}
+.workspace-meta{color:var(--muted);font-size:10px;text-align:right;line-height:1.8;letter-spacing:.08em}
+[dir=rtl] .workspace-layout{direction:rtl}
+[dir=rtl] .admin-nav button{text-align:right}
+[dir=rtl] .admin-nav button.active{box-shadow:inset -3px 0 0 var(--brand-gold)}
+[dir=rtl] .workspace-meta{text-align:left}
+@media(max-width:900px){
+ .workspace-layout{grid-template-columns:1fr;gap:18px}
+ .admin-sidebar{position:static;padding:10px 12px}
+ .sidebar-label,.sidebar-foot{display:none}
+ .admin-nav{flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:7px;scrollbar-width:thin;padding-bottom:3px}
+ .admin-nav button{width:auto;min-width:max-content;padding:10px 13px}
+ .admin-nav button.active{box-shadow:inset 0 -3px 0 var(--brand-gold)}
+ .workspace-meta{display:none}
+}
+@media(max-width:600px){
+ .site-header{height:auto;min-height:72px}
+ .site-header .header-inner{height:auto;min-height:72px;flex-wrap:wrap;gap:8px;padding:10px 0}
+ .site-header .brand-symbol{width:34px;height:34px;flex-basis:34px}
+ .site-header .brand-wordmark{font-size:18px}
+ .site-header .brand-badge{font-size:9px;margin-right:auto}
+ .site-header .header-actions{gap:6px}
+ .site-header .user-chip{display:none}
+ .site-header .header-link{display:none}
+ .app-main{padding:18px 0 50px}
+ .workspace-heading{align-items:flex-start}
+ .workspace-intro{margin-bottom:16px}
+}
+
 </style>
 </head><body>
 <div id="auth" class="auth-screen">
@@ -173,25 +226,34 @@ td .sub{display:block;color:#64748B;font-size:11px;margin-top:4px}
 </div>
 <div id="app" class="app hidden">
   <header class="site-header"><div class="container header-inner">
-    <a class="brand" href="/en/" aria-label="Experts Group Plus home"><span class="brand-symbol"><svg viewBox="0 0 100 100" aria-hidden="true"><rect x="38" y="14" width="24" height="24" rx="6" transform="rotate(45 50 26)" fill="#C2A74D"/><rect x="38" y="62" width="24" height="24" rx="6" transform="rotate(45 50 74)" fill="#C2A74D"/><rect x="14" y="38" width="24" height="24" rx="6" transform="rotate(45 26 50)" fill="#154695"/><rect x="62" y="38" width="24" height="24" rx="6" transform="rotate(45 74 50)" fill="#154695"/></svg></span><span class="brand-wordmark"><span>EXPERTS</span><span>GROUP <b>PLUS</b></span></span></a><span class="brand-badge">ADMIN PORTAL</span>
-    <nav class="admin-nav" aria-label="Admin navigation">
-      <button type="button" data-tab="overview" class="active">Overview</button>
-      <button type="button" data-tab="reviews">Reviews</button>
-      <button type="button" data-tab="operations">Operations</button>
-      <button type="button" data-tab="consultation">Consultation</button>
-      <button type="button" data-tab="leads">Inquiries</button>
-      <button type="button" data-tab="links">Website links</button>
-      <button type="button" data-tab="admins" id="adminsNav" class="hidden">Admin approvals</button>
-      <button type="button" data-tab="security">Security</button>
-    </nav>
+    <a class="brand" href="/en/" aria-label="Experts Group Plus home"><span class="brand-symbol"><svg viewBox="0 0 100 100" aria-hidden="true"><rect x="38" y="14" width="24" height="24" rx="6" transform="rotate(45 50 26)" fill="#C2A74D"/><rect x="38" y="62" width="24" height="24" rx="6" transform="rotate(45 50 74)" fill="#C2A74D"/><rect x="14" y="38" width="24" height="24" rx="6" transform="rotate(45 26 50)" fill="#154695"/><rect x="62" y="38" width="24" height="24" rx="6" transform="rotate(45 74 50)" fill="#154695"/></svg></span><span class="brand-wordmark"><span>EXPERTS</span><span>GROUP <b>PLUS</b></span></span></a>
+    <span class="brand-badge">ADMIN PORTAL</span>
     <div class="header-actions"><span id="userLabel" class="user-chip"></span><a class="header-link" href="/en/" target="_blank" rel="noopener">View website ↗</a><button id="logout" class="btn secondary small" type="button">Sign out</button></div>
   </div></header>
   <main class="container app-main">
-    <section class="workspace-intro">
-      <span class="eyebrow">EXPERTS GROUP PLUS / ADMINISTRATION</span>
-      <div class="workspace-heading"><div><h1>Admin workspace</h1><p>Manage your website, service content, and incoming business inquiries.</p></div><div class="workspace-meta">CONTENT MANAGEMENT<br>WEBSITE OPERATIONS</div></div>
-    </section>
-    <main class="main" id="content"></main>
+    <div class="workspace-layout">
+      <aside class="admin-sidebar" aria-label="Admin sections">
+        <div class="sidebar-label">WORKSPACE</div>
+        <nav class="admin-nav" aria-label="Admin navigation">
+          <button type="button" data-tab="overview" class="active"><span class="nav-dot"></span>Overview</button>
+          <button type="button" data-tab="reviews"><span class="nav-dot"></span>Reviews</button>
+          <button type="button" data-tab="operations"><span class="nav-dot"></span>Operations</button>
+          <button type="button" data-tab="consultation"><span class="nav-dot"></span>Consultation</button>
+          <button type="button" data-tab="leads"><span class="nav-dot"></span>Inquiries</button>
+          <button type="button" data-tab="links"><span class="nav-dot"></span>Website links</button>
+          <button type="button" data-tab="admins" id="adminsNav" class="hidden"><span class="nav-dot"></span>Admin approvals</button>
+          <button type="button" data-tab="security"><span class="nav-dot"></span>Security</button>
+        </nav>
+        <div class="sidebar-foot">Experts Group Plus<br><span>Administration workspace</span></div>
+      </aside>
+      <div class="workspace-content">
+        <section class="workspace-intro">
+          <span class="eyebrow">EXPERTS GROUP PLUS / ADMINISTRATION</span>
+          <div class="workspace-heading"><div><h1>Admin workspace</h1><p>Manage your website, service content, and incoming business inquiries.</p></div><div class="workspace-meta">CONTENT MANAGEMENT<br>WEBSITE OPERATIONS</div></div>
+        </section>
+        <main class="main" id="content"></main>
+      </div>
+    </div>
   </main>
 </div>
 <div id="modalBack" class="modal-back hidden"><div class="modal"><div class="modal-head"><h2 id="modalTitle">Edit item</h2><button class="btn light small" id="modalClose">Close</button></div><form id="itemForm"><div id="modalFields" class="modal-grid"></div><div class="actions" style="justify-content:flex-end;margin-top:18px"><button type="button" id="modalCancel" class="btn light">Cancel</button><button class="btn primary">Save changes</button></div></form></div></div>
