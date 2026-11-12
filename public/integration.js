@@ -78,7 +78,15 @@
   async function loadPublicContent(){try{const r=await fetch('/api/public/content');if(!r.ok)return;const data=await r.json();
     if(Array.isArray(data.operations)&&data.operations.length){operationsData=safeItems(data.operations);buildOperationsGrid()}
     if(Array.isArray(data.reviews)){reviewsData=safeItems(data.reviews);currentReviewStartIdx=0;renderTestimonials()}
-    if(Array.isArray(data.consultation)&&data.consultation.length){consultationOptions=safeItems(data.consultation);currentConsultationIdx=0;renderConsultationSlide()}
+    if(Array.isArray(data.consultation)&&data.consultation.length){
+      // Consultation slides render through textContent, so keep decoded plain text here.
+      // Escaping ampersands for an HTML template would visibly print "&amp;" in textContent.
+      consultationOptions=data.consultation.map(item=>Object.fromEntries(
+        Object.entries(item).map(([key,value])=>[key,typeof value==='string'?decodeCmsEntities(value):value])
+      ));
+      currentConsultationIdx=0;
+      renderConsultationSlide();
+    }
     linkMap=data.links||{};applyLinks();
     if(typeof window.egApplyTranslations==='function')window.egApplyTranslations(routeInfo().lang,false);
     refineArabic();
