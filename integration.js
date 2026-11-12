@@ -23,11 +23,12 @@
     [['en','en'],['ar','ar'],['x-default','en']].forEach(([hreflang,l])=>{let el=document.querySelector(`link[rel="alternate"][hreflang="${hreflang}"]`);if(!el){el=document.createElement('link');el.rel='alternate';el.hreflang=hreflang;document.head.appendChild(el)}el.href=location.origin+pathFor(l,page)});
     document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';[['og:title',p[0]],['og:description',p[1]],['og:url',location.origin+pathFor(lang,page)]].forEach(([prop,value])=>{let el=document.querySelector(`meta[property="${prop}"]`);if(!el){el=document.createElement('meta');el.setAttribute('property',prop);document.head.appendChild(el)}el.content=value});
   }
-  function route(lang,page,replace=false){if(!pageNames.includes(page))page='home';const url=pathFor(lang,page);history[replace?'replaceState':'pushState']({page,lang},'',url);if(originalNavigate)originalNavigate(page,false);if(originalApplyLanguage)originalApplyLanguage(lang,false);updateSeo(lang,page);}
+  function showPage(page){if(!pageNames.includes(page))page='home';document.querySelectorAll('.page-view').forEach(view=>view.classList.add('hidden'));const target=document.getElementById('view-'+page);if(target)target.classList.remove('hidden');document.querySelectorAll('.nav-link').forEach(btn=>btn.classList.remove('text-brand-blue','dark:text-brand-gold'));const active=document.getElementById('nav-btn-'+page);if(active)active.classList.add('text-brand-blue','dark:text-brand-gold');window.scrollTo({top:0,behavior:'auto'});return page;}
+  function route(lang,page,replace=false){if(!pageNames.includes(page))page='home';const url=pathFor(lang,page);history[replace?'replaceState':'pushState']({page,lang},'',url);showPage(page);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';updateSeo(lang,page);}
   window.navigateTo=function(page,updateHistory=true){const r=routeInfo();route(r.lang,page,!updateHistory);};
   window.applySiteLanguage=function(lang,announce=false){const r=routeInfo();route(lang,r.page,false);if(announce&&typeof showGlobalToast==='function')showGlobalToast(lang==='ar'?'تم تفعيل اللغة العربية':'English language enabled');};
   window.toggleLanguage=function(){const r=routeInfo();route(r.lang==='en'?'ar':'en',r.page,false)};
-  window.addEventListener('popstate',()=>{const r=routeInfo();if(originalNavigate)originalNavigate(r.page,false);if(originalApplyLanguage)originalApplyLanguage(r.lang,false);updateSeo(r.lang,r.page)});
+  window.addEventListener('popstate',()=>{const r=routeInfo();showPage(r.page);document.documentElement.lang=r.lang;document.documentElement.dir=r.lang==='ar'?'rtl':'ltr';updateSeo(r.lang,r.page)});
 
   // Replace the browser-only lead capture with a server-persisted submission.
   window.handleContactSubmit=async function(e){
