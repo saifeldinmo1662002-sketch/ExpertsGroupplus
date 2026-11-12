@@ -66,13 +66,71 @@ app.get('/api/public/content',async(req,res)=>{try{
  res.set('Cache-Control','public, max-age=60');res.json(out);
  }catch(e){console.error(e);res.status(500).json({error:'Unable to load site content.'})}});
 
+function escapeEmailHtml(value=''){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function sendContactNotification(id, lead){
+ const fail=async(message)=>{
+  const safe=String(message||'Email delivery failed.').slice(0,500);
+  try{await pool.query('UPDATE contact_submissions SET notification_status=$1,notification_error=$2 WHERE id=$3',['failed',safe,id])}catch(dbErr){console.error('Could not record contact email failure:',dbErr.message)}
+  console.error('Contact notification failed for lead',id,':',safe);
+  return {ok:false,error:safe};
+ };
+ if(!process.env.RESEND_API_KEY||!process.env.RESEND_FROM||!process.env.CONTACT_NOTIFICATION_TO){
+  return fail('Email notification is not configured. Check RESEND_API_KEY, RESEND_FROM and CONTACT_NOTIFICATION_TO in Railway.');
+ }
+ const field=(label,value)=>`<tr><td style="padding:10px 12px;color:#64748b;font-size:12px;border-bottom:1px solid #e2e8f0;width:150px">${escapeEmailHtml(label)}</td><td style="padding:10px 12px;color:#0f172a;font-size:14px;border-bottom:1px solid #e2e8f0">${escapeEmailHtml(value||'—')}</td></tr>`;
+ const plain=[
+  'New website inquiry — Experts Group Plus','',
+  `Name: ${lead.name}`,`Email: ${lead.email}`,`Company: ${lead.company||'—'}`,
+  `Service interest: ${lead.scope||'—'}`,`Preferred contact: ${lead.preferred_contact||'—'}`,
+  `Language: ${lead.language||'en'}`,'','Message:',lead.message||'—','',
+  `Submission ID: ${id}`
+ ].join('\n');
+ const html=`<!doctype html><html><body style="margin:0;background:#f8fafc;padding:28px 12px;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
+ <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:18px;overflow:hidden">
+ <tr><td style="background:#154695;padding:22px 26px;color:#fff"><div style="font-size:11px;letter-spacing:2px;font-weight:bold;color:#dfc87b">EXPERTS GROUP PLUS</div><h1 style="font-size:22px;line-height:1.3;margin:10px 0 0">New website inquiry</h1></td></tr>
+ <tr><td style="padding:22px 26px"><p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 18px">A visitor has submitted the contact form. Their details are below.</p>
+ <table role="presentation" width="100%" cellspacing="0" cellpadding="0">${field('Name',lead.name)}${field('Email',lead.email)}${field('Company',lead.company)}${field('Service interest',lead.scope)}${field('Preferred contact',lead.preferred_contact)}${field('Language',lead.language)}${field('Submission ID',id)}</table>
+ <h2 style="font-size:14px;margin:22px 0 9px;color:#154695">Message</h2><div style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:15px;font-size:14px;line-height:1.65">${escapeEmailHtml(lead.message||'—')}</div>
+ <p style="font-size:11px;color:#64748b;margin:22px 0 0">Reply directly to this email to respond to the visitor. This inquiry is also stored in the Experts Group Plus admin portal.</p>
+ </td></tr></table></body></html>`;
+ try{
+  const response=await fetch('https://api.resend.com/emails',{
+   method:'POST',
+   headers:{'Authorization':`Bearer ${process.env.RESEND_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':`egp-contact-${id}`},
+   body:JSON.stringify({
+    from:process.env.RESEND_FROM,
+    to:[process.env.CONTACT_NOTIFICATION_TO],
+    reply_to:[lead.email],
+    subject:`New website inquiry from ${String(lead.name).replace(/[\r\n]+/g,' ').slice(0,100)}`,
+    text:plain,html,
+    tags:[{name:'source',value:'website-contact-form'}]
+   }),
+   signal:AbortSignal.timeout(12000)
+  });
+  const payload=await response.json().catch(()=>({}));
+  if(!response.ok)return fail(payload.message||payload.name||`Resend returned HTTP ${response.status}.`);
+  await pool.query('UPDATE contact_submissions SET notification_status=$1,notification_id=$2,notification_error=NULL,notification_sent_at=NOW() WHERE id=$3',['sent',payload.id||null,id]);
+  return {ok:true,id:payload.id||null};
+ }catch(error){return fail(error.name==='TimeoutError'?'Resend request timed out.':error.message||'Email delivery failed.')}
+}
+
+async function notifySavedLead(id){
+ const q=await pool.query('SELECT id,name,email,company,scope,message,preferred_contact,language,notification_status FROM contact_submissions WHERE id=$1',[id]);
+ const lead=q.rows[0];if(!lead)return {ok:false,error:'Contact submission not found.'};
+ if(lead.notification_status==='sent')return {ok:true,alreadySent:true};
+ return sendContactNotification(id,lead);
+}
+
 app.post('/api/contact',contactLimiter,async(req,res)=>{try{
  const {name,email,company='',scope='',message='',preferredContact='',language='en',website=''}=req.body||{};
- if(website) return res.status(200).json({ok:true}); // honeypot
+ if(website) return res.status(200).json({ok:true});
  if(typeof name!=='string'||name.trim().length<2||name.length>160||typeof email!=='string'||email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return res.status(400).json({error:'Please provide a valid name and email.'});
  const clean=v=>typeof v==='string'?v.trim().slice(0,5000):'';
  const result=await pool.query(`INSERT INTO contact_submissions(name,email,company,scope,message,preferred_contact,language) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id`,[clean(name),clean(email),clean(company),clean(scope),clean(message),clean(preferredContact),language==='ar'?'ar':'en']);
- res.status(201).json({ok:true,id:result.rows[0].id,message:'Your inquiry has been received.'});
+ const id=result.rows[0].id;
+ const lead={id,name:clean(name),email:clean(email),company:clean(company),scope:clean(scope),message:clean(message),preferred_contact:clean(preferredContact),language:language==='ar'?'ar':'en'};
+ await sendContactNotification(id,lead); // Failure is tracked; it never removes or rejects the saved lead.
+ res.status(201).json({ok:true,id,message:'Your inquiry has been received.'});
  }catch(e){console.error(e);res.status(500).json({error:'We could not save your inquiry. Please try again.'})}});
 
 app.post('/api/auth/request-access',authLimiter,async(req,res)=>{try{
@@ -97,11 +155,12 @@ app.post('/api/auth/logout',(req,res)=>req.session.destroy(()=>{res.clearCookie(
 
 app.get('/api/admin/dashboard',requireAdmin,async(req,res)=>{try{
  const [leads,admins,counts]=await Promise.all([
- pool.query('SELECT id,name,email,company,scope,message,preferred_contact,language,status,created_at FROM contact_submissions ORDER BY created_at DESC LIMIT 500'),
+ pool.query('SELECT id,name,email,company,scope,message,preferred_contact,language,status,created_at,notification_status,notification_error,notification_sent_at FROM contact_submissions ORDER BY created_at DESC LIMIT 500'),
  req.session.admin.role==='owner'?pool.query('SELECT id,email,display_name,role,status,created_at,last_login FROM admins ORDER BY created_at DESC'):Promise.resolve({rows:[]}),
  pool.query('SELECT content_type,COUNT(*)::int AS count FROM content_items GROUP BY content_type')]);
  res.json({leads:leads.rows,admins:admins.rows,counts:counts.rows});
  }catch(e){console.error(e);res.status(500).json({error:'Could not load dashboard.'})}});
+app.post('/api/admin/leads/:id/notify',requireAdmin,async(req,res)=>{try{const result=await notifySavedLead(req.params.id);res.status(result.ok?200:502).json(result)}catch(e){console.error(e);res.status(500).json({error:'Could not retry the email notification.'})}});
 app.get('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});const q=await pool.query('SELECT item_key,data,sort_order FROM content_items WHERE content_type=$1 ORDER BY sort_order,id',[type]);res.json(q.rows.map(r=>({...r.data,_key:r.item_key,_sort:r.sort_order}))) });
 app.post('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});try{const data=req.body||{};const key=String(data.id||`${type}-${Date.now()}`).slice(0,100);delete data._key;delete data._sort;data.id=key;const q=await pool.query('INSERT INTO content_items(content_type,item_key,data,sort_order) VALUES($1,$2,$3,COALESCE((SELECT MAX(sort_order)+1 FROM content_items WHERE content_type=$1),0)) RETURNING item_key',[type,key,data]);res.status(201).json({ok:true,id:q.rows[0].item_key})}catch(e){if(e.code==='23505')return res.status(409).json({error:'That item ID already exists.'});console.error(e);res.status(500).json({error:'Could not save content.'})}});
 app.put('/api/admin/content/:type/:key',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});const data=req.body||{};delete data._key;delete data._sort;data.id=req.params.key;const q=await pool.query('UPDATE content_items SET data=$1,updated_at=NOW() WHERE content_type=$2 AND item_key=$3',[data,type,req.params.key]);res.json({ok:q.rowCount===1})});

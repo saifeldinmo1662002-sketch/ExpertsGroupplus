@@ -29,6 +29,10 @@ const seed = require('./seed-content.json');
     );
     CREATE INDEX IF NOT EXISTS contact_submissions_created_idx ON contact_submissions(created_at DESC);
     CREATE INDEX IF NOT EXISTS content_items_type_order_idx ON content_items(content_type,sort_order);
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS notification_status TEXT NOT NULL DEFAULT 'pending';
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS notification_id TEXT;
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS notification_error TEXT;
+    ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS notification_sent_at TIMESTAMPTZ;
   `);
   for (const [type, rows] of Object.entries({review:seed.reviews, operation:seed.operations, consultation:seed.consultation})) {
     for (let i=0;i<rows.length;i++) {
