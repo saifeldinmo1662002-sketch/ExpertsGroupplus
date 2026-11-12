@@ -13,6 +13,42 @@ const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
 const PUBLIC = path.join(ROOT, 'public');
 const SITE_URL = (process.env.SITE_URL || 'https://www.expertsgp.com').replace(/\/$/, '');
+
+const AR_TRANSLATIONS = JSON.parse(fs.readFileSync(path.join(PUBLIC,'ar-translations.json'),'utf8'));
+function decodeHtmlEntities(value){
+ return value.replace(/&(#x[0-9a-f]+|#\d+|amp|lt|gt|quot|apos|nbsp|bull|copy|mdash|ndash|rsquo|lsquo);/gi,(match,entity)=>{
+  const named={amp:'&',lt:'<',gt:'>',quot:'"',apos:"'",nbsp:'\u00a0',bull:'•',copy:'©',mdash:'—',ndash:'–',rsquo:'’',lsquo:'‘'};
+  if(entity[0]==='#'){const n=entity[1].toLowerCase()==='x'?parseInt(entity.slice(2),16):parseInt(entity.slice(1),10);try{return Number.isFinite(n)?String.fromCodePoint(n):match}catch{return match}}
+  return named[entity.toLowerCase()]??match;
+ });
+}
+function encodeHtmlText(value){return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function translateArabicHtml(html){
+ const protectedBlocks=[];
+ let output=html.replace(/<(script|style|noscript|code|pre)\b[\s\S]*?<\/\1\s*>/gi,block=>{
+  const token='__EGP_AR_PROTECTED_'+protectedBlocks.length+'__';protectedBlocks.push(block);return token;
+ });
+ output=output.replace(/>([^<>]+)</g,(whole,raw)=>{
+  const decoded=decodeHtmlEntities(raw);
+  const parts=decoded.match(/^(\s*)([\s\S]*?)(\s*)$/);
+  if(!parts)return whole;
+  const key=parts[2].replace(/\s+/g,' ').trim();
+  const translated=AR_TRANSLATIONS[key];
+  if(!translated)return whole;
+  return '>'+parts[1]+encodeHtmlText(translated)+parts[3]+'<';
+ });
+ output=output.replace(/\b(placeholder|title|aria-label|alt)\s*=\s*(["'])(.*?)\2/gi,(whole,name,quote,raw)=>{
+  const key=decodeHtmlEntities(raw).replace(/\s+/g,' ').trim();
+  const translated=AR_TRANSLATIONS[key];
+  if(!translated)return whole;
+  let safe=String(translated).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  safe=quote==='"'?safe.replace(/"/g,'&quot;'):safe.replace(/'/g,'&#39;');
+  return name+'='+quote+safe+quote;
+ });
+ output=output.replace(/__EGP_AR_PROTECTED_(\d+)__/g,(_,i)=>protectedBlocks[Number(i)]||'');
+ return output;
+}
+
 if (process.env.NODE_ENV === 'production' && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32)) throw new Error('Set SESSION_SECRET to a random value of at least 32 characters in Railway.');
 
 app.set('trust proxy', 1);
@@ -45,7 +81,9 @@ function addHead(html,lang,page){
  const pageMetaAr={home:['خبراء جروب بلس | حلول متكاملة للأعمال','حلول متكاملة في التدريب والاستشارات والعمليات وخدمات التعهيد لدعم نمو الشركات.'],about:['من نحن | خبراء جروب بلس','تعرّف على خبراء جروب بلس ومنهجية العمل والخدمات التي نقدمها للشركات.'],training:['التدريب المؤسسي | خبراء جروب بلس','برامج تدريب عملية للموظفين والإدارات والقيادات لتحسين أداء الأعمال.'],consultation:['الاستشارات الإدارية والاستراتيجية | خبراء جروب بلس','تشخيص الأعمال وتطوير الاستراتيجيات وتحسين العمليات لتحقيق نمو مستدام.'],operations:['خدمات العمليات | خبراء جروب بلس','خدمات تشغيل متخصصة في التسويق والإبداع والتقنية والوظائف المؤسسية.'],bpo:['خدمات تعهيد العمليات التجارية | خبراء جروب بلس','حلول مرنة لدعم العملاء والمبيعات والعمليات الإدارية والمساندة.'],contact:['تواصل مع خبراء جروب بلس','تواصل مع فريق خبراء جروب بلس لمناقشة التدريب والاستشارات والعمليات وخدمات التعهيد.']};
  const [title,desc]=(lang==='ar'?pageMetaAr:pageMeta)[page]; const url=SITE_URL+canonicalPath(lang,page);
  const head=`\n<meta name="description" content="${desc.replace(/"/g,'&quot;')}">\n<meta name="robots" content="index,follow,max-image-preview:large">\n<link rel="canonical" href="${url}">\n<link rel="alternate" hreflang="en" href="${SITE_URL+canonicalPath('en',page)}">\n<link rel="alternate" hreflang="ar" href="${SITE_URL+canonicalPath('ar',page)}">\n<link rel="alternate" hreflang="x-default" href="${SITE_URL+canonicalPath('en',page)}">\n<meta property="og:type" content="website"><meta property="og:site_name" content="Experts Group Plus"><meta property="og:title" content="${title}"><meta property="og:description" content="${desc}"><meta property="og:url" content="${url}">\n<meta name="twitter:card" content="summary_large_image">\n<script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'Organization','name':'Experts Group Plus','url':SITE_URL,'email':'info@expertsgp.com','telephone':'+201044111646','address':{'@type':'PostalAddress','addressLocality':'Cairo','addressCountry':'EG'},'sameAs':['https://www.linkedin.com/company/112247034','https://www.instagram.com/experts.group.plus?exln=OHVrOGIxY2xhMnBo','https://www.tiktok.com/@experts_group_plus?_r=1']})}</script>`;
- return html.replace(/<title>[^<]*<\/title>/i,`<title>${title}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`).replace('</head>',head+'\n</head>');
+ let output=html.replace(/<title>[^<]*<\/title>/i,`<title>${title}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`).replace('</head>',head+'\n</head>');
+ if(lang==='ar')output=translateArabicHtml(output);
+ return output;
 }
 function requireAdmin(req,res,next){if(!req.session.admin)return res.status(401).json({error:'Authentication required.'});next()}
 function requireOwner(req,res,next){if(!req.session.admin||req.session.admin.role!=='owner')return res.status(403).json({error:'Owner approval required.'});next()}
