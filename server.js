@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const session = require('express-session');
 const PgSession = require('connect-pg-simple')(session);
 const bcrypt = require('bcryptjs');
+const {BetaAnalyticsDataClient}=require('@google-analytics/data');
 const rateLimit = require('express-rate-limit');
 const pool = require('./db');
 const app = express();
@@ -161,6 +162,37 @@ app.get('/api/admin/dashboard',requireAdmin,async(req,res)=>{try{
  pool.query('SELECT content_type,COUNT(*)::int AS count FROM content_items GROUP BY content_type')]);
  res.json({leads:leads.rows,admins:admins.rows,counts:counts.rows});
  }catch(e){console.error(e);res.status(500).json({error:'Could not load dashboard.'})}});
+let gaClient;
+function getAnalyticsClient(){
+ if(!process.env.GA4_PROPERTY_ID||!process.env.GA4_SERVICE_ACCOUNT_JSON)return null;
+ if(!gaClient){let credentials;try{credentials=JSON.parse(process.env.GA4_SERVICE_ACCOUNT_JSON)}catch{throw new Error('GA4_SERVICE_ACCOUNT_JSON must contain valid service-account JSON.')}gaClient=new BetaAnalyticsDataClient({credentials,projectId:credentials.project_id});}
+ return gaClient;
+}
+app.get('/api/admin/analytics',requireAdmin,async(req,res)=>{
+ const client=getAnalyticsClient();
+ if(!client)return res.json({configured:false,missing:['GA4_PROPERTY_ID','GA4_SERVICE_ACCOUNT_JSON']});
+ const range=String(req.query.range||'28')==='7'?'7':'28';
+ const startDate=range==='7'?'7daysAgo':'28daysAgo';
+ const property='properties/'+String(process.env.GA4_PROPERTY_ID).replace(/^properties\//,'');
+ const report=async(dimensions,metrics,limit=10)=>{
+  const [response]=await client.runReport({property,dateRanges:[{startDate,endDate:'today'}],dimensions:dimensions.map(name=>({name})),metrics:metrics.map(name=>({name})),limit});
+  return (response.rows||[]).map(row=>Object.fromEntries([...dimensions.map((name,i)=>[name,row.dimensionValues?.[i]?.value||'—']),...metrics.map((name,i)=>[name,Number(row.metricValues?.[i]?.value||0)])]));
+ };
+ try{
+  const [summary,pages,sources,countries,cities,devices,ages,genders]=await Promise.all([
+   report([],['activeUsers','sessions','screenPageViews','newUsers','keyEvents'],1),
+   report(['pagePath'],['screenPageViews'],10),
+   report(['sessionSourceMedium'],['sessions'],10),
+   report(['country'],['activeUsers'],10),
+   report(['city'],['activeUsers'],10),
+   report(['deviceCategory'],['activeUsers'],10),
+   report(['userAgeBracket'],['activeUsers'],10),
+   report(['userGender'],['activeUsers'],10)
+  ]);
+  res.json({configured:true,range,summary:summary[0]||{},pages,sources,countries,cities,devices,ages,genders});
+ }catch(error){console.error('GA4 reporting failed:',error);res.status(502).json({configured:true,error:'Google Analytics could not return reports. Check the GA4 property ID, service-account access, and Google Analytics Data API.'})}
+});
+
 app.post('/api/admin/leads/:id/notify',requireAdmin,async(req,res)=>{try{const result=await notifySavedLead(req.params.id);res.status(result.ok?200:502).json(result)}catch(e){console.error(e);res.status(500).json({error:'Could not retry the email notification.'})}});
 app.get('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});const q=await pool.query('SELECT item_key,data,sort_order FROM content_items WHERE content_type=$1 ORDER BY sort_order,id',[type]);res.json(q.rows.map(r=>({...r.data,_key:r.item_key,_sort:r.sort_order}))) });
 app.post('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});try{const data=req.body||{};const key=String(data.id||`${type}-${Date.now()}`).slice(0,100);delete data._key;delete data._sort;data.id=key;const q=await pool.query('INSERT INTO content_items(content_type,item_key,data,sort_order) VALUES($1,$2,$3,COALESCE((SELECT MAX(sort_order)+1 FROM content_items WHERE content_type=$1),0)) RETURNING item_key',[type,key,data]);res.status(201).json({ok:true,id:q.rows[0].item_key})}catch(e){if(e.code==='23505')return res.status(409).json({error:'That item ID already exists.'});console.error(e);res.status(500).json({error:'Could not save content.'})}});
