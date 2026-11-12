@@ -173,7 +173,7 @@ app.post('/api/analytics/event',analyticsLimiter,async(req,res)=>{
    return res.status(400).json({error:'Invalid analytics event.'});
   }
   const page=String(b.pagePath||'/').slice(0,300);
-  const label=String(b.eventLabel||'').replace(/\\s+/g,' ').trim().slice(0,160)||null;
+  const label=String(b.eventLabel||'').trim().slice(0,160)||null;
   await pool.query(
    'INSERT INTO analytics_visitors(visitor_id,first_seen,last_seen,first_path) VALUES($1,NOW(),NOW(),$2) ON CONFLICT(visitor_id) DO UPDATE SET last_seen=NOW()',
    [visitor,page]
