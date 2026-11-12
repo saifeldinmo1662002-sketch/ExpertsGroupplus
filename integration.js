@@ -24,11 +24,11 @@
     document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';[['og:title',p[0]],['og:description',p[1]],['og:url',location.origin+pathFor(lang,page)]].forEach(([prop,value])=>{let el=document.querySelector(`meta[property="${prop}"]`);if(!el){el=document.createElement('meta');el.setAttribute('property',prop);document.head.appendChild(el)}el.content=value});
   }
   function showPage(page){if(!pageNames.includes(page))page='home';document.querySelectorAll('.page-view').forEach(view=>view.classList.add('hidden'));const target=document.getElementById('view-'+page);if(target)target.classList.remove('hidden');document.querySelectorAll('.nav-link').forEach(btn=>btn.classList.remove('text-brand-blue','dark:text-brand-gold'));const active=document.getElementById('nav-btn-'+page);if(active)active.classList.add('text-brand-blue','dark:text-brand-gold');window.scrollTo({top:0,behavior:'auto'});return page;}
-  function route(lang,page,replace=false){if(!pageNames.includes(page))page='home';const url=pathFor(lang,page);history[replace?'replaceState':'pushState']({page,lang},'',url);showPage(page);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';updateSeo(lang,page);}
+  function route(lang,page,replace=false,track=true){if(!pageNames.includes(page))page='home';const url=pathFor(lang,page);history[replace?'replaceState':'pushState']({page,lang},'',url);showPage(page);if(track&&typeof window.gtag==='function')window.gtag('event','page_view',{page_title:document.title,page_location:location.origin+url,page_path:url});document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';updateSeo(lang,page);}
   window.navigateTo=function(page,updateHistory=true){const r=routeInfo();route(r.lang,page,!updateHistory);};
   window.applySiteLanguage=function(lang,announce=false){const r=routeInfo();route(lang,r.page,false);if(announce&&typeof showGlobalToast==='function')showGlobalToast(lang==='ar'?'تم تفعيل اللغة العربية':'English language enabled');};
   window.toggleLanguage=function(){const r=routeInfo();route(r.lang==='en'?'ar':'en',r.page,false)};
-  window.addEventListener('popstate',()=>{const r=routeInfo();showPage(r.page);document.documentElement.lang=r.lang;document.documentElement.dir=r.lang==='ar'?'rtl':'ltr';updateSeo(r.lang,r.page)});
+  window.addEventListener('popstate',()=>{const r=routeInfo();showPage(r.page);if(typeof window.gtag==='function')window.gtag('event','page_view',{page_title:document.title,page_location:location.href,page_path:location.pathname});document.documentElement.lang=r.lang;document.documentElement.dir=r.lang==='ar'?'rtl':'ltr';updateSeo(r.lang,r.page)});
 
   // Replace the browser-only lead capture with a server-persisted submission.
   window.handleContactSubmit=async function(e){
@@ -62,7 +62,7 @@
     linkMap=data.links||{};applyLinks();
   }catch(e){console.warn('CMS content unavailable; displaying built-in website content.',e)}}
   document.addEventListener('DOMContentLoaded',()=>{
-    const r=routeInfo();route(r.lang,r.page,true);updateSeo(r.lang,r.page);
+    const r=routeInfo();route(r.lang,r.page,true,false);updateSeo(r.lang,r.page);
     loadPublicContent();refineArabic();
     const observer=new MutationObserver(records=>{if(document.documentElement.lang==='ar')records.forEach(rec=>rec.addedNodes.forEach(node=>{if(node.nodeType===1)refineArabic(node)}));});observer.observe(document.body,{childList:true,subtree:true});
   });
