@@ -34,6 +34,7 @@ const seed = require('./seed-content.json');
     CREATE INDEX IF NOT EXISTS analytics_events_created_idx ON analytics_events(created_at DESC);
     CREATE INDEX IF NOT EXISTS analytics_events_page_idx ON analytics_events(page_path,created_at DESC);
     ALTER TABLE analytics_events ADD COLUMN IF NOT EXISTS event_label TEXT;
+     ALTER TABLE analytics_events ADD COLUMN IF NOT EXISTS duration_ms INTEGER;
     CREATE INDEX IF NOT EXISTS analytics_sessions_started_idx ON analytics_sessions(started_at DESC);
     CREATE INDEX IF NOT EXISTS content_items_type_order_idx ON content_items(content_type,sort_order);
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS archived_at TIMESTAMPTZ;
