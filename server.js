@@ -13,6 +13,9 @@ const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
 const PUBLIC = path.join(ROOT, 'public');
 const SITE_URL = (process.env.SITE_URL || 'https://www.expertsgp.com').replace(/\/$/, '');
+const PROFILE_ASSETS = {"home_en":{"page_key":"home","language":"en","label":"Home — English"},"home_ar":{"page_key":"home","language":"ar","label":"Home — العربية"},"training_en":{"page_key":"training","language":"en","label":"Training — English"},"training_ar":{"page_key":"training","language":"ar","label":"Training — العربية"},"consultation_en":{"page_key":"consultation","language":"en","label":"Consultation — English"},"consultation_ar":{"page_key":"consultation","language":"ar","label":"Consultation — العربية"},"operations_en":{"page_key":"operations","language":"en","label":"Operations — English"},"operations_ar":{"page_key":"operations","language":"ar","label":"Operations — العربية"},"bpo_en":{"page_key":"bpo","language":"en","label":"BPO — English"},"bpo_ar":{"page_key":"bpo","language":"ar","label":"BPO — العربية"}};
+const profileRequestLimiter = rateLimit({windowMs:15*60*1000,limit:8,standardHeaders:true,legacyHeaders:false});
+const validProfileKey = key => Object.prototype.hasOwnProperty.call(PROFILE_ASSETS,String(key||''));
 
 const AR_TRANSLATIONS = JSON.parse(fs.readFileSync(path.join(PUBLIC,'ar-translations.json'),'utf8'));
 function decodeHtmlEntities(value){
@@ -103,6 +106,35 @@ app.get('/api/public/content',async(req,res)=>{try{
  for(const r of links.rows)out.links[r.link_key]=r.url;
  res.set('Cache-Control','public, max-age=60');res.json(out);
  }catch(e){console.error(e);res.status(500).json({error:'Unable to load site content.'})}});
+app.get('/api/public/profile-downloads',async(req,res)=>{
+ try{
+  const q=await pool.query('SELECT profile_key,file_name,file_size FROM profile_download_assets');
+  const uploaded=new Map(q.rows.map(row=>[row.profile_key,row]));
+  res.set('Cache-Control','no-store').json({assets:Object.entries(PROFILE_ASSETS).map(([key,spec])=>{
+   const file=uploaded.get(key);
+   return {profile_key:key,page_key:spec.page_key,language:spec.language,label:spec.label,available:!!file,file_name:file?.file_name||null,file_size:file?.file_size||0};
+  })});
+ }catch(error){console.error('Public profile availability failed:',error.message);res.status(500).json({error:'Could not check profile availability.'})}
+});
+app.post('/api/profile-downloads/:key/request',profileRequestLimiter,async(req,res)=>{
+ try{
+  const key=String(req.params.key||''),spec=PROFILE_ASSETS[key];
+  if(!spec)return res.status(404).json({error:'Unknown profile.'});
+  const b=req.body||{},clean=(v,n)=>typeof v==='string'?v.trim().slice(0,n):'';
+  const name=clean(b.name,160),company=clean(b.company,180),email=clean(b.email,254),phone=clean(b.phone,32);
+  if(name.length<2||company.length<2||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||phone.length<7||!/^[+0-9() .-]{7,32}$/.test(phone)){
+   return res.status(400).json({error:'Enter a valid name, company, work email and phone number.'});
+  }
+  const q=await pool.query('SELECT file_name,file_size,file_data FROM profile_download_assets WHERE profile_key=$1',[key]);
+  if(!q.rows.length)return res.status(404).json({error:'This profile has not been uploaded yet. Please contact our team.'});
+  const asset=q.rows[0],pdf=Buffer.isBuffer(asset.file_data)?asset.file_data:Buffer.from(asset.file_data);
+  if(pdf.length<5||pdf.subarray(0,5).toString('ascii')!=='%PDF-')return res.status(500).json({error:'The stored profile PDF is invalid. Please contact the website administrator.'});
+  await pool.query('INSERT INTO profile_download_requests(profile_key,page_key,language,full_name,company_name,email,phone_number,file_name,file_size) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)',
+   [key,spec.page_key,spec.language,name,company,email,phone,asset.file_name,asset.file_size]);
+  res.set({'Content-Type':'application/pdf','Content-Disposition':`attachment; filename="Experts-Group-Plus-${key}.pdf"`,'Content-Length':String(pdf.length),'Cache-Control':'no-store, no-cache, must-revalidate','X-Content-Type-Options':'nosniff'});
+  res.status(200).send(pdf);
+ }catch(error){console.error('Profile download request failed:',error.message);res.status(500).json({error:'We could not prepare the PDF. Please try again.'})}
+});
 
 function escapeEmailHtml(value=''){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function sendContactNotification(id, lead){
@@ -199,6 +231,58 @@ app.get('/api/admin/dashboard',requireAdmin,async(req,res)=>{try{
  pool.query('SELECT content_type,COUNT(*)::int AS count FROM content_items GROUP BY content_type')]);
  res.json({leads:leads.rows,admins:admins.rows,counts:counts.rows});
  }catch(e){console.error(e);res.status(500).json({error:'Could not load dashboard.'})}});
+app.get('/api/admin/profile-downloads',requireAdmin,async(req,res)=>{
+ try{
+  const q=await pool.query('SELECT profile_key,file_name,file_size,uploaded_at FROM profile_download_assets');
+  const uploaded=new Map(q.rows.map(row=>[row.profile_key,row]));
+  res.json(Object.entries(PROFILE_ASSETS).map(([key,spec])=>{
+   const file=uploaded.get(key);
+   return {profile_key:key,page_key:spec.page_key,language:spec.language,label:spec.label,available:!!file,file_name:file?.file_name||null,file_size:file?.file_size||0,uploaded_at:file?.uploaded_at||null};
+  }));
+ }catch(error){console.error(error);res.status(500).json({error:'Could not load profile PDFs.'})}
+});
+app.put('/api/admin/profile-downloads/:key',requireAdmin,express.raw({type:'application/pdf',limit:'15mb'}),async(req,res)=>{
+ try{
+  const key=String(req.params.key||''),spec=PROFILE_ASSETS[key],pdf=req.body;
+  if(!spec)return res.status(404).json({error:'Unknown profile slot.'});
+  if(!Buffer.isBuffer(pdf)||pdf.length<5||pdf.length>15*1024*1024||pdf.subarray(0,5).toString('ascii')!=='%PDF-')return res.status(400).json({error:'Upload a valid PDF file no larger than 15 MB.'});
+  const submittedName=String(req.query.filename||'profile.pdf');
+  const basename=path.basename(submittedName.replace(/\\/g,'/'));
+  const safeBase=basename.replace(/[\u0000-\u001f\u007f"<>:*?|]/g,'_').trim().slice(0,145)||'profile.pdf';
+  const fileName=safeBase.toLowerCase().endsWith('.pdf')?safeBase:safeBase+'.pdf';
+  await pool.query('INSERT INTO profile_download_assets(profile_key,page_key,language,file_name,mime_type,file_size,file_data,uploaded_by,uploaded_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,NOW()) ON CONFLICT(profile_key) DO UPDATE SET page_key=EXCLUDED.page_key,language=EXCLUDED.language,file_name=EXCLUDED.file_name,mime_type=EXCLUDED.mime_type,file_size=EXCLUDED.file_size,file_data=EXCLUDED.file_data,uploaded_by=EXCLUDED.uploaded_by,uploaded_at=NOW()',
+   [key,spec.page_key,spec.language,fileName,'application/pdf',pdf.length,pdf,req.session.admin.id]);
+  res.json({ok:true,profile_key:key,file_name:fileName,file_size:pdf.length});
+ }catch(error){console.error('Profile PDF upload failed:',error.message);res.status(500).json({error:'Could not upload this PDF.'})}
+});
+app.get('/api/admin/profile-downloads/:key/file',requireAdmin,async(req,res)=>{
+ try{
+  if(!validProfileKey(req.params.key))return res.status(404).json({error:'Unknown profile slot.'});
+  const q=await pool.query('SELECT file_name,file_data FROM profile_download_assets WHERE profile_key=$1',[req.params.key]);
+  if(!q.rows.length)return res.status(404).json({error:'No PDF is uploaded for this slot.'});
+  const filename=String(q.rows[0].file_name||'profile.pdf').replace(/[^\x20-\x7E]/g,'_').replace(/[\r\n"]/g,'_');
+  res.set({'Content-Type':'application/pdf','Content-Disposition':`attachment; filename="${filename}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}).send(q.rows[0].file_data);
+ }catch(error){console.error(error);res.status(500).json({error:'Could not download this PDF.'})}
+});
+app.delete('/api/admin/profile-downloads/:key',requireAdmin,async(req,res)=>{
+ try{
+  if(!validProfileKey(req.params.key))return res.status(404).json({error:'Unknown profile slot.'});
+  const result=await pool.query('DELETE FROM profile_download_assets WHERE profile_key=$1',[req.params.key]);
+  res.json({ok:true,removed:result.rowCount===1});
+ }catch(error){console.error(error);res.status(500).json({error:'Could not remove this PDF.'})}
+});
+app.get('/api/admin/profile-download-requests',requireAdmin,async(req,res)=>{
+ try{
+  const days=[7,28,90].includes(Number(req.query.days))?Number(req.query.days):28;
+  const [count,rows,byProfile]=await Promise.all([
+   pool.query("SELECT COUNT(*)::int AS total FROM profile_download_requests WHERE requested_at>=NOW()-($1::int*INTERVAL '1 day')",[days]),
+   pool.query("SELECT id,profile_key,page_key,language,full_name AS name,company_name AS company,email,phone_number AS phone,file_name,file_size,requested_at FROM profile_download_requests WHERE requested_at>=NOW()-($1::int*INTERVAL '1 day') ORDER BY requested_at DESC,id DESC LIMIT 500",[days]),
+   pool.query("SELECT profile_key,COUNT(*)::int AS total FROM profile_download_requests WHERE requested_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY profile_key ORDER BY total DESC",[days])
+  ]);
+  const labels=Object.fromEntries(Object.entries(PROFILE_ASSETS).map(([key,value])=>[key,value.label]));
+  res.json({ok:true,days,total:count.rows[0]?.total||0,requests:rows.rows.map(row=>({...row,profile_label:labels[row.profile_key]||row.profile_key})),byProfile:byProfile.rows.map(row=>({...row,profile_label:labels[row.profile_key]||row.profile_key}))});
+ }catch(error){console.error('Profile download analytics failed:',error.message);res.status(500).json({error:'Could not load profile download analytics.'})}
+});
 // First-party, privacy-conscious analytics. Never store visitor IP addresses.
 const analyticsLimiter=rateLimit({windowMs:60000,limit:90,standardHeaders:true,legacyHeaders:false});
 const analyticsText=(value,max=120)=>typeof value==='string'?value.trim().slice(0,max):'';

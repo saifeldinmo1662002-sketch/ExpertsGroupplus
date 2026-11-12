@@ -313,6 +313,18 @@ td .sub{color:var(--muted)}
 .analytics-stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 </style>
 
+<style id="profile-pdf-admin-styles">
+.profile-assets-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px;margin:16px 0}
+.profile-pdf-card{min-width:0;padding:18px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:var(--shadow)}
+.profile-pdf-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.profile-pdf-top h2{margin:5px 0 0;color:var(--navy);font-size:16px}
+.profile-file-meta{display:flex;flex-direction:column;gap:3px;min-height:45px;margin:13px 0;color:var(--body);font-size:12px;overflow-wrap:anywhere}
+.profile-file-meta span{color:var(--muted);font-size:11px}
+.profile-file-label{display:block;margin:12px 0 7px;color:var(--body);font-size:11px;font-weight:800}
+.profile-file{width:100%;min-width:0;padding:9px;border:1px dashed var(--line);border-radius:11px;background:var(--canvas);color:var(--body);font-size:11px}
+.profile-pdf-card .actions{margin-top:13px;flex-wrap:wrap}
+@media(max-width:600px){.profile-assets-grid{grid-template-columns:1fr}.profile-pdf-card{padding:15px}.profile-pdf-card .actions{display:grid;grid-template-columns:1fr 1fr}.profile-pdf-card .actions .btn{width:100%;white-space:normal}}
+</style>
 </head><body>
 <div id="auth" class="auth-screen">
   <header class="site-header auth-header"><div class="container header-inner">
@@ -360,6 +372,7 @@ td .sub{color:var(--muted)}
           <button type="button" data-tab="consultation"><span class="nav-dot"></span>Consultation</button>
           <button type="button" data-tab="leads"><span class="nav-dot"></span>Inquiries</button>
 <button type="button" data-tab="analytics"><span class="nav-dot"></span>Website analytics</button>
+          <button type="button" data-tab="profilePdfs"><span class="nav-dot"></span>Profile PDFs</button>
           <button type="button" data-tab="links"><span class="nav-dot"></span>Website links</button>
           <button type="button" data-tab="admins" id="adminsNav" class="hidden"><span class="nav-dot"></span>Admin approvals</button>
           <button type="button" data-tab="security"><span class="nav-dot"></span>Security</button>
@@ -404,7 +417,7 @@ $('#loginForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.tar
 $('#requestForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);try{const d=await api('/api/auth/request-access',{method:'POST',body:JSON.stringify(Object.fromEntries(f))});alertAuth(d.message);e.target.reset()}catch(err){alertAuth(err.message,true)}};
 $('#logout').onclick=async()=>{await api('/api/auth/logout',{method:'POST'});showAuth()};
 document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>go(b.dataset.tab));
-function go(tab){activeTab=tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));({overview:overview,reviews:()=>contentList('reviews'),operations:()=>contentList('operations'),consultation:()=>contentList('consultation'),leads:leads,analytics:analytics,links:links,admins:admins,security:security}[tab]||overview)()}
+function go(tab){activeTab=tab;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));({overview:overview,reviews:()=>contentList('reviews'),operations:()=>contentList('operations'),consultation:()=>contentList('consultation'),leads:leads,analytics:analytics,profilePdfs:profilePdfs,links:links,admins:admins,security:security}[tab]||overview)()}
 function esc(v=''){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function heading(title,sub,action=''){return `<div class="heading"><div><h1>${title}</h1><div class="muted">${sub}</div></div>${action}</div>`}
 async function overview(){try{const d=await api('/api/admin/dashboard');$('#content').innerHTML=heading('Overview','Your website content and incoming business inquiries.')+`<div class="cards"><div class="stat"><span class="muted">Contact submissions</span><b>${d.leads.length}</b></div><div class="stat"><span class="muted">Published reviews</span><b>${(d.counts.find(x=>x.content_type==='review')||{}).count||0}</b></div><div class="stat"><span class="muted">Operation services</span><b>${(d.counts.find(x=>x.content_type==='operation')||{}).count||0}</b></div></div><section class="panel"><h2>Recent contact submissions</h2>${leadTable(d.leads.slice(0,8))}</section>${me.role==='owner'?`<section class="panel"><h2>Pending admin approvals</h2>${adminTable(d.admins.filter(a=>a.status==='pending'))}</section>`:''}`}catch(e){$('#content').textContent=e.message}}
@@ -422,6 +435,9 @@ async function analytics(){
   const fmt=n=>Number(n||0).toLocaleString();
   const duration=ms=>{const seconds=Math.max(0,Math.round(Number(ms||0)/1000));if(seconds<60)return seconds+' sec';const minutes=Math.floor(seconds/60),remainder=seconds%60;return minutes+' min'+(remainder?' '+remainder+' sec':'')};
   const cairoDate=value=>{try{return new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Cairo',dateStyle:'medium',timeStyle:'medium'}).format(new Date(value))}catch{return new Date(value).toLocaleString()}};
+  const profileData=await api('/api/admin/profile-download-requests?days='+days);
+  const profileRows=(profileData.requests||[]).map(x=>({...x,requested_when:cairoDate(x.requested_at)}));
+  window.latestProfileDownloadRows=profileRows;
   const table=(rows,cols)=>rows.length?'<div class="table-wrap"><table><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join('')+'</tr></thead><tbody>'+rows.map(x=>'<tr>'+cols.map(c=>'<td>'+esc(c[2]?c[2](x[c[0]],x):(x[c[0]]??'—'))+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>':'<div class="empty">No data recorded for this period yet.</div>';
   const action='<select aria-label="Analytics date range" onchange="window.analyticsDays=Number(this.value);window.analyticsActivityPage=0;analytics()"><option value="7" '+(days===7?'selected':'')+'>Last 7 days</option><option value="28" '+(days===28?'selected':'')+'>Last 28 days</option><option value="90" '+(days===90?'selected':'')+'>Last 90 days</option></select> <button class="btn light" onclick="analytics()">Refresh</button>';
   const daily=(d.daily||[]).slice(-14),maxViews=Math.max(1,...daily.map(x=>Number(x.page_views||0)));
@@ -435,16 +451,89 @@ async function analytics(){
   const activityToolbar='<div class="analytics-filters"><select aria-label="Filter activity type" onchange="window.analyticsActivityType=this.value;window.analyticsActivityPage=0;analytics()"><option value="all" '+(activityType==='all'?'selected':'')+'>All activity</option><option value="page_view" '+(activityType==='page_view'?'selected':'')+'>Page visits</option><option value="button_press" '+(activityType==='button_press'?'selected':'')+'>Button / link presses</option><option value="contact_submit" '+(activityType==='contact_submit'?'selected':'')+'>Contact conversions</option><option value="engaged_time" '+(activityType==='engaged_time'?'selected':'')+'>Engaged time</option></select><input aria-label="Search activity" placeholder="Search page or action…" value="'+esc(activityQuery)+'" onchange="window.analyticsActivityQuery=this.value;window.analyticsActivityPage=0;analytics()"><span class="note">'+fmt(total)+' matching events</span></div>';
   const activityPager='<div class="analytics-pager"><span class="note">Page '+(activityPage+1)+' of '+pageCount+'</span><div class="actions"><button class="btn light small" '+(activityPage<=0?'disabled':'')+' onclick="window.analyticsActivityPage=Math.max(0,'+activityPage+'-1);analytics()">Previous</button><button class="btn light small" '+(activityPage+1>=pageCount?'disabled':'')+' onclick="window.analyticsActivityPage='+activityPage+'+1;analytics()">Next</button></div></div>';
   $('#content').innerHTML=heading('Website analytics','Independent, first-party visitor insights. All displayed event times use Cairo time.',action)+
-   '<div class="cards analytics-stats"><div class="stat"><span class="muted">Unique visitors</span><b>'+fmt(m.visitors)+'</b></div><div class="stat"><span class="muted">Visits</span><b>'+fmt(m.visits)+'</b></div><div class="stat"><span class="muted">Average stay time</span><b>'+duration(m.average_visit_ms)+'</b></div><div class="stat"><span class="muted">Page views</span><b>'+fmt(m.page_views)+'</b></div><div class="stat"><span class="muted">Button / link presses</span><b>'+fmt(m.button_presses)+'</b></div><div class="stat"><span class="muted">Contact conversions</span><b>'+fmt(m.conversions)+'</b></div><div class="stat"><span class="muted">Visit-to-contact rate</span><b>'+Number(m.conversion_rate||0).toFixed(1)+'%</b></div></div>'+
+   '<div class="cards analytics-stats"><div class="stat"><span class="muted">Unique visitors</span><b>'+fmt(m.visitors)+'</b></div><div class="stat"><span class="muted">Visits</span><b>'+fmt(m.visits)+'</b></div><div class="stat"><span class="muted">Average stay time</span><b>'+duration(m.average_visit_ms)+'</b></div><div class="stat"><span class="muted">Page views</span><b>'+fmt(m.page_views)+'</b></div><div class="stat"><span class="muted">Button / link presses</span><b>'+fmt(m.button_presses)+'</b></div><div class="stat"><span class="muted">Contact conversions</span><b>'+fmt(m.conversions)+'</b></div><div class="stat"><span class="muted">Visit-to-contact rate</span><b>'+Number(m.conversion_rate||0).toFixed(1)+'%</b></div><div class="stat"><span class="muted">PDF profile downloads</span><b>'+fmt(profileData.total)+'</b></div></div>'+
    '<section class="panel"><h2>Daily visitor activity</h2><p class="note">Page views by day for the selected reporting period (latest 14 days shown).</p>'+trend+'</section>'+
    '<section class="panel"><h2>Traffic sources and campaigns</h2>'+table(d.sources,[['source','Source'],['medium','Medium'],['campaign','Campaign'],['sessions','Visits'],['visitors','Visitors']])+'</section>'+
    '<section class="panel"><h2>New and returning visitors</h2>'+table(d.audience||[],[['audience','Audience'],['visitors','Visitors']])+'</section>'+'<section class="panel"><h2>Devices, browsers, operating systems and locale</h2>'+table(d.devices,[['device','Device'],['browser','Browser'],['operating_system','Operating system'],['language','Browser language'],['timezone','Timezone'],['sessions','Visits']])+'</section>'+
    '<section class="panel"><h2>Page performance</h2>'+table(d.pages,[['page_path','Page'],['views','Page views'],['average_page_ms','Avg. active time',duration],['engaged_ms','Total active time',duration]])+'</section>'+
    '<section class="panel"><h2>Most pressed buttons and links</h2>'+table(d.buttons,[['button','Button / link'],['page_path','Page'],['presses','Presses']])+'</section>'+
    '<section class="panel"><h2>Recent activity</h2><p class="note">Each row is an individual event with its recorded server timestamp.</p>'+activityToolbar+table(activityRows,[['when','Date & time'],['action','Action'],['page_path','Page'],['detail','Details'],['device','Device']])+activityPager+'</section>'+
+   '<section class="panel"><div class="heading"><div><h2>PDF profile download submissions</h2><p class="note">Name, company, email and phone entered before a matching PDF was returned. Visible only to approved administrators.</p></div><button class="btn light small" onclick="exportProfileDownloadRequests()">Export CSV</button></div>'+
+   '<p class="note">'+fmt(profileData.total)+' requests in this '+days+'-day period. Showing up to 500 latest records.</p>'+
+   table(profileRows,[['name','Name'],['company','Company'],['email','Email'],['phone','Phone number'],['profile_label','Requested profile'],['language','Language'],['requested_when','Date & time']])+
+   '<h3 style="margin:18px 0 8px">Downloads by profile</h3>'+table(profileData.byProfile||[],[['profile_label','Profile'],['total','Downloads']])+'</section>'+
    '<p class="note">This is independent first-party analytics. It records anonymous browser IDs, pages, interaction events, successful contact submissions, active-tab time, campaign/referrer information and broad device/browser settings. It does not store IP addresses or attempt to infer personal demographics. Referrer query strings are removed to reduce the risk of collecting sensitive URL data. Existing historical events remain, but new attribution/device fields begin filling from this release onward.</p>';
  }catch(e){$('#content').innerHTML=heading('Website analytics','Independent first-party reporting.')+'<section class="panel"><div class="alert error">'+esc(e.message)+'</div></section>'}
 }async function leads(){const d=await api('/api/admin/dashboard'),visible=d.leads.filter(x=>showArchivedLeads?!!x.archived_at:!x.archived_at),archivedCount=d.leads.filter(x=>x.archived_at).length;$('#content').innerHTML=heading('Contact submissions','Manage website inquiries. Hidden records remain stored and can be restored.',`<button class="btn ${showArchivedLeads?'primary':'light'}" onclick="toggleArchivedLeads()">${showArchivedLeads?'Show active':'Show hidden'} (${archivedCount})</button>`)+`<section class="panel">${leadTable(visible)}</section>`}
+function profilePdfSlots(){
+ return [
+  ['home_en','Home — English'],['home_ar','Home — العربية'],
+  ['training_en','Training — English'],['training_ar','Training — العربية'],
+  ['consultation_en','Consultation — English'],['consultation_ar','Consultation — العربية'],
+  ['operations_en','Operations — English'],['operations_ar','Operations — العربية'],
+  ['bpo_en','BPO — English'],['bpo_ar','BPO — العربية']
+ ];
+}
+let profilePdfActionsAttached=false;
+async function profilePdfs(){
+ try{
+  const rows=await api('/api/admin/profile-downloads'),byKey=new Map(rows.map(x=>[x.profile_key,x]));
+  const slots=profilePdfSlots().map(([key,label])=>byKey.get(key)||{profile_key:key,label,available:false,file_name:null,file_size:0});
+  const size=n=>n>=1024*1024?(n/1024/1024).toFixed(2)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+  if(!profilePdfActionsAttached){
+   $('#content').addEventListener('click',event=>{
+    const button=event.target.closest('[data-profile-action]');
+    if(!button)return;
+    const key=button.getAttribute('data-profile-key'),action=button.getAttribute('data-profile-action');
+    if(action==='upload')uploadProfilePdf(key);
+    if(action==='download')downloadProfilePdf(key,button.getAttribute('data-file-name'));
+    if(action==='remove')removeProfilePdf(key);
+   });
+   profilePdfActionsAttached=true;
+  }
+  $('#content').innerHTML=heading('Profile PDFs','Manage the 10 downloadable company profiles. Each page and language has its own PDF.')+
+   '<section class="panel"><p class="note">Upload a PDF up to 15 MB. Replacing a file updates visitor downloads; removing a file disables that page-and-language button until a replacement is uploaded. PDFs are stored in PostgreSQL and remain available after redeployments.</p></section>'+
+   '<div class="profile-assets-grid">'+slots.map(x=>'<section class="profile-pdf-card"><div class="profile-pdf-top"><div><span class="eyebrow">'+esc(x.language==='ar'?'ARABIC':'ENGLISH')+'</span><h2>'+esc(x.label||x.profile_key)+'</h2></div><span class="pill '+(x.available?'approved':'pending')+'">'+(x.available?'Uploaded':'Not uploaded')+'</span></div>'+
+   (x.available?'<p class="profile-file-meta"><b>'+esc(x.file_name)+'</b><span>'+size(Number(x.file_size||0))+(x.uploaded_at?' · Updated '+new Date(x.uploaded_at).toLocaleString():'')+'</span></p>':'<p class="profile-file-meta">No PDF uploaded for this page and language yet.</p>')+
+   '<label class="profile-file-label" for="profile-file-'+esc(x.profile_key)+'">Choose PDF file</label><input class="profile-file" id="profile-file-'+esc(x.profile_key)+'" type="file" accept="application/pdf,.pdf">'+
+   '<div class="actions"><button type="button" class="btn primary small" data-profile-action="upload" data-profile-key="'+esc(x.profile_key)+'">'+(x.available?'Upload / replace':'Upload PDF')+'</button>'+
+   (x.available?'<button type="button" class="btn light small" data-profile-action="download" data-profile-key="'+esc(x.profile_key)+'" data-file-name="'+esc(x.file_name)+'">Download current</button><button type="button" class="btn danger small" data-profile-action="remove" data-profile-key="'+esc(x.profile_key)+'">Remove</button>':'')+
+   '</div></section>').join('')+'</div>';
+ }catch(error){$('#content').innerHTML=heading('Profile PDFs','Manage visitor downloads.')+'<section class="panel"><div class="alert error">'+esc(error.message)+'</div></section>'}
+}
+async function uploadProfilePdf(key){
+ const input=document.getElementById('profile-file-'+key),file=input?.files?.[0];
+ if(!file)return alert('Choose a PDF file first.');
+ if((file.type&&file.type!=='application/pdf')||!file.name.toLowerCase().endsWith('.pdf'))return alert('Please choose a PDF file.');
+ if(file.size>15*1024*1024)return alert('The PDF must be 15 MB or smaller.');
+ const slot=profilePdfSlots().find(x=>x[0]===key);if(!slot)return alert('Unknown profile slot.');
+ try{
+  const response=await fetch('/api/admin/profile-downloads/'+encodeURIComponent(key)+'?filename='+encodeURIComponent(file.name),{method:'PUT',credentials:'same-origin',headers:{'Content-Type':'application/pdf'},body:file});
+  const data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.error||'Could not upload this PDF.');
+  alert(slot[1]+' PDF uploaded successfully.');await profilePdfs();
+ }catch(error){alert(error.message)}
+}
+async function downloadProfilePdf(key,fileName){
+ try{
+  const response=await fetch('/api/admin/profile-downloads/'+encodeURIComponent(key)+'/file',{credentials:'same-origin'});
+  if(!response.ok){const data=await response.json().catch(()=>({}));throw new Error(data.error||'Could not download this PDF.')}
+  const blob=await response.blob(),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=fileName||'profile.pdf';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+ }catch(error){alert(error.message)}
+}
+async function removeProfilePdf(key){
+ if(!confirm('Remove this profile PDF? Its public download becomes unavailable until you upload a replacement.'))return;
+ try{await api('/api/admin/profile-downloads/'+encodeURIComponent(key),{method:'DELETE'});await profilePdfs()}catch(error){alert(error.message)}
+}
+function exportProfileDownloadRequests(){
+ const rows=window.latestProfileDownloadRows||[];
+ if(!rows.length)return alert('There are no profile download submissions in the selected period.');
+ const keys=['requested_when','name','company','email','phone','profile_label','language'];
+ const quote=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
+ const csv=[keys.join(','),...rows.map(row=>keys.map(key=>quote(row[key])).join(','))].join('\r\n');
+ const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='experts-group-plus-profile-downloads.csv';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+}
 const configs={reviews:{title:'Reviews',sub:'Manage customer reviews displayed on the website.',fields:[['role','Reviewer role'],['company','Company'],['quote','Review text','textarea'],['initials','Initials'],['rating','Rating (1–5)','number']],label:x=>`${x.company||'Review'} — ${x.role||''}`},operations:{title:'Operation services',sub:'Manage service cards displayed in Expert Operations.',fields:[['title','Service title'],['tag','Category / tag'],['icon','Lucide icon name'],['desc','Description','textarea'],['benefits','Benefits (one per line)','textarea'],['advantage','Key advantage','textarea']],label:x=>x.title||'Service'},consultation:{title:'Consultation options',sub:'Manage the consultation carousel options.',fields:[['title','Option title'],['category','Category label'],['desc','Description','textarea']],label:x=>x.title||'Consultation option'}};
 async function contentList(type){const c=configs[type],rows=await api('/api/admin/content/'+type);cache[type]=rows;$('#content').innerHTML=heading(c.title,c.sub,`<button class="btn primary" onclick="editItem('${type}')">+ Add new</button>`)+`<section class="panel"><div class="table-wrap"><table><thead><tr><th>Item</th><th>Details</th><th>Actions</th></tr></thead><tbody>${rows.map(x=>`<tr><td><b>${esc(c.label(x))}</b><span class="sub">${esc(x.id||x._key)}</span></td><td>${esc(x.quote||x.desc||x.advantage||'')}<span class="sub">${esc(x.tag||x.category||'')}</span></td><td><div class="actions"><button class="btn light small" onclick="editItem('${type}','${esc(x._key)}')">Edit</button><button class="btn danger small" onclick="deleteItem('${type}','${esc(x._key)}')">Delete</button></div></td></tr>`).join('')}</tbody></table></div></section>`}
 function editItem(type,key){const c=configs[type],item=key?(cache[type]||[]).find(x=>x._key===key):{};$('#modalTitle').textContent=(key?'Edit ':'Add ')+c.title.slice(0,-1);$('#modalFields').innerHTML=(key?[]:[['id','Unique item ID (optional)']]).concat(c.fields).map(([name,label,kind])=>{let value=item?.[name]??'';if(name==='benefits'&&Array.isArray(value))value=value.join('\n');return `<div class="field ${kind==='textarea'?'wide':''}"><label>${label}</label>${kind==='textarea'?`<textarea name="${name}">${esc(value)}</textarea>`:`<input name="${name}" ${kind==='number'?'type="number" min="1" max="5"':'type="text"'} value="${esc(value)}" ${name==='id'?'placeholder="Generated automatically"':''}>`}</div>`}).join('');$('#modalBack').classList.remove('hidden');$('#itemForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target),data=Object.fromEntries(f);if(data.benefits!==undefined)data.benefits=data.benefits.split('\n').map(x=>x.trim()).filter(Boolean);if(data.rating)data.rating=Number(data.rating);if(!data.id)data.id=undefined;try{await api(key?`/api/admin/content/${type}/${encodeURIComponent(key)}`:`/api/admin/content/${type}`,{method:key?'PUT':'POST',body:JSON.stringify(data)});closeModal();await contentList(type)}catch(err){alert(err.message)}}}

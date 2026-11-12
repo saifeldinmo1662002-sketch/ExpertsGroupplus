@@ -91,6 +91,72 @@
     if(typeof window.egApplyTranslations==='function')window.egApplyTranslations(routeInfo().lang,false);
     refineArabic();
   }catch(e){console.warn('CMS content unavailable; displaying built-in website content.',e)}}
+  let activeProfileKey = null;
+  function profileLanguage(){return document.documentElement.lang==='ar'?'ar':'en'}
+  function setProfileAvailability(available,message){
+    const form=document.getElementById('profile-download-form'),status=document.getElementById('profile-download-status'),submit=document.getElementById('profile-download-submit');
+    if(!form||!status||!submit)return;
+    form.dataset.available=available?'true':'false';
+    form.querySelectorAll('input').forEach(input=>{input.disabled=!available});
+    submit.disabled=!available;
+    if(message){status.textContent=message;status.className='mb-4 rounded-xl border p-3 text-sm '+(available?'border-blue-200 bg-blue-50 text-blue-800 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-200':'border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900 dark:bg-amber-950/30 dark:text-amber-200')}
+    else status.className='hidden';
+  }
+  window.openProfileDownload=async function(pageKey){
+    const modal=document.getElementById('profile-download-modal'),form=document.getElementById('profile-download-form');
+    if(!modal||!form)return;
+    const page=['home','training','consultation','operations','bpo'].includes(pageKey)?pageKey:'home',lang=profileLanguage();
+    activeProfileKey=page+'_'+lang;form.reset();form.dataset.available='false';
+    const requestedKey=activeProfileKey;
+    setProfileAvailability(false,lang==='ar'?'جارٍ التحقق من توفر الملف التعريفي...':'Checking profile availability...');
+    modal.classList.remove('hidden');modal.classList.add('flex');document.body.style.overflow='hidden';
+    document.getElementById('profile-download-name')?.focus();
+    try{
+      const response=await fetch('/api/public/profile-downloads',{cache:'no-store'}),data=await response.json();
+      if(activeProfileKey!==requestedKey)return;
+      if(!response.ok)throw new Error(data.error||'Could not check profile availability.');
+      const asset=(data.assets||[]).find(item=>item.profile_key===requestedKey);
+      if(asset?.available)setProfileAvailability(true,'');
+      else setProfileAvailability(false,lang==='ar'?'هذا الملف التعريفي غير متاح حاليًا. يرجى التواصل مع فريقنا أو المحاولة لاحقًا.':'This profile is not available yet. Please contact our team or check back soon.');
+    }catch(error){if(activeProfileKey===requestedKey)setProfileAvailability(false,lang==='ar'?'تعذّر التحقق من توفر الملف. يرجى المحاولة مرة أخرى لاحقًا.':'We could not check profile availability. Please try again later.')}
+  };
+  window.closeProfileDownload=function(){
+    const modal=document.getElementById('profile-download-modal');if(modal){modal.classList.add('hidden');modal.classList.remove('flex')}
+    document.body.style.overflow='';activeProfileKey=null;
+  };
+  document.addEventListener('click',event=>{
+    const trigger=event.target.closest('[data-profile-download]');
+    if(trigger){event.preventDefault();window.openProfileDownload(trigger.getAttribute('data-profile-download'))}
+    if(event.target.closest('#profile-download-close,#profile-download-cancel'))window.closeProfileDownload();
+    if(event.target.id==='profile-download-modal')window.closeProfileDownload();
+  });
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!document.getElementById('profile-download-modal')?.classList.contains('hidden'))window.closeProfileDownload()});
+  document.addEventListener('DOMContentLoaded',()=>{
+    const form=document.getElementById('profile-download-form');if(!form)return;
+    form.addEventListener('submit',async event=>{
+      event.preventDefault();
+      const submit=document.getElementById('profile-download-submit'),lang=profileLanguage();
+      if(!activeProfileKey||form.dataset.available!=='true'||!form.reportValidity())return;
+      const payload=Object.fromEntries(new FormData(form).entries());
+      submit.disabled=true;submit.textContent=lang==='ar'?'جارٍ تجهيز ملف PDF...':'Preparing your PDF...';
+      try{
+        const response=await fetch('/api/profile-downloads/'+encodeURIComponent(activeProfileKey)+'/request',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        if(!response.ok){const err=await response.json().catch(()=>({}));throw new Error(err.error||'We could not prepare the PDF. Please try again.')}
+        const blob=await response.blob();
+        if(blob.type!=='application/pdf'||blob.size<5)throw new Error('The downloaded file is not a valid PDF.');
+        const url=URL.createObjectURL(blob),link=document.createElement('a');
+        link.href=url;link.download='Experts-Group-Plus-'+activeProfileKey.replace('_','-')+'.pdf';
+        document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+        setProfileAvailability(true,lang==='ar'?'أصبح الملف التعريفي جاهزًا للتنزيل.':'Your profile download is ready.');
+        form.reset();setTimeout(()=>window.closeProfileDownload(),900);
+      }catch(error){
+        const status=document.getElementById('profile-download-status');
+        status.textContent=error.message;status.className='mb-4 rounded-xl border border-red-200 bg-red-50 text-red-800 p-3 text-sm dark:border-red-900 dark:bg-red-950/30 dark:text-red-200';
+      }finally{
+        if(form.isConnected&&form.dataset.available==='true'){submit.disabled=false;submit.textContent=lang==='ar'?'تنزيل ملف PDF':'Download PDF'}
+      }
+    });
+  });
   document.addEventListener('DOMContentLoaded',()=>{
     const r=routeInfo();route(r.lang,r.page,true);updateSeo(r.lang,r.page);
     loadPublicContent();refineArabic();

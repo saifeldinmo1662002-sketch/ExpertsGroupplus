@@ -55,6 +55,24 @@ const seed = require('./seed-content.json');
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS apollo_deal_id TEXT;
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS apollo_task_id TEXT;
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS apollo_synced_at TIMESTAMPTZ;
+    CREATE TABLE IF NOT EXISTS profile_download_assets (
+      profile_key TEXT PRIMARY KEY, page_key TEXT NOT NULL,
+      language TEXT NOT NULL CHECK (language IN ('en','ar')),
+      file_name TEXT NOT NULL, mime_type TEXT NOT NULL DEFAULT 'application/pdf',
+      file_size INTEGER NOT NULL, file_data BYTEA NOT NULL,
+      uploaded_by BIGINT REFERENCES admins(id) ON DELETE SET NULL,
+      uploaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    CREATE TABLE IF NOT EXISTS profile_download_requests (
+      id BIGSERIAL PRIMARY KEY, profile_key TEXT NOT NULL, page_key TEXT NOT NULL,
+      language TEXT NOT NULL CHECK (language IN ('en','ar')),
+      full_name TEXT NOT NULL, company_name TEXT NOT NULL,
+      email TEXT NOT NULL, phone_number TEXT NOT NULL,
+      file_name TEXT NOT NULL, file_size INTEGER NOT NULL,
+      requested_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS profile_download_requests_requested_idx ON profile_download_requests(requested_at DESC);
+    CREATE INDEX IF NOT EXISTS profile_download_requests_profile_idx ON profile_download_requests(profile_key,requested_at DESC);
   `);
   for (const [type, rows] of Object.entries({review:seed.reviews, operation:seed.operations, consultation:seed.consultation})) {
     for (let i=0;i<rows.length;i++) {
