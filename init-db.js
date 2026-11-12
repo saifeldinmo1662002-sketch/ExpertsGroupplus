@@ -42,7 +42,7 @@ const seed = require('./seed-content.json');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('ADMIN_EMAIL must be a valid email address.');
   if (password.length < 14) throw new Error('ADMIN_PASSWORD must be at least 14 characters.');
   const hash=await bcrypt.hash(password,12);
-  await pool.query(`INSERT INTO admins(email,password_hash,display_name,role,status) VALUES($1,$2,'Platform Owner','owner','approved') ON CONFLICT(email) DO UPDATE SET password_hash=EXCLUDED.password_hash,display_name='Platform Owner',role='owner',status='approved'`,[email,hash]);
+  await pool.query(`INSERT INTO admins(email,password_hash,display_name,role,status) VALUES($1,$2,'Platform Owner','owner','approved') ON CONFLICT(email) DO NOTHING`,[email,hash]);
   console.log('Database schema and seed content are ready.');
   await pool.end();
 })().catch(async e=>{console.error(e);await pool.end();process.exit(1)});
