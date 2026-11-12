@@ -114,6 +114,98 @@ async function sendContactNotification(id, lead){
  }catch(error){return fail(error.name==='TimeoutError'?'Resend request timed out.':error.message||'Email delivery failed.')}
 }
 
+
+const apolloSyncLocks=new Map();
+async function apolloRequest(endpoint,body){
+ const response=await fetch('https://api.apollo.io/api/v1/'+endpoint,{
+  method:'POST',
+  headers:{'x-api-key':process.env.APOLLO_API_KEY,'Content-Type':'application/json','Accept':'application/json','Cache-Control':'no-cache'},
+  body:JSON.stringify(body),signal:AbortSignal.timeout(15000)
+ });
+ const payload=await response.json().catch(()=>({}));
+ if(!response.ok)throw new Error(payload.error||payload.message||payload.error_message||('Apollo API returned HTTP '+response.status));
+ return payload;
+}
+async function syncLeadToApollo(id){
+ if(apolloSyncLocks.has(String(id)))return apolloSyncLocks.get(String(id));
+ const work=(async()=>{
+  const q=await pool.query('SELECT * FROM contact_submissions WHERE id=$1',[id]);
+  const lead=q.rows[0];if(!lead)return {ok:false,error:'Contact submission not found.'};
+  if(lead.apollo_sync_status==='synced')return {ok:true,alreadySynced:true};
+  if(!process.env.APOLLO_API_KEY||!process.env.APOLLO_USER_ID){
+   await pool.query("UPDATE contact_submissions SET apollo_sync_status='pending',apollo_sync_error=$1 WHERE id=$2",['Apollo API key or owner ID is not configured.',id]);
+   return {ok:false,pending:true,error:'Apollo API key or owner ID is not configured.'};
+  }
+  try{
+   let contactId=lead.apollo_contact_id;
+   if(!contactId){
+    const parts=String(lead.name||'').trim().split(/\s+/);
+    const firstName=parts.shift()||'Website';
+    const lastName=parts.join(' ')||'Lead';
+    const contact=await apolloRequest('contacts',{
+     first_name:firstName,last_name:lastName,email:lead.email,
+     ...(lead.company?{organization_name:lead.company}:{}),
+     run_dedupe:true
+    });
+    contactId=contact.contact?.id;
+    if(!contactId)throw new Error('Apollo did not return a contact ID.');
+    await pool.query('UPDATE contact_submissions SET apollo_contact_id=$1 WHERE id=$2',[contactId,id]);
+   }
+   let dealId=lead.apollo_deal_id;
+   if(!dealId){
+    const deal=await apolloRequest('opportunities',{
+     name:'Website inquiry - '+String(lead.name||'New lead').slice(0,120),
+     owner_id:process.env.APOLLO_USER_ID,
+     description:[
+      'Source: Experts Group Plus website contact form',
+      'Contact: '+lead.name,
+      'Email: '+lead.email,
+      lead.company?'Company: '+lead.company:'',
+      lead.scope?'Service interest: '+lead.scope:'',
+      lead.message?'Message: '+lead.message:''
+     ].filter(Boolean).join('\n')
+    });
+    dealId=deal.opportunity?.id;
+    if(!dealId)throw new Error('Apollo did not return a deal ID.');
+    await pool.query('UPDATE contact_submissions SET apollo_deal_id=$1 WHERE id=$2',[dealId,id]);
+   }
+   let taskId=lead.apollo_task_id;
+   if(!taskId){
+    const dueAt=new Date(Date.now()+60*60*1000).toISOString();
+    const task=await apolloRequest('tasks',{
+     user_id:process.env.APOLLO_USER_ID,
+     contact_id:contactId,
+     type:'call',
+     priority:'high',
+     status:'scheduled',
+     due_at:dueAt,
+     title:'Call new website lead',
+     note:[
+      'High-priority callback for a new Experts Group Plus website inquiry.',
+      'Deal: '+('Website inquiry - '+String(lead.name||'New lead').slice(0,120)),
+      lead.company?'Company: '+lead.company:'',
+      lead.scope?'Service interest: '+lead.scope:'',
+      lead.preferred_contact?'Preferred contact: '+lead.preferred_contact:'',
+      lead.message?'Original message: '+lead.message:''
+     ].filter(Boolean).join('\n')
+    });
+    taskId=task.task?.id;
+    if(!taskId)throw new Error('Apollo did not return a task ID.');
+    await pool.query('UPDATE contact_submissions SET apollo_task_id=$1 WHERE id=$2',[taskId,id]);
+   }
+   await pool.query("UPDATE contact_submissions SET apollo_sync_status='synced',apollo_sync_error=NULL,apollo_synced_at=NOW() WHERE id=$1",[id]);
+   return {ok:true,contactId,dealId,taskId};
+  }catch(error){
+   const message=String(error.message||'Apollo sync failed.').slice(0,1000);
+   await pool.query("UPDATE contact_submissions SET apollo_sync_status='failed',apollo_sync_error=$1 WHERE id=$2",[message,id]);
+   console.error('Apollo sync failed for website lead',id,':',message);
+   return {ok:false,error:message};
+  }
+ })();
+ apolloSyncLocks.set(String(id),work);
+ try{return await work}finally{apolloSyncLocks.delete(String(id))}
+}
+
 async function notifySavedLead(id){
  const q=await pool.query('SELECT id,name,email,company,scope,message,preferred_contact,language,notification_status FROM contact_submissions WHERE id=$1',[id]);
  const lead=q.rows[0];if(!lead)return {ok:false,error:'Contact submission not found.'};
@@ -129,7 +221,7 @@ app.post('/api/contact',contactLimiter,async(req,res)=>{try{
  const result=await pool.query(`INSERT INTO contact_submissions(name,email,company,scope,message,preferred_contact,language) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id`,[clean(name),clean(email),clean(company),clean(scope),clean(message),clean(preferredContact),language==='ar'?'ar':'en']);
  const id=result.rows[0].id;
  const lead={id,name:clean(name),email:clean(email),company:clean(company),scope:clean(scope),message:clean(message),preferred_contact:clean(preferredContact),language:language==='ar'?'ar':'en'};
- await sendContactNotification(id,lead); // Failure is tracked; it never removes or rejects the saved lead.
+ await Promise.all([sendContactNotification(id,lead),syncLeadToApollo(id)]); // External integrations never discard the saved lead.
  res.status(201).json({ok:true,id,message:'Your inquiry has been received.'});
  }catch(e){console.error(e);res.status(500).json({error:'We could not save your inquiry. Please try again.'})}});
 
@@ -155,11 +247,12 @@ app.post('/api/auth/logout',(req,res)=>req.session.destroy(()=>{res.clearCookie(
 
 app.get('/api/admin/dashboard',requireAdmin,async(req,res)=>{try{
  const [leads,admins,counts]=await Promise.all([
- pool.query('SELECT id,name,email,company,scope,message,preferred_contact,language,status,created_at,notification_status,notification_error,notification_sent_at FROM contact_submissions ORDER BY created_at DESC LIMIT 500'),
+ pool.query('SELECT id,name,email,company,scope,message,preferred_contact,language,status,created_at,notification_status,notification_error,notification_sent_at,apollo_sync_status,apollo_sync_error,apollo_contact_id,apollo_deal_id,apollo_task_id,apollo_synced_at FROM contact_submissions ORDER BY created_at DESC LIMIT 500'),
  req.session.admin.role==='owner'?pool.query('SELECT id,email,display_name,role,status,created_at,last_login FROM admins ORDER BY created_at DESC'):Promise.resolve({rows:[]}),
  pool.query('SELECT content_type,COUNT(*)::int AS count FROM content_items GROUP BY content_type')]);
  res.json({leads:leads.rows,admins:admins.rows,counts:counts.rows});
  }catch(e){console.error(e);res.status(500).json({error:'Could not load dashboard.'})}});
+app.post('/api/admin/leads/:id/apollo-sync',requireAdmin,async(req,res)=>{try{const result=await syncLeadToApollo(req.params.id);res.status(result.ok?200:502).json(result)}catch(e){console.error(e);res.status(500).json({error:'Could not sync this lead to Apollo.'})}});
 app.post('/api/admin/leads/:id/notify',requireAdmin,async(req,res)=>{try{const result=await notifySavedLead(req.params.id);res.status(result.ok?200:502).json(result)}catch(e){console.error(e);res.status(500).json({error:'Could not retry the email notification.'})}});
 app.get('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});const q=await pool.query('SELECT item_key,data,sort_order FROM content_items WHERE content_type=$1 ORDER BY sort_order,id',[type]);res.json(q.rows.map(r=>({...r.data,_key:r.item_key,_sort:r.sort_order}))) });
 app.post('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});try{const data=req.body||{};const key=String(data.id||`${type}-${Date.now()}`).slice(0,100);delete data._key;delete data._sort;data.id=key;const q=await pool.query('INSERT INTO content_items(content_type,item_key,data,sort_order) VALUES($1,$2,$3,COALESCE((SELECT MAX(sort_order)+1 FROM content_items WHERE content_type=$1),0)) RETURNING item_key',[type,key,data]);res.status(201).json({ok:true,id:q.rows[0].item_key})}catch(e){if(e.code==='23505')return res.status(409).json({error:'That item ID already exists.'});console.error(e);res.status(500).json({error:'Could not save content.'})}});
