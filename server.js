@@ -161,60 +161,60 @@ app.get('/api/admin/dashboard',requireAdmin,async(req,res)=>{try{
  pool.query('SELECT content_type,COUNT(*)::int AS count FROM content_items GROUP BY content_type')]);
  res.json({leads:leads.rows,admins:admins.rows,counts:counts.rows});
  }catch(e){console.error(e);res.status(500).json({error:'Could not load dashboard.'})}});
-// Basic first-party analytics: anonymous visitor counts, page views, button presses and active-page time.
+// First-party, privacy-conscious analytics. Never store visitor IP addresses.
 const analyticsLimiter=rateLimit({windowMs:60000,limit:90,standardHeaders:true,legacyHeaders:false});
+const analyticsText=(value,max=120)=>typeof value==='string'?value.trim().slice(0,max):'';
+const analyticsChoice=(value,choices,fallback='unknown')=>choices.includes(value)?value:fallback;
 app.post('/api/analytics/event',analyticsLimiter,async(req,res)=>{
  try{
-  const b=req.body||{};
-  const visitor=String(b.visitorId||'');
-  const session=String(b.sessionId||'');
-  const event=String(b.eventName||'page_view');
-  if(!/^[a-f0-9-]{36}$/i.test(visitor)||!/^[a-f0-9-]{36}$/i.test(session)||!['page_view','button_press','engaged_time'].includes(event)){
-   return res.status(400).json({error:'Invalid analytics event.'});
-  }
-  const page=String(b.pagePath||'/').slice(0,300);
-  const label=String(b.eventLabel||'').trim().slice(0,160)||null;
+  const b=req.body||{},visitor=String(b.visitorId||''),sessionId=String(b.sessionId||''),event=String(b.eventName||'page_view');
+  const eventTypes=['page_view','button_press','engaged_time','contact_submit'];
+  if(!/^[a-f0-9-]{36}$/i.test(visitor)||!/^[a-f0-9-]{36}$/i.test(sessionId)||!eventTypes.includes(event))return res.status(400).json({error:'Invalid analytics event.'});
+  const page=analyticsText(b.pagePath,300)||'/',label=analyticsText(b.eventLabel,160)||null;
   const durationMs=event==='engaged_time'?Math.round(Number(b.durationMs)):null;
-  if(event==='engaged_time'&&(!Number.isFinite(durationMs)||durationMs<250||durationMs>30000)){
-   return res.status(400).json({error:'Invalid engagement duration.'});
-  }
-  await pool.query(
-   'INSERT INTO analytics_visitors(visitor_id,first_seen,last_seen,first_path) VALUES($1,NOW(),NOW(),$2) ON CONFLICT(visitor_id) DO UPDATE SET last_seen=NOW()',
-   [visitor,page]
-  );
-  await pool.query(
-   'INSERT INTO analytics_sessions(session_id,visitor_id,started_at,last_seen,landing_page) VALUES($1,$2,NOW(),NOW(),$3) ON CONFLICT(session_id) DO UPDATE SET last_seen=NOW()',
-   [session,visitor,page]
-  );
-  await pool.query(
-   'INSERT INTO analytics_events(session_id,visitor_id,event_name,event_label,page_path,duration_ms,created_at) VALUES($1,$2,$3,$4,$5,$6,NOW())',
-   [session,visitor,event,label,page,durationMs]
-  );
+  if(event==='engaged_time'&&(!Number.isFinite(durationMs)||durationMs<250||durationMs>30000))return res.status(400).json({error:'Invalid engagement duration.'});
+  let referrer=null;
+  try{const parsed=new URL(analyticsText(b.referrer,1000));if(['https:','http:'].includes(parsed.protocol)&&parsed.host!==req.get('host'))referrer=(parsed.origin+parsed.pathname).slice(0,300)}catch{}
+  const suppliedSource=analyticsText(b.source,100),suppliedMedium=analyticsText(b.medium,100);
+  let inferredHost='';try{inferredHost=new URL(referrer).hostname.replace(/^www\./,'')}catch{}
+  const isSearch=/google|bing|yahoo|duckduckgo|baidu/i.test(inferredHost);
+  const source=suppliedSource||(!referrer?'Direct':isSearch?inferredHost:'Referral');
+  const medium=suppliedMedium||(!referrer?'direct':isSearch?'organic':'referral');
+  const campaign=analyticsText(b.campaign,160)||null;
+  const device=analyticsChoice(analyticsText(b.deviceCategory,20),['desktop','mobile','tablet'],'unknown');
+  const browser=analyticsText(b.browser,50)||'Unknown',operatingSystem=analyticsText(b.operatingSystem,50)||'Unknown';
+  const browserLanguage=analyticsText(b.language,24)||null,timezoneName=analyticsText(b.timezone,80)||null;
+  await pool.query("INSERT INTO analytics_visitors(visitor_id,first_seen,last_seen,first_path,first_referrer,device_category,browser,operating_system,browser_language,timezone_name) VALUES($1,NOW(),NOW(),$2,$3,$4,$5,$6,$7,$8) ON CONFLICT(visitor_id) DO UPDATE SET last_seen=NOW()",
+   [visitor,page,referrer,device,browser,operatingSystem,browserLanguage,timezoneName]);
+  await pool.query("INSERT INTO analytics_sessions(session_id,visitor_id,started_at,last_seen,landing_page,referrer,source,medium,campaign,device_category,browser,operating_system,browser_language,timezone_name) VALUES($1,$2,NOW(),NOW(),$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) ON CONFLICT(session_id) DO UPDATE SET last_seen=NOW()",
+   [sessionId,visitor,page,referrer,source,medium,campaign,device,browser,operatingSystem,browserLanguage,timezoneName]);
+  await pool.query("INSERT INTO analytics_events(session_id,visitor_id,event_name,event_label,page_path,referrer,duration_ms,created_at) VALUES($1,$2,$3,$4,$5,$6,$7,NOW())",
+   [sessionId,visitor,event,label,page,referrer,durationMs]);
   res.status(202).json({ok:true});
- }catch(error){
-  console.error('First-party analytics event failed:',error.message);
-  res.status(500).json({error:'Could not record analytics event.'});
- }
+ }catch(error){console.error('First-party analytics event failed:',error.message);res.status(500).json({error:'Could not record analytics event.'})}
 });
 app.get('/api/admin/analytics',requireAdmin,async(req,res)=>{
  const days=[7,28,90].includes(Number(req.query.days))?Number(req.query.days):28;
- const period="NOW()-($1::int*INTERVAL '1 day')";
+ const type=['all','page_view','button_press','contact_submit','engaged_time'].includes(String(req.query.type))?String(req.query.type):'all';
+ const search=analyticsText(String(req.query.q||''),100);
+ const pageNumber=Math.max(0,Math.min(10000,Math.floor(Number(req.query.page)||0))),pageSize=30,offset=pageNumber*pageSize;
  try{
-  const summarySql='SELECT COUNT(DISTINCT visitor_id)::int AS visitors, COUNT(DISTINCT session_id) FILTER(WHERE event_name=\'page_view\')::int AS visits, COUNT(*) FILTER(WHERE event_name=\'page_view\')::int AS page_views, COUNT(*) FILTER(WHERE event_name=\'button_press\')::int AS button_presses, COALESCE(SUM(duration_ms) FILTER(WHERE event_name=\'engaged_time\'),0)::bigint AS engaged_ms, COALESCE(ROUND(COALESCE(SUM(duration_ms) FILTER(WHERE event_name=\'engaged_time\'),0)::numeric/NULLIF(COUNT(DISTINCT session_id) FILTER(WHERE event_name=\'page_view\'),0)),0)::bigint AS average_visit_ms FROM analytics_events WHERE created_at>='+period;
-  const pagesSql='WITH page_views AS (SELECT page_path,COUNT(*)::int AS views FROM analytics_events WHERE event_name=\'page_view\' AND created_at>='+period+' GROUP BY page_path), page_times AS (SELECT page_path,SUM(duration_ms)::bigint AS engaged_ms FROM analytics_events WHERE event_name=\'engaged_time\' AND created_at>='+period+' GROUP BY page_path) SELECT v.page_path,v.views,COALESCE(t.engaged_ms,0)::bigint AS engaged_ms,COALESCE(ROUND(COALESCE(t.engaged_ms,0)::numeric/NULLIF(v.views,0)),0)::bigint AS average_page_ms FROM page_views v LEFT JOIN page_times t ON t.page_path=v.page_path ORDER BY v.views DESC LIMIT 20';
-  const buttonsSql='SELECT COALESCE(event_label,\'Unlabelled button\') AS button,page_path,COUNT(*)::int AS presses FROM analytics_events WHERE event_name=\'button_press\' AND created_at>='+period+' GROUP BY event_label,page_path ORDER BY presses DESC LIMIT 30';
-  const [summary,pages,buttons]=await Promise.all([
-   pool.query(summarySql,[days]),
-   pool.query(pagesSql,[days]),
-   pool.query(buttonsSql,[days])
+  const summarySql="SELECT COUNT(DISTINCT visitor_id)::int AS visitors, COUNT(DISTINCT session_id) FILTER(WHERE event_name='page_view')::int AS visits, COUNT(*) FILTER(WHERE event_name='page_view')::int AS page_views, COUNT(*) FILTER(WHERE event_name='button_press')::int AS button_presses, COUNT(DISTINCT session_id) FILTER(WHERE event_name='contact_submit')::int AS conversions, COALESCE(ROUND(100.0*COUNT(DISTINCT session_id) FILTER(WHERE event_name='contact_submit')/NULLIF(COUNT(DISTINCT session_id) FILTER(WHERE event_name='page_view'),0),1),0)::numeric AS conversion_rate, COALESCE(SUM(duration_ms) FILTER(WHERE event_name='engaged_time'),0)::bigint AS engaged_ms, COALESCE(ROUND(COALESCE(SUM(duration_ms) FILTER(WHERE event_name='engaged_time'),0)::numeric/NULLIF(COUNT(DISTINCT session_id) FILTER(WHERE event_name='page_view'),0)),0)::bigint AS average_visit_ms FROM analytics_events WHERE created_at>=NOW()-($1::int*INTERVAL '1 day')";
+  const pagesSql="WITH page_views AS(SELECT page_path,COUNT(*)::int AS views FROM analytics_events WHERE event_name='page_view' AND created_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY page_path), page_times AS(SELECT page_path,SUM(duration_ms)::bigint AS engaged_ms FROM analytics_events WHERE event_name='engaged_time' AND created_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY page_path) SELECT v.page_path,v.views,COALESCE(t.engaged_ms,0)::bigint AS engaged_ms,COALESCE(ROUND(COALESCE(t.engaged_ms,0)::numeric/NULLIF(v.views,0)),0)::bigint AS average_page_ms FROM page_views v LEFT JOIN page_times t ON t.page_path=v.page_path ORDER BY v.views DESC LIMIT 20";
+  const buttonsSql="SELECT COALESCE(event_label,'Unlabelled button') AS button,page_path,COUNT(*)::int AS presses FROM analytics_events WHERE event_name='button_press' AND created_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY event_label,page_path ORDER BY presses DESC LIMIT 30";
+  const dailySql="SELECT TO_CHAR(DATE_TRUNC('day',created_at),'YYYY-MM-DD') AS day,COUNT(DISTINCT visitor_id) FILTER(WHERE event_name='page_view')::int AS visitors,COUNT(*) FILTER(WHERE event_name='page_view')::int AS page_views,COUNT(DISTINCT session_id) FILTER(WHERE event_name='contact_submit')::int AS conversions,COALESCE(SUM(duration_ms) FILTER(WHERE event_name='engaged_time'),0)::bigint AS engaged_ms FROM analytics_events WHERE created_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY DATE_TRUNC('day',created_at) ORDER BY DATE_TRUNC('day',created_at)";
+  const sourcesSql="SELECT COALESCE(NULLIF(source,''),'Unknown') AS source,COALESCE(NULLIF(medium,''),'—') AS medium,COALESCE(NULLIF(campaign,''),'—') AS campaign,COUNT(*)::int AS sessions,COUNT(DISTINCT visitor_id)::int AS visitors FROM analytics_sessions WHERE started_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY source,medium,campaign ORDER BY sessions DESC LIMIT 20";
+  const devicesSql="SELECT COALESCE(NULLIF(device_category,''),'unknown') AS device,COALESCE(NULLIF(browser,''),'Unknown') AS browser,COALESCE(NULLIF(operating_system,''),'Unknown') AS operating_system,COUNT(*)::int AS sessions FROM analytics_sessions WHERE started_at>=NOW()-($1::int*INTERVAL '1 day') GROUP BY device_category,browser,operating_system ORDER BY sessions DESC LIMIT 20";
+  const activityWhere=" FROM analytics_events e WHERE e.created_at>=NOW()-($1::int*INTERVAL '1 day') AND ($2::text='all' OR e.event_name=$2) AND ($3::text='' OR COALESCE(e.event_label,'') ILIKE '%'||$3||'%' OR COALESCE(e.page_path,'') ILIKE '%'||$3||'%')";
+  const activityCountSql='SELECT COUNT(*)::int AS total '+activityWhere;
+  const activitySql="SELECT e.id,e.event_name,e.event_label,e.page_path,e.duration_ms,e.created_at,COALESCE(s.device_category,'unknown') AS device FROM analytics_events e LEFT JOIN analytics_sessions s ON s.session_id=e.session_id WHERE e.created_at>=NOW()-($1::int*INTERVAL '1 day') AND ($2::text='all' OR e.event_name=$2) AND ($3::text='' OR COALESCE(e.event_label,'') ILIKE '%'||$3||'%' OR COALESCE(e.page_path,'') ILIKE '%'||$3||'%') ORDER BY e.created_at DESC,e.id DESC LIMIT $4 OFFSET $5";
+  const [summary,pages,buttons,daily,sources,devices,activityCount,activity]=await Promise.all([
+   pool.query(summarySql,[days]),pool.query(pagesSql,[days]),pool.query(buttonsSql,[days]),pool.query(dailySql,[days]),
+   pool.query(sourcesSql,[days]),pool.query(devicesSql,[days]),pool.query(activityCountSql,[days,type,search]),pool.query(activitySql,[days,type,search,pageSize,offset])
   ]);
-  res.json({ok:true,days,summary:summary.rows[0]||{},pages:pages.rows,buttons:buttons.rows});
- }catch(error){
-  console.error('Analytics dashboard query failed:',error);
-  res.status(500).json({error:'Could not load website analytics.'});
- }
-});
-app.post('/api/admin/leads/:id/notify',requireAdmin,async(req,res)=>{try{const result=await notifySavedLead(req.params.id);res.status(result.ok?200:502).json(result)}catch(e){console.error(e);res.status(500).json({error:'Could not retry the email notification.'})}});
+  res.json({ok:true,days,summary:summary.rows[0]||{},pages:pages.rows,buttons:buttons.rows,daily:daily.rows,sources:sources.rows,devices:devices.rows,activity:activity.rows,totalActivity:activityCount.rows[0]?.total||0,activityPage:pageNumber,activityPageSize:pageSize,activityType:type,activityQuery:search});
+ }catch(error){console.error('Analytics dashboard query failed:',error);res.status(500).json({error:'Could not load website analytics.'})}
+});app.post('/api/admin/leads/:id/notify',requireAdmin,async(req,res)=>{try{const result=await notifySavedLead(req.params.id);res.status(result.ok?200:502).json(result)}catch(e){console.error(e);res.status(500).json({error:'Could not retry the email notification.'})}});
 app.get('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});const q=await pool.query('SELECT item_key,data,sort_order FROM content_items WHERE content_type=$1 ORDER BY sort_order,id',[type]);res.json(q.rows.map(r=>({...r.data,_key:r.item_key,_sort:r.sort_order}))) });
 app.post('/api/admin/content/:type',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});try{const data=req.body||{};const key=String(data.id||`${type}-${Date.now()}`).slice(0,100);delete data._key;delete data._sort;data.id=key;const q=await pool.query('INSERT INTO content_items(content_type,item_key,data,sort_order) VALUES($1,$2,$3,COALESCE((SELECT MAX(sort_order)+1 FROM content_items WHERE content_type=$1),0)) RETURNING item_key',[type,key,data]);res.status(201).json({ok:true,id:q.rows[0].item_key})}catch(e){if(e.code==='23505')return res.status(409).json({error:'That item ID already exists.'});console.error(e);res.status(500).json({error:'Could not save content.'})}});
 app.put('/api/admin/content/:type/:key',requireAdmin,async(req,res)=>{const types={reviews:'review',operations:'operation',consultation:'consultation'};const type=types[req.params.type];if(!type)return res.status(404).json({error:'Unknown content type.'});const data=req.body||{};delete data._key;delete data._sort;data.id=req.params.key;const q=await pool.query('UPDATE content_items SET data=$1,updated_at=NOW() WHERE content_type=$2 AND item_key=$3',[data,type,req.params.key]);res.json({ok:q.rowCount===1})});
