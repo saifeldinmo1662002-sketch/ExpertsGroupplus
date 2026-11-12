@@ -10,7 +10,7 @@ const rateLimit = require('express-rate-limit');
 const pool = require('./db');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const ROOT = path.join(__dirname, '..');
+const ROOT = __dirname;
 const PUBLIC = path.join(ROOT, 'public');
 const SITE_URL = (process.env.SITE_URL || 'https://www.expertsgp.com').replace(/\/$/, '');
 if (process.env.NODE_ENV === 'production' && (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32)) throw new Error('Set SESSION_SECRET to a random value of at least 32 characters in Railway.');
