@@ -113,7 +113,7 @@ app.patch('/api/admin/leads/:id',requireAdmin,async(req,res)=>{const status=['ne
 app.patch('/api/admin/admins/:id/approval',requireOwner,async(req,res)=>{const status=['approved','rejected'].includes(req.body.status)?req.body.status:null;if(!status)return res.status(400).json({error:'Invalid approval status.'});if(String(req.session.admin.id)===String(req.params.id))return res.status(400).json({error:'You cannot change your own approval.'});await pool.query('UPDATE admins SET status=$1,approved_by=$2,approved_at=CASE WHEN $1=\'approved\' THEN NOW() ELSE NULL END WHERE id=$3 AND role<>\'owner\'',[status,req.session.admin.id,req.params.id]);res.json({ok:true})});
 
 app.use('/assets',express.static(PUBLIC,{maxAge:'1d'}));
-app.get('/admin*',(req,res)=>res.sendFile(path.join(PUBLIC,'admin.html')));
+app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-age=0, must-revalidate');res.sendFile(path.join(PUBLIC,'admin.html'))});
 app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.type('html').send(addHead(html,route.lang,route.page))});
 app.get('*',(req,res)=>{if(req.path.includes('.'))return res.status(404).send('Not found');res.redirect(302,'/en/')});
 
