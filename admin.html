@@ -114,7 +114,34 @@ td .sub{display:block;color:#64748B;font-size:11px;margin-top:4px}
 [dir=rtl] .auth-card{text-align:right}
 [dir=rtl] .auth-links{flex-direction:row-reverse}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
-</style></head><body>
+</style>
+<style id="admin-navigation-layout-fix">
+/* Keep the main site-like header readable when the full admin menu cannot fit on one line. */
+.site-header{height:auto;min-height:82px}
+.site-header .header-inner{height:auto;min-height:82px}
+.site-header .brand{flex:0 0 auto;min-width:max-content}
+.site-header .header-actions{flex:0 0 auto;min-width:max-content}
+.site-header .admin-nav{min-width:0}
+.site-header .admin-nav button{flex:0 0 auto;white-space:nowrap}
+@media (min-width:1121px) and (max-width:1450px){
+  .site-header .header-inner{flex-wrap:wrap;justify-content:space-between;gap:4px 18px;padding:8px 0 5px}
+  .site-header .admin-nav{order:3;flex:1 0 100%;width:100%;min-width:0;display:flex;flex-wrap:wrap;justify-content:flex-start;align-content:center;overflow:visible;gap:0 clamp(18px,2vw,28px);padding:0 0 5px}
+  .site-header .admin-nav button{padding:10px 2px;line-height:1.35}
+  .site-header .header-actions{margin-left:auto}
+}
+@media (max-width:1120px){
+  .site-header .header-inner{height:auto;min-height:78px;flex-wrap:wrap;gap:8px;padding:10px 0}
+  .site-header .admin-nav{order:3;flex:1 0 100%;width:100%;display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:18px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;padding:0 0 7px;scrollbar-width:thin}
+  .site-header .admin-nav button{flex:0 0 auto;white-space:nowrap}
+  .site-header .header-actions{margin-left:auto}
+}
+@media (max-width:700px){
+  .site-header .header-inner{gap:7px 10px}
+  .site-header .admin-nav{gap:16px}
+  .site-header .header-actions{gap:6px}
+}
+</style>
+</head><body>
 <div id="auth" class="auth-screen">
   <header class="site-header auth-header"><div class="container header-inner">
     <a class="brand" href="/en/" aria-label="Experts Group Plus home"><span class="brand-symbol"><svg viewBox="0 0 100 100" aria-hidden="true"><rect x="38" y="14" width="24" height="24" rx="6" transform="rotate(45 50 26)" fill="#C2A74D"/><rect x="38" y="62" width="24" height="24" rx="6" transform="rotate(45 50 74)" fill="#C2A74D"/><rect x="14" y="38" width="24" height="24" rx="6" transform="rotate(45 26 50)" fill="#154695"/><rect x="62" y="38" width="24" height="24" rx="6" transform="rotate(45 74 50)" fill="#154695"/></svg></span><span class="brand-wordmark"><span>EXPERTS</span><span>GROUP <b>PLUS</b></span></span></a><span class="brand-badge">ADMIN PORTAL</span>
