@@ -73,7 +73,7 @@
     if (!target) return;
 
     const visibleText = (target.getAttribute('aria-label') || target.getAttribute('data-analytics-name') ||
-      target.innerText || target.value || target.textContent || target.id || '').replace(/\\s+/g, ' ').trim();
+      target.innerText || target.value || target.textContent || target.id || '').trim();
     const kind = target.tagName === 'A' ? 'Link' : 'Button';
     const label = (kind + ' · ' + (visibleText || 'Unnamed control')).slice(0, 160);
     send('button_press', label);
