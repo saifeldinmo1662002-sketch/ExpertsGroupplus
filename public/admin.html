@@ -3,6 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#154695">
 <title>Admin Portal | Experts Group Plus</title>
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("egp_admin_theme")||"light"}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Crect%20x%3D%2238%22%20y%3D%2214%22%20width%3D%2224%22%20height%3D%2224%22%20rx%3D%226%22%20transform%3D%22rotate(45%2050%2026)%22%20fill%3D%22%23C2A74D%22%2F%3E%3Crect%20x%3D%2238%22%20y%3D%2262%22%20width%3D%2224%22%20height%3D%2224%22%20rx%3D%226%22%20transform%3D%22rotate(45%2050%2074)%22%20fill%3D%22%23C2A74D%22%2F%3E%3Crect%20x%3D%2214%22%20y%3D%2238%22%20width%3D%2224%22%20height%3D%2224%22%20rx%3D%226%22%20transform%3D%22rotate(45%2026%2050)%22%20fill%3D%22%23154695%22%2F%3E%3Crect%20x%3D%2262%22%20y%3D%2238%22%20width%3D%2224%22%20height%3D%2224%22%20rx%3D%226%22%20transform%3D%22rotate(45%2074%2050)%22%20fill%3D%22%23154695%22%2F%3E%3C%2Fsvg%3E">
@@ -199,11 +200,113 @@ td .sub{display:block;color:#64748B;font-size:11px;margin-top:4px}
 .pill.pending{background:#FFFBEB;color:#92400E;border-color:#FDE68A}
 .lead-archived{opacity:.72;background:#F8FAFC}
 </style>
+
+<style id="admin-modern-theme">
+:root{color-scheme:light;--canvas:#F4F7FC;--surface:#FFFFFF;--ink:#14243A;--navy:#0C1D36;--body:#51627A;--muted:#73839A;--line:#E2E9F2;--accent:#154695;--soft:#EFF5FF;--shadow:0 8px 28px rgba(15,35,67,.055);--shadow-lg:0 22px 60px rgba(15,35,67,.12)}
+:root[data-theme="dark"]{color-scheme:dark;--canvas:#080E1F;--surface:#0D152F;--ink:#E8EEF8;--navy:#F5F7FC;--body:#B6C3D6;--muted:#8F9FB7;--line:#25334C;--accent:#94BCFF;--soft:#142544;--shadow:0 8px 28px rgba(0,0,0,.18);--shadow-lg:0 22px 60px rgba(0,0,0,.30)}
+html,body{min-height:100%;background:var(--canvas);color:var(--ink)}
+body{font-family:Inter,"Noto Sans Arabic",sans-serif;transition:background .2s,color .2s}
+.container{width:min(1380px,calc(100% - 48px))}
+.site-header{min-height:78px;height:auto;position:sticky;top:0;background:rgba(255,255,255,.90);border-bottom:1px solid var(--line);box-shadow:0 4px 20px rgba(15,35,67,.04);backdrop-filter:blur(18px)}
+.site-header .header-inner{height:auto;min-height:78px;gap:18px}
+.brand-symbol{width:40px;height:40px;flex-basis:40px}
+.brand-wordmark{font-size:21px}
+.brand-badge{letter-spacing:.13em;font-size:9px}
+.header-actions{gap:8px}
+.header-link{background:var(--surface);border-color:var(--line);color:var(--accent);border-radius:12px}
+.header-link:hover{background:var(--soft);border-color:var(--line)}
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-size:12px;font-weight:750;white-space:nowrap;transition:background .2s,border-color .2s,transform .2s}
+.theme-toggle:hover{background:var(--soft);border-color:#9AB4D7;transform:translateY(-1px)}
+.theme-toggle:first-letter{font-size:16px;color:var(--brand-gold)}
+.app-main{padding:30px 0 76px}
+.workspace-layout{display:grid;grid-template-columns:252px minmax(0,1fr);align-items:start;gap:26px}
+.admin-sidebar{position:sticky;top:100px;padding:14px 11px;border-radius:22px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);min-width:0}
+.sidebar-label{padding:9px 13px 13px;color:var(--muted);font-size:10px;letter-spacing:.16em;font-weight:850}
+.admin-nav{display:flex;flex-direction:column;align-items:stretch;gap:5px;width:100%}
+.admin-nav button{display:flex;align-items:center;gap:12px;width:100%;min-height:45px;padding:11px 13px;border:1px solid transparent;border-radius:13px;background:transparent;color:var(--body);font-size:13px;font-weight:700;text-align:left;white-space:nowrap;transition:background .18s,border-color .18s,color .18s}
+.admin-nav button:hover{background:var(--soft);color:var(--accent)}
+.admin-nav button.active{background:var(--soft);border-color:rgba(21,70,149,.10);color:var(--accent);box-shadow:inset 3px 0 0 var(--brand-gold)}
+.nav-dot{width:8px;height:8px;flex:0 0 8px;border-radius:3px;background:#AEBBD0;transform:rotate(45deg)}
+.admin-nav button.active .nav-dot{background:var(--brand-gold);box-shadow:0 0 0 4px rgba(194,167,77,.14)}
+.sidebar-foot{margin:17px 7px 2px;padding:14px 7px 3px;border-top:1px solid var(--line);color:var(--accent);font-size:11px;line-height:1.8}
+.workspace-content{min-width:0}
+.workspace-intro{padding:26px 28px;margin:0 0 23px;border:1px solid var(--line);border-radius:22px;background:var(--surface);box-shadow:var(--shadow)}
+.workspace-intro .eyebrow{margin:0 0 13px;padding:6px 12px;background:var(--soft);border-color:var(--line);box-shadow:none;color:var(--accent);font-size:10px}
+.workspace-heading{align-items:flex-end}
+.workspace-heading h1{color:var(--navy);font-size:clamp(27px,2.6vw,35px);letter-spacing:-.045em}
+.workspace-heading p{color:var(--body);font-size:13px}
+.workspace-meta{color:var(--muted);font-size:9px}
+.heading{margin-bottom:18px}
+.heading h1{color:var(--navy);font-size:24px;letter-spacing:-.035em}
+.heading .muted{color:var(--muted);font-size:12px;line-height:1.6}
+.cards{grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:14px;margin-bottom:18px}
+.stat{padding:19px 20px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:var(--shadow)}
+.stat .muted{color:var(--muted);font-size:11px}
+.stat b{color:var(--accent);font-size:29px;letter-spacing:-.04em}
+.analytics-stats{grid-template-columns:repeat(5,minmax(0,1fr))}
+.panel{padding:21px 22px;border:1px solid var(--line);border-radius:19px;background:var(--surface);box-shadow:var(--shadow)}
+.panel h2{color:var(--navy);font-size:15px}
+table{min-width:620px}
+th,td{padding:13px 12px;border-bottom:1px solid var(--line)}
+th{background:var(--soft);color:var(--muted);font-size:10px}
+td{color:var(--body)}
+td b{color:var(--navy)}
+td .sub{color:var(--muted)}
+.field label{color:var(--body)}
+.field input,.field textarea,.field select{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:#6B9CE5}
+.btn.secondary,.btn.light{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn.secondary:hover,.btn.light:hover{background:var(--soft);border-color:#A9BEDC}
+.header-link,.theme-toggle{box-shadow:0 2px 7px rgba(15,35,67,.035)}
+.auth-screen{background:radial-gradient(ellipse at 50% 0%,rgba(219,232,252,.55),transparent 48%),var(--canvas)}
+.auth-main h1{color:var(--navy)}
+.auth-main .lead{color:var(--body)}
+.auth-card,.modal{background:var(--surface);border-color:var(--line);box-shadow:var(--shadow-lg)}
+.auth-card h2,.modal-head h2{color:var(--navy)}
+.auth-card .subline,.note{color:var(--muted)}
+.auth-eyebrow{background:var(--surface);border-color:var(--line);color:var(--body)}
+.empty{color:var(--muted)}
+.pill{background:var(--soft);color:var(--body);border-color:var(--line)}
+.lead-archived{background:var(--soft)}
+.alert{background:#FFFBEB;color:#92400E;border-color:#FDE68A}
+.modal-back{background:rgba(4,10,22,.60)}
+:root[data-theme="dark"] .site-header{background:rgba(13,21,47,.92);border-color:var(--line);box-shadow:0 4px 20px rgba(0,0,0,.22)}
+:root[data-theme="dark"] .brand-wordmark{color:#EAF2FF}
+:root[data-theme="dark"] .brand-badge{border-color:var(--line)}
+:root[data-theme="dark"] .header-link,:root[data-theme="dark"] .theme-toggle{background:#111D37;color:#DAE7FA;border-color:var(--line)}
+:root[data-theme="dark"] .header-link:hover,:root[data-theme="dark"] .theme-toggle:hover{background:#1A2B4A}
+:root[data-theme="dark"] .admin-sidebar,:root[data-theme="dark"] .workspace-intro,:root[data-theme="dark"] .stat,:root[data-theme="dark"] .panel,:root[data-theme="dark"] .auth-card,:root[data-theme="dark"] .modal{background:var(--surface);border-color:var(--line)}
+:root[data-theme="dark"] .admin-nav button{color:#B8C6DA}
+:root[data-theme="dark"] .admin-nav button:hover,:root[data-theme="dark"] .admin-nav button.active{background:#142544;color:#B9D2FF;border-color:#263C60}
+:root[data-theme="dark"] .admin-nav button.active{box-shadow:inset 3px 0 0 var(--brand-gold)}
+:root[data-theme="dark"] .workspace-intro .eyebrow,:root[data-theme="dark"] th,:root[data-theme="dark"] .pill{background:#14213B;border-color:var(--line);color:#B9C7DC}
+:root[data-theme="dark"] td,:root[data-theme="dark"] .field label{color:var(--body)}
+:root[data-theme="dark"] td b,:root[data-theme="dark"] .auth-card h2,:root[data-theme="dark"] .modal-head h2{color:var(--navy)}
+:root[data-theme="dark"] .btn.secondary,:root[data-theme="dark"] .btn.light{background:#111D37;color:#DCE7F7;border-color:var(--line)}
+:root[data-theme="dark"] .btn.secondary:hover,:root[data-theme="dark"] .btn.light:hover{background:#1A2B4A}
+:root[data-theme="dark"] .field input,:root[data-theme="dark"] .field textarea,:root[data-theme="dark"] .field select{background:#0A1227;color:#EAF0FA;border-color:#2B3A55}
+:root[data-theme="dark"] .auth-screen{background:radial-gradient(ellipse at 50% 0%,rgba(21,70,149,.28),transparent 50%),var(--canvas)}
+:root[data-theme="dark"] .auth-eyebrow{background:#111D37;border-color:var(--line);color:#C5D1E2}
+:root[data-theme="dark"] .auth-main .lead,:root[data-theme="dark"] .workspace-heading p{color:var(--body)}
+:root[data-theme="dark"] .pill.pending,:root[data-theme="dark"] .pill.new{background:#382B13;color:#F5D68B;border-color:#665126}
+:root[data-theme="dark"] .pill.approved,:root[data-theme="dark"] .pill.closed,:root[data-theme="dark"] .pill.sent{background:#123528;color:#9BE2BD;border-color:#245941}
+:root[data-theme="dark"] .pill.rejected,:root[data-theme="dark"] .pill.spam,:root[data-theme="dark"] .pill.failed{background:#3A1D29;color:#FFB6C4;border-color:#6B3042}
+:root[data-theme="dark"] .alert{background:#382B13;color:#F5D68B;border-color:#665126}
+:root[data-theme="dark"] .alert.error{background:#3A1D29;color:#FFB6C4;border-color:#6B3042}
+:root[data-theme="dark"] .lead-archived{background:#101B32}
+:root[data-theme="dark"] .btn.danger{background:#3A1D29;color:#FFB6C4;border-color:#6B3042}
+:root[data-theme="dark"] .auth-footer{color:#8292AA}
+@media(max-width:1100px){.analytics-stats{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){.workspace-layout{grid-template-columns:1fr;gap:17px}.admin-sidebar{position:static;padding:10px 12px}.sidebar-label,.sidebar-foot{display:none}.admin-nav{flex-direction:row;overflow-x:auto;overflow-y:hidden;gap:7px;padding-bottom:3px;scrollbar-width:thin}.admin-nav button{width:auto;min-width:max-content;padding:10px 13px}.admin-nav button.active{box-shadow:inset 0 -3px 0 var(--brand-gold)}.workspace-meta{display:none}.workspace-intro{padding:22px}}
+@media(max-width:700px){.container{width:calc(100% - 28px)}.site-header{position:relative}.site-header .header-inner{min-height:70px;flex-wrap:wrap;gap:8px;padding:10px 0}.site-header .header-actions{margin-left:auto;gap:6px}.site-header .brand-wordmark{font-size:18px}.site-header .brand-symbol{width:34px;height:34px;flex-basis:34px}.theme-toggle{min-height:35px;padding:7px 9px}.theme-toggle span{font-size:10px}.app-main{padding:17px 0 50px}.workspace-intro{padding:19px 17px;border-radius:18px}.workspace-heading{align-items:flex-start}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.analytics-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat{padding:15px}.stat b{font-size:24px}.panel{padding:15px;border-radius:16px}.heading{align-items:flex-start;flex-direction:column}.header-link{display:none}.auth-main{padding:42px 14px 55px}.auth-card{padding:24px 20px}}
+@media(max-width:430px){.theme-toggle span{display:none}.theme-toggle{min-width:36px}.brand-badge{display:none}.analytics-stats{grid-template-columns:1fr 1fr}}
+</style>
+
 </head><body>
 <div id="auth" class="auth-screen">
   <header class="site-header auth-header"><div class="container header-inner">
     <a class="brand" href="/en/" aria-label="Experts Group Plus home"><span class="brand-symbol"><svg viewBox="0 0 100 100" aria-hidden="true"><rect x="38" y="14" width="24" height="24" rx="6" transform="rotate(45 50 26)" fill="#C2A74D"/><rect x="38" y="62" width="24" height="24" rx="6" transform="rotate(45 50 74)" fill="#C2A74D"/><rect x="14" y="38" width="24" height="24" rx="6" transform="rotate(45 26 50)" fill="#154695"/><rect x="62" y="38" width="24" height="24" rx="6" transform="rotate(45 74 50)" fill="#154695"/></svg></span><span class="brand-wordmark"><span>EXPERTS</span><span>GROUP <b>PLUS</b></span></span></a><span class="brand-badge">ADMIN PORTAL</span>
-    <div class="header-actions"><a class="header-link" href="/en/">Back to website <span aria-hidden="true">↗</span></a></div>
+    <div class="header-actions"><button id="authThemeToggle" class="theme-toggle" type="button" aria-label="Switch color theme">☾ <span>Dark mode</span></button><a class="header-link" href="/en/">Back to website <span aria-hidden="true">↗</span></a></div>
   </div></header>
   <main class="auth-main">
     <span class="auth-eyebrow">SECURE ADMINISTRATION</span>
@@ -233,7 +336,7 @@ td .sub{display:block;color:#64748B;font-size:11px;margin-top:4px}
   <header class="site-header"><div class="container header-inner">
     <a class="brand" href="/en/" aria-label="Experts Group Plus home"><span class="brand-symbol"><svg viewBox="0 0 100 100" aria-hidden="true"><rect x="38" y="14" width="24" height="24" rx="6" transform="rotate(45 50 26)" fill="#C2A74D"/><rect x="38" y="62" width="24" height="24" rx="6" transform="rotate(45 50 74)" fill="#C2A74D"/><rect x="14" y="38" width="24" height="24" rx="6" transform="rotate(45 26 50)" fill="#154695"/><rect x="62" y="38" width="24" height="24" rx="6" transform="rotate(45 74 50)" fill="#154695"/></svg></span><span class="brand-wordmark"><span>EXPERTS</span><span>GROUP <b>PLUS</b></span></span></a>
     <span class="brand-badge">ADMIN PORTAL</span>
-    <div class="header-actions"><span id="userLabel" class="user-chip"></span><a class="header-link" href="/en/" target="_blank" rel="noopener">View website ↗</a><button id="logout" class="btn secondary small" type="button">Sign out</button></div>
+    <div class="header-actions"><span id="userLabel" class="user-chip"></span><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch color theme">☾ <span>Dark mode</span></button><a class="header-link" href="/en/" target="_blank" rel="noopener">View website ↗</a><button id="logout" class="btn secondary small" type="button">Sign out</button></div>
   </div></header>
   <main class="container app-main">
     <div class="workspace-layout">
@@ -266,6 +369,21 @@ td .sub{display:block;color:#64748B;font-size:11px;margin-top:4px}
 
 <script>
 const $=s=>document.querySelector(s);let me=null,activeTab='overview',cache={},showArchivedLeads=false;
+function applyAdminTheme(theme){
+ const value=theme==='dark'?'dark':'light';
+ document.documentElement.dataset.theme=value;
+ try{localStorage.setItem('egp_admin_theme',value)}catch(e){}
+ document.querySelectorAll('#themeToggle,#authThemeToggle').forEach(button=>{
+  button.innerHTML=(value==='dark'?'☀':'☾')+' <span>'+(value==='dark'?'Light mode':'Dark mode')+'</span>';
+  button.setAttribute('aria-label',value==='dark'?'Switch to light mode':'Switch to dark mode');
+  button.title=value==='dark'?'Switch to light mode':'Switch to dark mode';
+ });
+ const meta=document.querySelector('meta[name="theme-color"]');
+ if(meta)meta.content=value==='dark'?'#080E1F':'#154695';
+}
+function toggleAdminTheme(){applyAdminTheme(document.documentElement.dataset.theme==='dark'?'light':'dark')}
+document.querySelectorAll('#themeToggle,#authThemeToggle').forEach(button=>button.addEventListener('click',toggleAdminTheme));
+try{applyAdminTheme(localStorage.getItem('egp_admin_theme')||'light')}catch(e){applyAdminTheme('light')}
 async function api(url,opts={}){const r=await fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json',...(opts.headers||{})},...opts});const d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||'Request failed');return d}
 function alertAuth(msg,error=false){$('#authAlert').textContent=msg;$('#authAlert').className='alert'+(error?' error':'')}
 function showAuth(){me=null;$('#app').classList.add('hidden');$('#auth').classList.remove('hidden');$('#loginForm').classList.remove('hidden');$('#requestForm').classList.add('hidden');$('#authTitle').textContent='Admin sign in';$('#authIntro').textContent='Use your approved administrator account to continue.';$('#toggleRequest').textContent='Request access';$('#authAlert').classList.add('hidden')}
@@ -291,15 +409,21 @@ async function analytics(){
   const d=await api('/api/admin/analytics?days='+days);
   const m=d.summary||{};
   const fmt=n=>Number(n||0).toLocaleString();
+  const duration=ms=>{
+   const seconds=Math.max(0,Math.round(Number(ms||0)/1000));
+   if(seconds<60)return seconds+' sec';
+   const minutes=Math.floor(seconds/60),remainder=seconds%60;
+   return minutes+' min'+(remainder?' '+remainder+' sec':'');
+  };
   const table=(rows,cols)=>rows.length
-   ?'<div class="table-wrap"><table><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join('')+'</tr></thead><tbody>'+rows.map(x=>'<tr>'+cols.map(c=>'<td>'+esc(x[c[0]]??'—')+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'
+   ?'<div class="table-wrap"><table><thead><tr>'+cols.map(c=>'<th>'+c[1]+'</th>').join('')+'</tr></thead><tbody>'+rows.map(x=>'<tr>'+cols.map(c=>'<td>'+esc(c[2]?c[2](x[c[0]],x):(x[c[0]]??'—'))+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>'
    :'<div class="empty">No activity recorded for this period yet.</div>';
   const action='<select aria-label="Analytics date range" onchange="window.analyticsDays=Number(this.value);analytics()"><option value="7" '+(days===7?'selected':'')+'>Last 7 days</option><option value="28" '+(days===28?'selected':'')+'>Last 28 days</option><option value="90" '+(days===90?'selected':'')+'>Last 90 days</option></select> <button class="btn light" onclick="analytics()">Refresh</button>';
-  $('#content').innerHTML=heading('Website analytics','Basic visitor counts, page views and button presses. Data is stored in your own database.',action)+
-   '<div class="cards"><div class="stat"><span class="muted">Unique visitors</span><b>'+fmt(m.visitors)+'</b></div><div class="stat"><span class="muted">Visits</span><b>'+fmt(m.visits)+'</b></div><div class="stat"><span class="muted">Page views</span><b>'+fmt(m.page_views)+'</b></div><div class="stat"><span class="muted">Button presses</span><b>'+fmt(m.button_presses)+'</b></div></div>'+
-   '<section class="panel"><h2>Page views by page</h2>'+table(d.pages,[['page_path','Page'],['views','Page views']])+'</section>'+
+  $('#content').innerHTML=heading('Website analytics','Independent visitor reporting, page views, button presses and average active time.',action)+
+   '<div class="cards analytics-stats"><div class="stat"><span class="muted">Unique visitors</span><b>'+fmt(m.visitors)+'</b></div><div class="stat"><span class="muted">Visits</span><b>'+fmt(m.visits)+'</b></div><div class="stat"><span class="muted">Average stay time</span><b>'+duration(m.average_visit_ms)+'</b></div><div class="stat"><span class="muted">Page views</span><b>'+fmt(m.page_views)+'</b></div><div class="stat"><span class="muted">Button presses</span><b>'+fmt(m.button_presses)+'</b></div></div>'+
+   '<section class="panel"><h2>Page views and average time by page</h2>'+table(d.pages,[['page_path','Page'],['views','Page views'],['average_page_ms','Avg. stay',duration],['engaged_ms','Total active time',duration]])+'</section>'+
    '<section class="panel"><h2>Button presses</h2>'+table(d.buttons,[['button','Button / link'],['page_path','Page'],['presses','Presses']])+'</section>'+
-   '<p class="note">Uses a random first-party visitor ID to count unique visitors. No Google Analytics, IP addresses, demographics or cross-site tracking.</p>';
+   '<p class="note">Stay time counts only while the website is visible in the browser tab. A closing browser or lost connection can prevent the final few seconds from being recorded. Uses anonymous first-party IDs only; no IP addresses, demographics or Google Analytics.</p>';
  }catch(e){
   $('#content').innerHTML=heading('Website analytics','Basic first-party reporting.')+'<section class="panel"><div class="alert error">'+esc(e.message)+'</div></section>';
  }
