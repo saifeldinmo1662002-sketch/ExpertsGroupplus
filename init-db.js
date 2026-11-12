@@ -28,6 +28,12 @@ const seed = require('./seed-content.json');
       status TEXT NOT NULL DEFAULT 'new', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
     CREATE INDEX IF NOT EXISTS contact_submissions_created_idx ON contact_submissions(created_at DESC);
+    CREATE TABLE IF NOT EXISTS analytics_visitors(visitor_id TEXT PRIMARY KEY,first_seen TIMESTAMPTZ NOT NULL,last_seen TIMESTAMPTZ NOT NULL,first_path TEXT,first_referrer TEXT,country_code TEXT,device_category TEXT,browser TEXT,operating_system TEXT);
+    CREATE TABLE IF NOT EXISTS analytics_sessions(session_id TEXT PRIMARY KEY,visitor_id TEXT NOT NULL REFERENCES analytics_visitors(visitor_id) ON DELETE CASCADE,started_at TIMESTAMPTZ NOT NULL,last_seen TIMESTAMPTZ NOT NULL,landing_page TEXT,referrer TEXT,source TEXT,medium TEXT,campaign TEXT,country_code TEXT,device_category TEXT,browser TEXT,operating_system TEXT);
+    CREATE TABLE IF NOT EXISTS analytics_events(id BIGSERIAL PRIMARY KEY,session_id TEXT NOT NULL REFERENCES analytics_sessions(session_id) ON DELETE CASCADE,visitor_id TEXT NOT NULL REFERENCES analytics_visitors(visitor_id) ON DELETE CASCADE,event_name TEXT NOT NULL,page_path TEXT,referrer TEXT,created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
+    CREATE INDEX IF NOT EXISTS analytics_events_created_idx ON analytics_events(created_at DESC);
+    CREATE INDEX IF NOT EXISTS analytics_events_page_idx ON analytics_events(page_path,created_at DESC);
+    CREATE INDEX IF NOT EXISTS analytics_sessions_started_idx ON analytics_sessions(started_at DESC);
     CREATE INDEX IF NOT EXISTS content_items_type_order_idx ON content_items(content_type,sort_order);
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS archived_at TIMESTAMPTZ;
     ALTER TABLE contact_submissions ADD COLUMN IF NOT EXISTS notification_status TEXT NOT NULL DEFAULT 'pending';
