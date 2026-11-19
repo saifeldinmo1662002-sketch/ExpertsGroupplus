@@ -6,6 +6,7 @@ const pool = require('./db');
 const seed = require('./seed-content.json');
 (async () => {
   await pool.query(`
+    CREATE TABLE IF NOT EXISTS seo_page_settings (id BIGSERIAL PRIMARY KEY,page_key TEXT NOT NULL,language TEXT NOT NULL CHECK(language IN ('en','ar')),seo_title TEXT NOT NULL,meta_description TEXT NOT NULL,focus_keyword TEXT NOT NULL DEFAULT '',additional_keywords TEXT NOT NULL DEFAULT '',canonical_url TEXT,robots_directive TEXT NOT NULL DEFAULT 'index,follow,max-image-preview:large',social_title TEXT NOT NULL DEFAULT '',social_description TEXT NOT NULL DEFAULT '',social_image TEXT,seo_notes TEXT NOT NULL DEFAULT '',updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),UNIQUE(page_key,language));
     CREATE TABLE IF NOT EXISTS admins (
       id BIGSERIAL PRIMARY KEY, email TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL,
       display_name TEXT NOT NULL DEFAULT 'Administrator', role TEXT NOT NULL DEFAULT 'admin',

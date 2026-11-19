@@ -80,9 +80,13 @@ const pageMeta={
 };
 function canonicalPath(lang,page){return `/${lang}/${page==='home'?'':page}`.replace(/\/$/,'/')}
 function pageFromPath(url){const m=url.match(/^\/(en|ar)(?:\/([^/?#]+))?\/?$/);return m?{lang:m[1],page:slugToPage(m[2]||'home')}:null}
-function addHead(html,lang,page){
+async function addHead(html,lang,page){
  const pageMetaAr={home:['خبراء جروب بلس | حلول متكاملة للأعمال','حلول متكاملة في التدريب والاستشارات والعمليات وخدمات التعهيد لدعم نمو الشركات.'],about:['من نحن | خبراء جروب بلس','تعرّف على خبراء جروب بلس ومنهجية العمل والخدمات التي نقدمها للشركات.'],training:['التدريب المؤسسي | خبراء جروب بلس','برامج تدريب عملية للموظفين والإدارات والقيادات لتحسين أداء الأعمال.'],consultation:['الاستشارات الإدارية والاستراتيجية | خبراء جروب بلس','تشخيص الأعمال وتطوير الاستراتيجيات وتحسين العمليات لتحقيق نمو مستدام.'],operations:['خدمات العمليات | خبراء جروب بلس','خدمات تشغيل متخصصة في التسويق والإبداع والتقنية والوظائف المؤسسية.'],bpo:['خدمات تعهيد العمليات التجارية | خبراء جروب بلس','حلول مرنة لدعم العملاء والمبيعات والعمليات الإدارية والمساندة.'],contact:['تواصل مع خبراء جروب بلس','تواصل مع فريق خبراء جروب بلس لمناقشة التدريب والاستشارات والعمليات وخدمات التعهيد.']};
- const [title,desc]=(lang==='ar'?pageMetaAr:pageMeta)[page]; const url=SITE_URL+canonicalPath(lang,page);
+ let [title,desc]=(lang==='ar'?pageMetaAr:pageMeta)[page];let seo={};
+ try{const q=await pool.query('SELECT * FROM seo_page_settings WHERE page_key=$1 AND language=$2',[page,lang]);if(q.rows[0])seo=q.rows[0]}catch(e){if(e.code!=='42P01')console.error('SEO settings read failed:',e.message)}
+ title=seo.seo_title||title;desc=seo.meta_description||desc;const url=SITE_URL+canonicalPath(lang,page);
+ const escMeta=v=>String(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ const canonical=safeUrl(seo.canonical_url)||url;const robots=seo.robots_directive||'index,follow,max-image-preview:large';const socialTitle=seo.social_title||title;const socialDescription=seo.social_description||desc;
  const serviceMeta={
   training:['Corporate Training','Corporate training programs for employees, departments and managers.'],
   consultation:['Business Consulting','Business diagnostics, strategic advisory and operational improvement.'],
@@ -99,16 +103,16 @@ function addHead(html,lang,page){
   const [serviceName,serviceDescription]=serviceMeta[page];
   graph.push({'@type':'Service','@id':url+'#service','name':lang==='ar'?title:serviceName,'description':lang==='ar'?desc:serviceDescription,'url':url,'provider':{'@id':orgId},'mainEntityOfPage':{'@id':url+'#webpage'}});
  }
- const head='\n<meta name="description" content="'+desc.replace(/"/g,'&quot;')+'">'+
- '\n<meta name="robots" content="index,follow,max-image-preview:large">'+
- '\n<link rel="canonical" href="'+url+'">'+
+ const head='\n<meta name="description" content="'+escMeta(desc)+'">'+
+ '\n<meta name="robots" content="'+escMeta(robots)+'">'+
+ '\n<link rel="canonical" href="'+escMeta(canonical)+'">'+
  '\n<link rel="alternate" hreflang="en" href="'+SITE_URL+canonicalPath('en',page)+'">'+
  '\n<link rel="alternate" hreflang="ar" href="'+SITE_URL+canonicalPath('ar',page)+'">'+
  '\n<link rel="alternate" hreflang="x-default" href="'+SITE_URL+canonicalPath('en',page)+'">'+
- '\n<meta property="og:type" content="website"><meta property="og:site_name" content="Experts Group Plus"><meta property="og:title" content="'+title+'"><meta property="og:description" content="'+desc+'"><meta property="og:url" content="'+url+'"><meta property="og:locale" content="'+(lang==='ar'?'ar_EG':'en_US')+'"><meta property="og:locale:alternate" content="'+(lang==='ar'?'en_US':'ar_EG')+'">'+
- '\n<meta name="twitter:card" content="summary"><meta name="twitter:title" content="'+title+'"><meta name="twitter:description" content="'+desc+'">'+
+ '\n<meta property="og:type" content="website"><meta property="og:site_name" content="Experts Group Plus"><meta property="og:title" content="'+escMeta(socialTitle)+'"><meta property="og:description" content="'+escMeta(socialDescription)+'"><meta property="og:url" content="'+escMeta(canonical)+'">'+(seo.social_image?'<meta property="og:image" content="'+escMeta(seo.social_image)+'">':'')+'<meta property="og:locale" content="'+(lang==='ar'?'ar_EG':'en_US')+'"><meta property="og:locale:alternate" content="'+(lang==='ar'?'en_US':'ar_EG')+'">'+
+ '\n<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="'+escMeta(socialTitle)+'"><meta name="twitter:description" content="'+escMeta(socialDescription)+'">'+
  '\n<script type="application/ld+json">'+JSON.stringify({'@context':'https://schema.org','@graph':graph})+'</script>';
- let output=html.replace(/<title>[^<]*<\/title>/i,`<title>${title}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`);
+ let output=html.replace(/<title>[^<]*<\/title>/i,`<title>${escMeta(title)}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`);
  // Make the requested route's content visible in the initial HTML response, not only after client-side JavaScript runs.
  output=output.replace(/(<section\b[^>]*id=[\"']view-([^\"']+)[\"'][^>]*class=[\"'])([^\"']*)([\"'])/gi,(whole,start,view,classes,end)=>{const tokens=classes.split(/\s+/).filter(Boolean).filter(token=>token!=='hidden');if(view!==page)tokens.unshift('hidden');return start+tokens.join(' ')+end;});
  output=output.replace('</head>',head+'\n</head>');
@@ -121,6 +125,24 @@ function safeUrl(raw){try{const u=new URL(raw);return ['https:','http:','mailto:
 
 app.post('/api/auth/password',requireAdmin,async(req,res)=>{try{const current=String(req.body.currentPassword||''),next=String(req.body.newPassword||'');if(next.length<14||next.length>128)return res.status(400).json({error:'New password must be at least 14 characters.'});const q=await pool.query('SELECT password_hash FROM admins WHERE id=$1',[req.session.admin.id]);if(!q.rows[0]||!(await bcrypt.compare(current,q.rows[0].password_hash)))return res.status(400).json({error:'Current password is incorrect.'});const hash=await bcrypt.hash(next,12);await pool.query('UPDATE admins SET password_hash=$1 WHERE id=$2',[hash,req.session.admin.id]);res.json({ok:true})}catch(e){console.error(e);res.status(500).json({error:'Could not update password.'})}});
 app.post('/api/admin/links/bulk',requireAdmin,async(req,res)=>{try{const items=Array.isArray(req.body.items)?req.body.items.slice(0,250):[];let count=0;for(const item of items){const key=String(item.key||'').slice(0,120),label=String(item.label||key).slice(0,160),url=safeUrl(String(item.url||''));if(!/^[a-zA-Z0-9_.:-]+$/.test(key)||!url)continue;await pool.query(`INSERT INTO site_links(link_key,label,url) VALUES($1,$2,$3) ON CONFLICT(link_key) DO NOTHING`,[key,label,url]);count++}res.json({ok:true,count})}catch(e){console.error(e);res.status(500).json({error:'Could not import links.'})}});
+const SEO_PAGES=[['home','Home'],['about','About'],['training','Training'],['consultation','Consultation'],['operations','Operations'],['bpo','BPO'],['contact','Contact']];
+app.get('/api/admin/seo',requireAdmin,async(req,res)=>{try{const q=await pool.query('SELECT * FROM seo_page_settings ORDER BY page_key,language');res.json({pages:SEO_PAGES.map(([key,label])=>({key,label})),settings:q.rows,google:{configured:!!(process.env.GOOGLE_CLIENT_ID&&process.env.GOOGLE_CLIENT_SECRET&&process.env.GOOGLE_REFRESH_TOKEN),site:process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL||'sc-domain:expertsgp.com'}})}catch(e){console.error(e);res.status(500).json({error:'Could not load SEO settings.'})}});
+app.put('/api/admin/seo/:page/:language',requireAdmin,async(req,res)=>{try{const page=String(req.params.page),language=String(req.params.language);if(!SEO_PAGES.some(x=>x[0]===page)||!['en','ar'].includes(language))return res.status(400).json({error:'Invalid page or language.'});const b=req.body||{},clean=(v,n)=>typeof v==='string'?v.trim().slice(0,n):'';const title=clean(b.seo_title,180),description=clean(b.meta_description,500),canonical=clean(b.canonical_url,500),image=clean(b.social_image,500);if(!title||!description)return res.status(400).json({error:'SEO title and meta description are required.'});if(canonical&&!/^https:\/\//i.test(canonical))return res.status(400).json({error:'Canonical URL must use HTTPS.'});if(image&&!/^https:\/\//i.test(image))return res.status(400).json({error:'Social image URL must use HTTPS.'});const robots=['index,follow,max-image-preview:large','noindex,follow','index,nofollow','noindex,nofollow'].includes(b.robots_directive)?b.robots_directive:'index,follow,max-image-preview:large';const vals=[page,language,title,description,clean(b.focus_keyword,160),clean(b.additional_keywords,1000),canonical||null,robots,clean(b.social_title,180),clean(b.social_description,500),image||null,clean(b.seo_notes,4000)];const q=await pool.query('INSERT INTO seo_page_settings(page_key,language,seo_title,meta_description,focus_keyword,additional_keywords,canonical_url,robots_directive,social_title,social_description,social_image,seo_notes,updated_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,NOW()) ON CONFLICT(page_key,language) DO UPDATE SET seo_title=EXCLUDED.seo_title,meta_description=EXCLUDED.meta_description,focus_keyword=EXCLUDED.focus_keyword,additional_keywords=EXCLUDED.additional_keywords,canonical_url=EXCLUDED.canonical_url,robots_directive=EXCLUDED.robots_directive,social_title=EXCLUDED.social_title,social_description=EXCLUDED.social_description,social_image=EXCLUDED.social_image,seo_notes=EXCLUDED.seo_notes,updated_at=NOW() RETURNING *',vals);res.json({ok:true,setting:q.rows[0]})}catch(e){console.error(e);res.status(500).json({error:'Could not save SEO settings.'})}});
+app.get('/api/admin/seo/search-console',requireAdmin,async(req,res)=>{try{
+ const {GOOGLE_CLIENT_ID:id,GOOGLE_CLIENT_SECRET:secret,GOOGLE_REFRESH_TOKEN:refresh}=process.env;
+ if(!id||!secret||!refresh)return res.status(503).json({configured:false,error:'Add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET and GOOGLE_REFRESH_TOKEN to the Railway service to connect Search Console.'});
+ const date=/^\d{4}-\d{2}-\d{2}$/;
+ const end=String(req.query.endDate||new Date(Date.now()-3*86400000).toISOString().slice(0,10));
+ const start=String(req.query.startDate||new Date(Date.now()-30*86400000).toISOString().slice(0,10));
+ if(!date.test(start)||!date.test(end)||start>end)return res.status(400).json({error:'Use valid startDate and endDate values (YYYY-MM-DD).'});
+ const tokenResponse=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:id,client_secret:secret,refresh_token:refresh,grant_type:'refresh_token'})});
+ const token=await tokenResponse.json();if(!tokenResponse.ok||!token.access_token)return res.status(502).json({configured:true,error:'Google OAuth token refresh failed. Check the OAuth client, refresh token and Search Console access.'});
+ const site=process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL||'sc-domain:expertsgp.com';
+ const googleResponse=await fetch('https://searchconsole.googleapis.com/webmasters/v3/sites/'+encodeURIComponent(site)+'/searchAnalytics/query',{method:'POST',headers:{Authorization:'Bearer '+token.access_token,'Content-Type':'application/json'},body:JSON.stringify({startDate:start,endDate:end,dimensions:['date','page','query'],rowLimit:250})});
+ const result=await googleResponse.json();if(!googleResponse.ok)return res.status(502).json({configured:true,error:'Google Search Console API rejected the request. Verify that the property is accessible to this Google account and the Search Console API is enabled.'});
+ res.set('Cache-Control','no-store').json({configured:true,site,startDate:start,endDate:end,rows:result.rows||[],rowCount:(result.rows||[]).length});
+ }catch(e){console.error('Search Console API request failed:',e.message);res.status(502).json({configured:true,error:'Unable to retrieve Google Search Console data.'})}});
+
 app.get('/health',(req,res)=>res.json({ok:true}));
 app.get('/robots.txt',(req,res)=>res.set('Cache-Control','public, max-age=3600').type('text/plain').send('User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nSitemap: '+SITE_URL+'/sitemap.xml\n'));
 app.get('/sitemap.xml',(req,res)=>{
@@ -388,7 +410,7 @@ app.patch('/api/admin/admins/:id/approval',requireOwner,async(req,res)=>{const s
 
 app.use('/assets',express.static(PUBLIC,{maxAge:'1d'}));
 app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-age=0, must-revalidate');res.sendFile(path.join(PUBLIC,'admin.html'))});
-app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');res.type('html').send(addHead(html,route.lang,route.page))});
+app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],async(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');res.type('html').send(await addHead(html,route.lang,route.page))});
 app.get('*',(req,res)=>{if(req.path.includes('.'))return res.status(404).send('Not found');res.redirect(302,'/en/')});
 
 app.listen(PORT,()=>console.log(`Experts Group Plus platform listening on ${PORT}`));
