@@ -1,6 +1,6 @@
 (()=> {
 const nav=document.querySelector('.admin-nav'); if(!nav)return;
-const button=document.createElement('button'); button.type='button'; button.dataset.tab='seo'; button.className=nav.querySelector('button')?.className||''; button.innerHTML='<span class="nav-dot"></span>SEO Manager'; nav.appendChild(button);
+const button=document.createElement('button'); button.type='button'; button.dataset.tab='seo'; button.className=(nav.querySelector('button')?.className||'').replace('active','').trim(); button.innerHTML='<span class="nav-dot"></span>SEO Manager'; nav.appendChild(button);
 const originalGo=window.go;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let state={pages:[],settings:[],google:{},page:'home',language:'en'};
