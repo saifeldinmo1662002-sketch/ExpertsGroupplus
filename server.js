@@ -109,10 +109,10 @@ async function addHead(html,lang,page){
  '\n<link rel="alternate" hreflang="en" href="'+SITE_URL+canonicalPath('en',page)+'">'+
  '\n<link rel="alternate" hreflang="ar" href="'+SITE_URL+canonicalPath('ar',page)+'">'+
  '\n<link rel="alternate" hreflang="x-default" href="'+SITE_URL+canonicalPath('en',page)+'">'+
- '\n<meta property="og:type" content="website"><meta property="og:site_name" content="Experts Group Plus"><meta property="og:title" content="'+escMeta(socialTitle)+'"><meta property="og:description" content="'+escMeta(socialDescription)+'"><meta property="og:url" content="'+escMeta(canonical)+'"><meta property="og:locale" content="'+(lang==='ar'?'ar_EG':'en_US')+'"><meta property="og:locale:alternate" content="'+(lang==='ar'?'en_US':'ar_EG')+'">'+
+ '\n<meta property="og:type" content="website"><meta property="og:site_name" content="Experts Group Plus"><meta property="og:title" content="'+escMeta(socialTitle)+'"><meta property="og:description" content="'+escMeta(socialDescription)+'"><meta property="og:url" content="'+escMeta(canonical)+'">'+(seo.social_image?'<meta property="og:image" content="'+escMeta(seo.social_image)+'">':'')+'<meta property="og:locale" content="'+(lang==='ar'?'ar_EG':'en_US')+'"><meta property="og:locale:alternate" content="'+(lang==='ar'?'en_US':'ar_EG')+'">'+
  '\n<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="'+escMeta(socialTitle)+'"><meta name="twitter:description" content="'+escMeta(socialDescription)+'">'+
  '\n<script type="application/ld+json">'+JSON.stringify({'@context':'https://schema.org','@graph':graph})+'</script>';
- let output=html.replace(/<title>[^<]*<\/title>/i,`<title>${title}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`);
+ let output=html.replace(/<title>[^<]*<\/title>/i,`<title>${escMeta(title)}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`);
  // Make the requested route's content visible in the initial HTML response, not only after client-side JavaScript runs.
  output=output.replace(/(<section\b[^>]*id=[\"']view-([^\"']+)[\"'][^>]*class=[\"'])([^\"']*)([\"'])/gi,(whole,start,view,classes,end)=>{const tokens=classes.split(/\s+/).filter(Boolean).filter(token=>token!=='hidden');if(view!==page)tokens.unshift('hidden');return start+tokens.join(' ')+end;});
  output=output.replace('</head>',head+'\n</head>');
