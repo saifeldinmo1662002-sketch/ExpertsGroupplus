@@ -80,9 +80,13 @@ const pageMeta={
 };
 function canonicalPath(lang,page){return `/${lang}/${page==='home'?'':page}`.replace(/\/$/,'/')}
 function pageFromPath(url){const m=url.match(/^\/(en|ar)(?:\/([^/?#]+))?\/?$/);return m?{lang:m[1],page:slugToPage(m[2]||'home')}:null}
-function addHead(html,lang,page){
+async function addHead(html,lang,page){
  const pageMetaAr={home:['خبراء جروب بلس | حلول متكاملة للأعمال','حلول متكاملة في التدريب والاستشارات والعمليات وخدمات التعهيد لدعم نمو الشركات.'],about:['من نحن | خبراء جروب بلس','تعرّف على خبراء جروب بلس ومنهجية العمل والخدمات التي نقدمها للشركات.'],training:['التدريب المؤسسي | خبراء جروب بلس','برامج تدريب عملية للموظفين والإدارات والقيادات لتحسين أداء الأعمال.'],consultation:['الاستشارات الإدارية والاستراتيجية | خبراء جروب بلس','تشخيص الأعمال وتطوير الاستراتيجيات وتحسين العمليات لتحقيق نمو مستدام.'],operations:['خدمات العمليات | خبراء جروب بلس','خدمات تشغيل متخصصة في التسويق والإبداع والتقنية والوظائف المؤسسية.'],bpo:['خدمات تعهيد العمليات التجارية | خبراء جروب بلس','حلول مرنة لدعم العملاء والمبيعات والعمليات الإدارية والمساندة.'],contact:['تواصل مع خبراء جروب بلس','تواصل مع فريق خبراء جروب بلس لمناقشة التدريب والاستشارات والعمليات وخدمات التعهيد.']};
- const [title,desc]=(lang==='ar'?pageMetaAr:pageMeta)[page]; const url=SITE_URL+canonicalPath(lang,page);
+ let [title,desc]=(lang==='ar'?pageMetaAr:pageMeta)[page];let seo={};
+ try{const q=await pool.query('SELECT * FROM seo_page_settings WHERE page_key=$1 AND language=$2',[page,lang]);if(q.rows[0])seo=q.rows[0]}catch(e){if(e.code!=='42P01')console.error('SEO settings read failed:',e.message)}
+ title=seo.seo_title||title;desc=seo.meta_description||desc;const url=SITE_URL+canonicalPath(lang,page);
+ const escMeta=v=>String(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ const canonical=safeUrl(seo.canonical_url)||url;const robots=seo.robots_directive||'index,follow,max-image-preview:large';const socialTitle=seo.social_title||title;const socialDescription=seo.social_description||desc;
  const serviceMeta={
   training:['Corporate Training','Corporate training programs for employees, departments and managers.'],
   consultation:['Business Consulting','Business diagnostics, strategic advisory and operational improvement.'],
@@ -99,14 +103,14 @@ function addHead(html,lang,page){
   const [serviceName,serviceDescription]=serviceMeta[page];
   graph.push({'@type':'Service','@id':url+'#service','name':lang==='ar'?title:serviceName,'description':lang==='ar'?desc:serviceDescription,'url':url,'provider':{'@id':orgId},'mainEntityOfPage':{'@id':url+'#webpage'}});
  }
- const head='\n<meta name="description" content="'+desc.replace(/"/g,'&quot;')+'">'+
- '\n<meta name="robots" content="index,follow,max-image-preview:large">'+
- '\n<link rel="canonical" href="'+url+'">'+
+ const head='\n<meta name="description" content="'+escMeta(desc)+'">'+
+ '\n<meta name="robots" content="'+escMeta(robots)+'">'+
+ '\n<link rel="canonical" href="'+escMeta(canonical)+'">'+
  '\n<link rel="alternate" hreflang="en" href="'+SITE_URL+canonicalPath('en',page)+'">'+
  '\n<link rel="alternate" hreflang="ar" href="'+SITE_URL+canonicalPath('ar',page)+'">'+
  '\n<link rel="alternate" hreflang="x-default" href="'+SITE_URL+canonicalPath('en',page)+'">'+
- '\n<meta property="og:type" content="website"><meta property="og:site_name" content="Experts Group Plus"><meta property="og:title" content="'+title+'"><meta property="og:description" content="'+desc+'"><meta property="og:url" content="'+url+'"><meta property="og:locale" content="'+(lang==='ar'?'ar_EG':'en_US')+'"><meta property="og:locale:alternate" content="'+(lang==='ar'?'en_US':'ar_EG')+'">'+
- '\n<meta name="twitter:card" content="summary"><meta name="twitter:title" content="'+title+'"><meta name="twitter:description" content="'+desc+'">'+
+ '\n<meta property="og:type" content="website"><meta property="og:site_name" content="Experts Group Plus"><meta property="og:title" content="'+escMeta(socialTitle)+'"><meta property="og:description" content="'+escMeta(socialDescription)+'"><meta property="og:url" content="'+escMeta(canonical)+'"><meta property="og:locale" content="'+(lang==='ar'?'ar_EG':'en_US')+'"><meta property="og:locale:alternate" content="'+(lang==='ar'?'en_US':'ar_EG')+'">'+
+ '\n<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="'+escMeta(socialTitle)+'"><meta name="twitter:description" content="'+escMeta(socialDescription)+'">'+
  '\n<script type="application/ld+json">'+JSON.stringify({'@context':'https://schema.org','@graph':graph})+'</script>';
  let output=html.replace(/<title>[^<]*<\/title>/i,`<title>${title}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`);
  // Make the requested route's content visible in the initial HTML response, not only after client-side JavaScript runs.
@@ -391,7 +395,7 @@ app.patch('/api/admin/admins/:id/approval',requireOwner,async(req,res)=>{const s
 
 app.use('/assets',express.static(PUBLIC,{maxAge:'1d'}));
 app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-age=0, must-revalidate');res.sendFile(path.join(PUBLIC,'admin.html'))});
-app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');res.type('html').send(addHead(html,route.lang,route.page))});
+app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');res.type('html').send(await addHead(html,route.lang,route.page))});
 app.get('*',(req,res)=>{if(req.path.includes('.'))return res.status(404).send('Not found');res.redirect(302,'/en/')});
 
 app.listen(PORT,()=>console.log(`Experts Group Plus platform listening on ${PORT}`));
