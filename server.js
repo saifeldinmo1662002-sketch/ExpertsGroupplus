@@ -128,6 +128,30 @@ app.post('/api/admin/links/bulk',requireAdmin,async(req,res)=>{try{const items=A
 const SEO_PAGES=[['home','Home'],['about','About'],['training','Training'],['consultation','Consultation'],['operations','Operations'],['bpo','BPO'],['contact','Contact']];
 app.get('/api/admin/seo',requireAdmin,async(req,res)=>{try{const q=await pool.query('SELECT * FROM seo_page_settings ORDER BY page_key,language');res.json({pages:SEO_PAGES.map(([key,label])=>({key,label})),settings:q.rows,google:{configured:!!(process.env.GSC_BRIDGE_URL&&process.env.GSC_BRIDGE_SECRET),site:process.env.GSC_PROPERTY||'sc-domain:expertsgp.com'}})}catch(e){console.error(e);res.status(500).json({error:'Could not load SEO settings.'})}});
 app.put('/api/admin/seo/:page/:language',requireAdmin,async(req,res)=>{try{const page=String(req.params.page),language=String(req.params.language);if(!SEO_PAGES.some(x=>x[0]===page)||!['en','ar'].includes(language))return res.status(400).json({error:'Invalid page or language.'});const b=req.body||{},clean=(v,n)=>typeof v==='string'?v.trim().slice(0,n):'';const title=clean(b.seo_title,180),description=clean(b.meta_description,500),canonical=clean(b.canonical_url,500),image=clean(b.social_image,500);if(!title||!description)return res.status(400).json({error:'SEO title and meta description are required.'});if(canonical&&!/^https:\/\//i.test(canonical))return res.status(400).json({error:'Canonical URL must use HTTPS.'});if(image&&!/^https:\/\//i.test(image))return res.status(400).json({error:'Social image URL must use HTTPS.'});const robots=['index,follow,max-image-preview:large','noindex,follow','index,nofollow','noindex,nofollow'].includes(b.robots_directive)?b.robots_directive:'index,follow,max-image-preview:large';const vals=[page,language,title,description,clean(b.focus_keyword,160),clean(b.additional_keywords,1000),canonical||null,robots,clean(b.social_title,180),clean(b.social_description,500),image||null,clean(b.seo_notes,4000)];const q=await pool.query('INSERT INTO seo_page_settings(page_key,language,seo_title,meta_description,focus_keyword,additional_keywords,canonical_url,robots_directive,social_title,social_description,social_image,seo_notes,updated_at) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,NOW()) ON CONFLICT(page_key,language) DO UPDATE SET seo_title=EXCLUDED.seo_title,meta_description=EXCLUDED.meta_description,focus_keyword=EXCLUDED.focus_keyword,additional_keywords=EXCLUDED.additional_keywords,canonical_url=EXCLUDED.canonical_url,robots_directive=EXCLUDED.robots_directive,social_title=EXCLUDED.social_title,social_description=EXCLUDED.social_description,social_image=EXCLUDED.social_image,seo_notes=EXCLUDED.seo_notes,updated_at=NOW() RETURNING *',vals);res.json({ok:true,setting:q.rows[0]})}catch(e){console.error(e);res.status(500).json({error:'Could not save SEO settings.'})}});
+async function fetchGscBridge(url,payload){
+ let lastError=null;
+ for(let attempt=0;attempt<3;attempt++){
+  try{
+   let response=await fetch(url,{method:'POST',redirect:'manual',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
+   let hops=0;
+   while(response.status>=300&&response.status<400&&hops<5){
+    const location=response.headers.get('location');
+    if(!location)throw new Error('Apps Script returned a redirect without a Location header.');
+    const next=new URL(location,url);
+    if(!['script.google.com','script.googleusercontent.com'].includes(next.hostname))throw new Error('Apps Script returned an unexpected redirect host.');
+    if(next.hostname==='script.google.com'&&next.pathname.includes('/macros/s/')&&next.pathname.endsWith('/exec'))throw new Error('Apps Script redirected back to its execution URL.');
+    response=await fetch(next,{method:'GET',redirect:'manual',headers:{'Accept':'application/json'}});
+    hops++;
+   }
+   if(response.status>=300&&response.status<400)throw new Error('Too many Apps Script response redirects.');
+   const text=await response.text();
+   if(!response.ok)throw new Error('Apps Script response HTTP '+response.status+'.');
+   let data;try{data=JSON.parse(text)}catch{throw new Error('Apps Script returned a non-JSON response.')};
+   return data;
+  }catch(error){lastError=error;if(attempt<2)await new Promise(resolve=>setTimeout(resolve,600*(attempt+1)))}
+ }
+ throw lastError||new Error('Apps Script bridge request failed.');
+}
 app.get('/api/admin/seo/search-console',requireAdmin,async(req,res)=>{try{
  const bridgeUrl=process.env.GSC_BRIDGE_URL,bridgeSecret=process.env.GSC_BRIDGE_SECRET,site=process.env.GSC_PROPERTY||'sc-domain:expertsgp.com';
  if(!bridgeUrl||!bridgeSecret)return res.status(503).json({configured:false,error:'Google Search Console bridge is not configured.'});
@@ -136,11 +160,10 @@ app.get('/api/admin/seo/search-console',requireAdmin,async(req,res)=>{try{
  const startDate=String(req.query.startDate||new Date(Date.now()-30*86400000).toISOString().slice(0,10));
  if(!date.test(startDate)||!date.test(endDate)||startDate>endDate)return res.status(400).json({error:'Use valid startDate and endDate values (YYYY-MM-DD).'});
  const page=typeof req.query.page==='string'?req.query.page.slice(0,500):null;
- const response=await fetch(bridgeUrl,{method:'POST',redirect:'follow',headers:{'Content-Type':'application/json'},body:JSON.stringify({secret:bridgeSecret,action:page?'queries':'pageQueries',startDate,endDate,page:page||undefined})});
- const result=await response.json();
- if(!response.ok||!result.success)return res.status(502).json({configured:true,error:result.error||'Apps Script bridge request failed.'});
+ const result=await fetchGscBridge(bridgeUrl,{secret:bridgeSecret,action:page?'queries':'pageQueries',startDate,endDate,page:page||undefined});
+ if(!result||!result.success)return res.status(502).json({configured:true,error:result?.error||'Apps Script bridge request failed.'});
  res.set('Cache-Control','no-store').json({configured:true,site,startDate,endDate,retrievedAt:result.retrievedAt,rows:result.data||[],rowCount:(result.data||[]).length});
- }catch(e){console.error('Search Console bridge request failed:',e.message);res.status(502).json({configured:true,error:'Unable to retrieve Google Search Console data through Apps Script.'})}});
+ }catch(e){console.error('Search Console bridge request failed:',e.message);res.status(502).json({configured:true,error:'Unable to retrieve Google Search Console data through Apps Script: '+e.message})}});
  
 app.get('/health',(req,res)=>res.json({ok:true}));
 app.get('/robots.txt',(req,res)=>res.set('Cache-Control','public, max-age=3600').type('text/plain').send('User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nSitemap: '+SITE_URL+'/sitemap.xml\n'));
