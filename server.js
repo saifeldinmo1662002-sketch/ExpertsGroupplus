@@ -152,7 +152,8 @@ async function fetchGscBridge(url,payload){
       const hint=body.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]*>/g,' ').replace(/&nbsp;/gi,' ').replace(/&amp;/gi,'&').replace(/&quot;/gi,'"').replace(/&#39;/gi,"'").replace(/\s+/g,' ').trim().slice(0,500);
      console.error('Apps Script non-JSON response',{status:response.status,contentType:response.headers.get('content-type'),url:response.url,title:title.slice(0,100),bodyHint:hint});
      throw new Error('Apps Script returned HTML instead of JSON ('+(response.headers.get('content-type')||'unknown content type')+'). '+(hint||title||'Check web app deployment and access permissions.'));
-   return data;
+    }
+    return data;
   }catch(error){lastError=error;if(attempt<2)await new Promise(resolve=>setTimeout(resolve,600*(attempt+1)))}
  }
  throw lastError||new Error('Apps Script bridge request failed.');
