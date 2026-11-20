@@ -155,7 +155,7 @@ async function fetchGscBridge(url,payload){
 app.get('/api/admin/seo/search-console',requireAdmin,async(req,res)=>{try{
  const bridgeUrl=process.env.GSC_BRIDGE_URL,bridgeSecret=process.env.GSC_BRIDGE_SECRET,site=process.env.GSC_PROPERTY||'sc-domain:expertsgp.com';
  if(!bridgeUrl||!bridgeSecret)return res.status(503).json({configured:false,error:'Google Search Console bridge is not configured.'});
- const date=/^\\d{4}-\\d{2}-\\d{2}$/;
+ const date=/^\d{4}-\d{2}-\d{2}$/;
  const endDate=String(req.query.endDate||new Date(Date.now()-3*86400000).toISOString().slice(0,10));
  const startDate=String(req.query.startDate||new Date(Date.now()-30*86400000).toISOString().slice(0,10));
  if(!date.test(startDate)||!date.test(endDate)||startDate>endDate)return res.status(400).json({error:'Use valid startDate and endDate values (YYYY-MM-DD).'});
