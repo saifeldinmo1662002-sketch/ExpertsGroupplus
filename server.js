@@ -147,11 +147,11 @@ async function fetchGscBridge(url,payload){
    const text=await response.text();
    if(!response.ok)throw new Error('Apps Script response HTTP '+response.status+'.');
    let data;try{data=JSON.parse(text)}catch{
-     const title=(text.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1]||'';
-     const hint=(title||text.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim()).slice(0,180);
-    console.error('Apps Script non-JSON response',{status:response.status,contentType:response.headers.get('content-type'),url:response.url,title:hint});
-    throw new Error('Apps Script returned HTML instead of JSON ('+(response.headers.get('content-type')||'unknown content type')+'). '+(hint||'Check web app deployment and access permissions.'));
-   }
+      const title=(text.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[])[1]||'';
+      const body=(text.match(/<body[^>]*>([\s\S]*?)<\/body>/i)||[])[1]||text;
+      const hint=body.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]*>/g,' ').replace(/&nbsp;/gi,' ').replace(/&amp;/gi,'&').replace(/&quot;/gi,'"').replace(/&#39;/gi,"'").replace(/\s+/g,' ').trim().slice(0,500);
+     console.error('Apps Script non-JSON response',{status:response.status,contentType:response.headers.get('content-type'),url:response.url,title:title.slice(0,100),bodyHint:hint});
+     throw new Error('Apps Script returned HTML instead of JSON ('+(response.headers.get('content-type')||'unknown content type')+'). '+(hint||title||'Check web app deployment and access permissions.'));
    return data;
   }catch(error){lastError=error;if(attempt<2)await new Promise(resolve=>setTimeout(resolve,600*(attempt+1)))}
  }
