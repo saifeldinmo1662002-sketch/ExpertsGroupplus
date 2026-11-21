@@ -56,6 +56,21 @@ function inflate(bytes,encoding){
     default:throw new Error('Unexpected AI Office content encoding');
   }
 }
+function normalizeOriginForOffice(origin,publicHost,method='GET'){
+  // Browser requests originate at www.expertsgp.com while Railway routes the
+  // upstream HTTP Host to its own service domain. The upstream's strict CSRF
+  // guard must see an Origin matching that upstream Host, but only after we
+  // verify the browser really made a same-origin request to this public site.
+  if(!origin)return {allowed:true,upstreamOrigin:null};
+  let supplied;
+  try{supplied=new URL(origin);}catch{return {allowed:false,upstreamOrigin:null};}
+  const siteHost=String(publicHost||'').toLowerCase();
+  const sameOrigin=supplied.protocol==='https:'&&
+    supplied.host.toLowerCase()===siteHost&&
+    supplied.pathname==='/'&&supplied.search===''&&supplied.hash==='';
+  if(!sameOrigin)return {allowed:false,upstreamOrigin:null};
+  return {allowed:true,upstreamOrigin:UPSTREAM.origin};
+}
 function stripHopHeaders(source){
   const result={};
   for(const [name,value] of Object.entries(source||{})){
@@ -69,7 +84,14 @@ function serveOfficeUnderCompanyDomain(req,res){
   const rest=original.slice(PREFIX.length);
   const path=rest.startsWith('/')?rest:'/'+(rest||'');
   const clientHeaders=req.headers||{};
+  const isMutation=['POST','PUT','PATCH','DELETE'].includes(req.method);
+  // Prevent cross-site POSTs before rewriting the verified browser Origin.
+  const originCheck=normalizeOriginForOffice(clientHeaders.origin,clientHeaders.host,req.method);
+  if(isMutation&&!originCheck.allowed){
+    return res.status(403).json({error:'Cross-origin request blocked.'});
+  }
   const headers=stripHopHeaders(clientHeaders);
+  if(isMutation&&originCheck.upstreamOrigin)headers.origin=originCheck.upstreamOrigin;
   headers.host=UPSTREAM.host;
   headers['accept-encoding']='identity';
   headers['x-forwarded-host']=clientHeaders.host||'www.expertsgp.com';
@@ -132,4 +154,4 @@ function serveOfficeUnderCompanyDomain(req,res){
 }
 
 module.exports=serveOfficeUnderCompanyDomain;
-module.exports._test={rewriteOfficeBrowserUrls,rewriteOfficeLocation,scopeOfficeCookie,stripHopHeaders};
+module.exports._test={rewriteOfficeBrowserUrls,rewriteOfficeLocation,scopeOfficeCookie,stripHopHeaders,normalizeOriginForOffice};
