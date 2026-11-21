@@ -56,6 +56,10 @@ if (process.env.NODE_ENV === 'production' && (!process.env.SESSION_SECRET || pro
 
 app.set('trust proxy', 1);
 app.use(helmet({contentSecurityPolicy:false, crossOriginEmbedderPolicy:false}));
+// The CRM runs as a separate Railway service but is exposed under
+// www.expertsgp.com/CRM. Register before body parsers so uploads and JSON
+// reach its API intact; the proxy handles only the /CRM prefix.
+app.all(/^\/CRM(?:\/|$)/i,require('./crm-proxy'));
 app.use(express.json({limit:'1mb'}));
 app.use(express.urlencoded({extended:false,limit:'20kb'}));
 app.use(session({
