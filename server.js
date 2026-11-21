@@ -198,7 +198,7 @@ app.get('/sitemap.xml',(req,res)=>{
    '<xhtml:link rel="alternate" hreflang="x-default" href="'+SITE_URL+canonicalPath('en',p)+'"/>';
   return '<url><loc>'+loc+'</loc>'+alternates+'</url>';
  })).join('');
- res.set('Cache-Control','public, max-age=3600').type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+urls+'</urlset>');
+ res.set('Cache-Control','public, max-age=3600').type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+urls+'<url><loc>'+SITE_URL+'/crm</loc><changefreq>weekly</changefreq><priority>0.8</priority></url></urlset>');
 });
 
 // Public content consumed by the bilingual website.
@@ -452,6 +452,8 @@ app.patch('/api/admin/leads/:id',requireAdmin,async(req,res)=>{const status=['ne
 app.patch('/api/admin/leads/:id/archive',requireAdmin,async(req,res)=>{const archived=req.body.archived===true;if(typeof req.body.archived!=='boolean')return res.status(400).json({error:'Archived must be true or false.'});const q=await pool.query('UPDATE contact_submissions SET archived_at=CASE WHEN $1 THEN COALESCE(archived_at,NOW()) ELSE NULL END WHERE id=$2',[archived,req.params.id]);if(!q.rowCount)return res.status(404).json({error:'Contact submission not found.'});res.json({ok:true,archived})});
 app.delete('/api/admin/leads/:id',requireAdmin,async(req,res)=>{const q=await pool.query('DELETE FROM contact_submissions WHERE id=$1',[req.params.id]);if(!q.rowCount)return res.status(404).json({error:'Contact submission not found.'});res.json({ok:true})});
 app.patch('/api/admin/admins/:id/approval',requireOwner,async(req,res)=>{const status=['approved','rejected'].includes(req.body.status)?req.body.status:null;if(!status)return res.status(400).json({error:'Invalid approval status.'});if(String(req.session.admin.id)===String(req.params.id))return res.status(400).json({error:'You cannot change your own approval.'});await pool.query('UPDATE admins SET status=$1,approved_by=$2,approved_at=CASE WHEN $1=\'approved\' THEN NOW() ELSE NULL END WHERE id=$3 AND role<>\'owner\'',[status,req.session.admin.id,req.params.id]);res.json({ok:true})});
+
+require('./crm-public-proxy').registerCrmPublicSite(app,SITE_URL);
 
 app.use('/assets',express.static(PUBLIC,{maxAge:'1d',setHeaders:(res,filePath)=>{if(filePath.endsWith('seo-manager.js'))res.setHeader('Cache-Control','no-store, max-age=0, must-revalidate')}}));
 app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-age=0, must-revalidate');res.sendFile(path.join(PUBLIC,'admin.html'))});
