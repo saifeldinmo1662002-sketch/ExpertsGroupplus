@@ -15,10 +15,12 @@ const DISALLOWED_HEADERS = new Set([
 ]);
 
 function rewriteRelativeUrls(text) {
-  // CRM uses absolute, root-relative paths for CSS, JS, images and /api.
-  // These paths must instead live under /CRM on www.expertsgp.com.
+  // Only browser-facing URLs need a /CRM prefix. Endpoint fragments such as
+  // '/deals', '/login' or '/preferences' are passed to CRM's api() helper and
+  // must stay unchanged.
   return text
-    .replace(/([\x22\x27\x60])\/(?!\/)(?=[A-Za-z0-9?#\x22\x27\x60])/g, '$1/CRM/')
+    .replace(/([\x22\x27\x60])\/(?=(?:api(?=[\/\x22\x27\x60])|assets\/|crm(?=[\/\x22\x27\x60])|owner\.html|landing\.css|landing\.js|pricing-billing\.js|styles\.css|app\.js))/gi, '$1/CRM/')
+    .replace(/(href\s*=\s*[\x22\x27])\/(?=[\x22\x27])/gi, '$1/CRM/')
     .replace(/url\(\s*\/(?!\/)/gi, 'url(/CRM/');
 }
 
