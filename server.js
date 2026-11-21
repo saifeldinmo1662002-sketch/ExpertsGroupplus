@@ -59,7 +59,8 @@ app.use(helmet({contentSecurityPolicy:false, crossOriginEmbedderPolicy:false}));
 // The CRM runs as a separate Railway service but is exposed under
 // www.expertsgp.com/CRM. Register before body parsers so uploads and JSON
 // reach its API intact; the proxy handles only the /CRM prefix.
-app.all(/^\/CRM(?:\/|$)/i,require('./crm-proxy'));
+app.all(/^\/crm(?:\/|$)/,(req,res)=>res.redirect(308,'/CRM'+req.originalUrl.slice(4)));
+app.all(/^\/CRM(?:\/|$)/,require('./crm-proxy'));
 app.use(express.json({limit:'1mb'}));
 app.use(express.urlencoded({extended:false,limit:'20kb'}));
 app.use(session({
@@ -202,7 +203,7 @@ app.get('/sitemap.xml',(req,res)=>{
    '<xhtml:link rel="alternate" hreflang="x-default" href="'+SITE_URL+canonicalPath('en',p)+'"/>';
   return '<url><loc>'+loc+'</loc>'+alternates+'</url>';
  })).join('');
- res.set('Cache-Control','public, max-age=3600').type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+urls+'<url><loc>'+SITE_URL+'/crm</loc><changefreq>weekly</changefreq><priority>0.8</priority></url></urlset>');
+ res.set('Cache-Control','public, max-age=3600').type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+urls+'<url><loc>'+SITE_URL+'/CRM</loc><changefreq>weekly</changefreq><priority>0.8</priority></url></urlset>');
 });
 
 // Public content consumed by the bilingual website.
@@ -457,7 +458,7 @@ app.patch('/api/admin/leads/:id/archive',requireAdmin,async(req,res)=>{const arc
 app.delete('/api/admin/leads/:id',requireAdmin,async(req,res)=>{const q=await pool.query('DELETE FROM contact_submissions WHERE id=$1',[req.params.id]);if(!q.rowCount)return res.status(404).json({error:'Contact submission not found.'});res.json({ok:true})});
 app.patch('/api/admin/admins/:id/approval',requireOwner,async(req,res)=>{const status=['approved','rejected'].includes(req.body.status)?req.body.status:null;if(!status)return res.status(400).json({error:'Invalid approval status.'});if(String(req.session.admin.id)===String(req.params.id))return res.status(400).json({error:'You cannot change your own approval.'});await pool.query('UPDATE admins SET status=$1,approved_by=$2,approved_at=CASE WHEN $1=\'approved\' THEN NOW() ELSE NULL END WHERE id=$3 AND role<>\'owner\'',[status,req.session.admin.id,req.params.id]);res.json({ok:true})});
 
-require('./crm-public-proxy').registerCrmPublicSite(app,SITE_URL);
+// The /crm public-only proxy was superseded by the full /CRM reverse proxy above.
 
 app.use('/assets',express.static(PUBLIC,{maxAge:'1d',setHeaders:(res,filePath)=>{if(filePath.endsWith('seo-manager.js'))res.setHeader('Cache-Control','no-store, max-age=0, must-revalidate')}}));
 app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-age=0, must-revalidate');res.sendFile(path.join(PUBLIC,'admin.html'))});
