@@ -1,0 +1,18 @@
+name: Verify company CRM path
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [feature/crm-public-at-domain-path-20261121]
+permissions:
+  contents: read
+jobs:
+  crm-public-path:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify /crm routing and search metadata
+        run: npm run test:crm-route
