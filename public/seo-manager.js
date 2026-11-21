@@ -1,20 +1,74 @@
 (()=> {
 const nav=document.querySelector('.admin-nav'); if(!nav)return;
-const button=document.createElement('button'); button.type='button'; button.dataset.tab='seo'; button.className=(nav.querySelector('button')?.className||'').replace('active','').trim(); button.innerHTML='<span class="nav-dot"></span>SEO Manager'; nav.appendChild(button);
-const faviconShortcut=document.createElement('button');faviconShortcut.type='button';faviconShortcut.dataset.shortcut='favicon';faviconShortcut.innerHTML='<span class="nav-dot"></span>Site favicon';nav.appendChild(faviconShortcut);
-const arrangeButton=document.createElement('button');arrangeButton.type='button';arrangeButton.dataset.tab='arrange';arrangeButton.innerHTML='<span class="nav-dot"></span>Arrange admin pages';nav.appendChild(arrangeButton);
-const navKeys=['overview','reviews','operations','consultation','leads','analytics','profilePdfs','links','admins','security','seo','arrange'];
-let savedOrder=null;
-function applyOrder(order){const items=[...nav.querySelectorAll('[data-tab]')];const lookup=new Map(items.map(el=>[el.dataset.tab,el]));for(const key of order){if(lookup.has(key))nav.appendChild(lookup.get(key))}nav.appendChild(faviconShortcut)}
-async function loadOrder(){try{const result=await request('/api/admin/navigation');if(Array.isArray(result.order)&&result.order.length===navKeys.length){savedOrder=result.order;applyOrder(savedOrder)}}catch(e){console.warn('Navigation order unavailable:',e.message)}}
-function renderArrange(){const root=document.querySelector('#content');const order=savedOrder?savedOrder.slice():navKeys.slice();const names=new Map([...nav.querySelectorAll('[data-tab]')].map(el=>[el.dataset.tab,el.textContent.trim()]));function draw(){root.innerHTML='<div class="heading"><div><h1>Arrange admin pages</h1><p class="note">Move admin menu pages up or down. Changes are only applied when you click Save order. This does not change the public website navigation.</p></div></div><section class="panel"><h2>Admin sidebar order</h2><div id="arrange-list"></div><div class="actions" style="margin-top:20px"><button class="btn primary" id="arrange-save" type="button">Save order</button><button class="btn light" id="arrange-reset" type="button">Reset changes</button><span id="arrange-status" class="note"></span></div></section>';const list=root.querySelector('#arrange-list');order.forEach((key,i)=>{const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)';const label=document.createElement('strong');label.textContent=names.get(key)||key;const controls=document.createElement('div');controls.style.display='flex';controls.style.gap='8px';for(const [delta,txt] of [[-1,'↑ Up'],[1,'↓ Down']]){const b=document.createElement('button');b.type='button';b.className='btn light small';b.textContent=txt;b.disabled=i+delta<0||i+delta>=order.length;b.onclick=()=>{[order[i],order[i+delta]]=[order[i+delta],order[i]];draw()};controls.appendChild(b)}row.append(label,controls);list.appendChild(row)});root.querySelector('#arrange-save').onclick=async()=>{const status=root.querySelector('#arrange-status');status.textContent='Saving…';try{await request('/api/admin/navigation',{method:'PUT',body:JSON.stringify({order})});savedOrder=order.slice();applyOrder(savedOrder);status.textContent='Order saved.'}catch(e){status.textContent=e.message}};root.querySelector('#arrange-reset').onclick=()=>{order.splice(0,order.length,...(savedOrder||navKeys));draw()}}draw()}
-arrangeButton.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab==='arrange'));renderArrange()});
-faviconShortcut.addEventListener('click',async()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab==='seo'));try{await load();const target=document.querySelector('#seo-favicon-file');if(target){target.closest('section')?.scrollIntoView({behavior:'smooth',block:'start'});target.focus()}}catch(e){const root=document.querySelector('#content');if(root)root.textContent=e.message}});
-loadOrder();
+const seoButton=nav.querySelector('[data-tab="seo"]');
+const faviconButton=nav.querySelector('[data-tab="favicon"]');
+const arrangeButton=nav.querySelector('[data-tab="arrange"]');
+if(!seoButton||!faviconButton||!arrangeButton)return;
+const defaultOrder=[...nav.querySelectorAll('button[data-tab]')].map(b=>b.dataset.tab);
 const originalGo=window.go;
+let savedOrder=null;
+let orderLoaded=false;
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let state={pages:[],settings:[],google:{},page:'home',language:'en'};
 async function request(url,options={}){const r=await fetch(url,{credentials:'same-origin',headers:{'Content-Type':'application/json'},...options});const j=await r.json().catch(()=>({}));if(!r.ok)throw Error(j.error||'Request failed');return j}
+
+function markTab(tab){nav.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));}
+function applyOrder(order){
+ const elements=new Map([...nav.querySelectorAll('[data-tab]')].map(b=>[b.dataset.tab,b]));
+ for(const key of order){const el=elements.get(key);if(el)nav.appendChild(el)}
+}
+async function loadOrder(){
+ try{
+  const result=await request('/api/admin/navigation');
+  if(Array.isArray(result.order)&&result.order.length===defaultOrder.length&&
+     new Set(result.order).size===defaultOrder.length&&
+     result.order.every(key=>defaultOrder.includes(key))){
+    savedOrder=result.order.slice();
+    applyOrder(savedOrder);
+  }
+  orderLoaded=true;
+ }catch(err){/* Login may still be pending; retry after authentication. */}
+}
+function renderArrange(){
+ const root=document.querySelector('#content');if(!root)return;
+ const order=savedOrder?savedOrder.slice():defaultOrder.slice();
+ const labels=new Map([...nav.querySelectorAll('[data-tab]')].map(el=>[el.dataset.tab,el.textContent.trim()]));
+ function draw(){
+  root.innerHTML='<div class="heading"><div><h1>Arrange admin pages</h1><p class="note">Move admin sidebar pages up or down and review the new order before saving. Public website pages are unchanged.</p></div></div>'+
+  '<section class="panel"><h2>Page order</h2><div id="arrange-list"></div><div class="actions" style="margin-top:20px"><button class="btn primary" id="arrange-save" type="button">Save order</button> <button class="btn light" id="arrange-reset" type="button">Discard changes</button> <button class="btn light" id="arrange-default" type="button">Restore default</button> <span id="arrange-status" class="note"></span></div></section>';
+  const list=root.querySelector('#arrange-list');
+  order.forEach((key,i)=>{
+   const row=document.createElement('div');
+   row.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)';
+   const label=document.createElement('strong');label.textContent=labels.get(key)||key;
+   const controls=document.createElement('div');controls.style.cssText='display:flex;gap:8px';
+   for(const [delta,name] of [[-1,'↑ Up'],[1,'↓ Down']]){
+    const b=document.createElement('button');b.type='button';b.className='btn light small';b.textContent=name;b.disabled=i+delta<0||i+delta>=order.length;
+    b.onclick=()=>{[order[i],order[i+delta]]=[order[i+delta],order[i]];draw()};
+    controls.appendChild(b);
+   }
+   row.append(label,controls);list.appendChild(row);
+  });
+  root.querySelector('#arrange-save').onclick=async()=>{
+   const status=root.querySelector('#arrange-status');status.textContent='Saving…';
+   try{await request('/api/admin/navigation',{method:'PUT',body:JSON.stringify({order})});savedOrder=order.slice();applyOrder(savedOrder);status.textContent='Saved. Your admin sidebar now uses this order.'}
+   catch(err){status.textContent=err.message}
+  };
+  root.querySelector('#arrange-reset').onclick=()=>{order.splice(0,order.length,...(savedOrder||defaultOrder));draw()};
+  root.querySelector('#arrange-default').onclick=()=>{order.splice(0,order.length,...defaultOrder);draw()};
+ }
+ draw();
+}
+function openSeo(tab){
+ markTab(tab);
+ load().then(()=>{
+  if(tab==='favicon'){
+   const input=document.querySelector('#seo-favicon-file');
+   if(input){input.closest('section')?.scrollIntoView({behavior:'smooth',block:'start'});input.focus()}
+  }
+ }).catch(err=>{const root=document.querySelector('#content');if(root)root.innerHTML='<section class="panel">'+esc(err.message)+'</section>'});
+}
+
 const seoRecommendations={"en":{"home":["Business Consulting, Training & BPO | Experts Group Plus","Grow your business with corporate training, strategic consulting, outsourced operations and BPO services from Experts Group Plus.","business consulting","corporate training, business consulting services, business process outsourcing, BPO services, outsourced operations"],"about":["About Experts Group Plus | Business Services Partner","Discover how Experts Group Plus supports organizations through practical training, business consulting, operations and outsourcing services.","business services","about Experts Group Plus, business consulting company, corporate services, business solutions"],"training":["Corporate Training & Employee Development | Experts Group Plus","Build employee and leadership capabilities with practical corporate training programs designed around your team's needs and business goals.","corporate training","employee development, leadership training, management training, staff training programs"],"consultation":["Business Consulting & Strategic Advisory | Experts Group Plus","Improve business performance with management consulting, strategic planning, operational reviews and practical advisory support.","business consulting","management consulting, strategic advisory, business strategy, operational improvement"],"operations":["Outsourced Business Operations | Experts Group Plus","Access flexible business operations support across marketing, creative, technology and corporate functions, tailored to your organization.","outsourced business operations","business operations support, outsourced operations, marketing operations, technology services"],"bpo":["BPO & Business Process Outsourcing | Experts Group Plus","Explore business process outsourcing for customer support, sales support and back-office operations with Experts Group Plus.","business process outsourcing","BPO services, customer support outsourcing, sales support outsourcing, back office outsourcing"],"contact":["Contact Experts Group Plus | Schedule a Consultation","Speak with Experts Group Plus about corporate training, business consulting, outsourced operations or BPO. Schedule a conversation.","contact Experts Group Plus","schedule a consultation, business services inquiry, contact business consultants"]},"ar":{"home":["خدمات الأعمال والاستشارات والتعهيد | خبراء جروب بلس","نساعد الشركات على تطوير أعمالها من خلال التدريب المؤسسي والاستشارات الإدارية وخدمات التشغيل وتعهيد العمليات، بحلول تناسب احتياجات كل شركة.","خدمات الأعمال","استشارات إدارية، تدريب الشركات، خدمات التعهيد، تشغيل الأعمال، حلول الأعمال"],"about":["من نحن | خبراء جروب بلس لخدمات الأعمال","تعرّف على خبراء جروب بلس وكيف نساعد الشركات في التدريب وتطوير الأداء والاستشارات الإدارية وتشغيل الأعمال وخدمات التعهيد.","خبراء جروب بلس","من نحن، شركة خدمات أعمال، حلول للشركات، استشارات وتدريب"],"training":["تدريب الشركات وتطوير الموظفين | خبراء جروب بلس","برامج تدريب عملي للشركات والموظفين والمديرين، مصممة لتطوير المهارات ورفع كفاءة الفرق وتحسين الأداء في بيئة العمل.","تدريب الشركات","تطوير الموظفين، تدريب المديرين، برامج تدريب مؤسسي، تطوير المهارات"],"consultation":["استشارات إدارية وتطوير الأعمال | خبراء جروب بلس","استشارات إدارية واستراتيجية لمساعدة الشركات على تقييم الأداء وتطوير خطط العمل وتحسين العمليات واتخاذ قرارات أفضل.","استشارات إدارية","استشارات للشركات، تطوير الأعمال، التخطيط الاستراتيجي، تحسين العمليات"],"operations":["خدمات تشغيل وإدارة الأعمال | خبراء جروب بلس","دعم مرن لتشغيل الأعمال في التسويق والتصميم والتقنية والوظائف الإدارية، بما يتناسب مع طبيعة شركتك واحتياجاتها.","تشغيل الأعمال","إدارة العمليات، خدمات تشغيل للشركات، دعم الأعمال، خدمات التسويق والتقنية"],"bpo":["تعهيد العمليات وخدمات BPO للشركات | خبراء جروب بلس","حلول تعهيد العمليات للشركات تشمل دعم العملاء ومساندة المبيعات والأعمال المكتبية والإدارية، مع مرونة تناسب حجم العمل.","تعهيد العمليات","خدمات BPO، تعهيد خدمة العملاء، دعم المبيعات، تعهيد الأعمال الإدارية"],"contact":["تواصل معنا واحجز استشارة | خبراء جروب بلس","تواصل مع فريق خبراء جروب بلس لمناقشة احتياجات شركتك في التدريب والاستشارات الإدارية والتشغيل وخدمات تعهيد العمليات.","تواصل معنا","احجز استشارة، التواصل مع خبراء جروب بلس، استفسارات خدمات الشركات"]}};
 function recommendation(){const [title,description,keyword]=seoRecommendations[state.language][state.page];return {seo_title:title,meta_description:description,focus_keyword:keyword,additional_keywords:seoRecommendations[state.language][state.page][3],canonical_url:'',robots_directive:'index,follow,max-image-preview:large',social_title:title,social_description:description,social_image:'',seo_notes:''}}
 function current(){return state.settings.find(x=>x.page_key===state.page&&x.language===state.language)||recommendation()}
@@ -54,6 +108,13 @@ root.querySelector('#seo-use-recommendation').onclick=()=>{const r=recommendatio
 form.addEventListener('input',preview);preview();form.onsubmit=async e=>{e.preventDefault();const payload=Object.fromEntries(new FormData(form));const status=root.querySelector('#seo-status');status.textContent='Saving…';try{await request('/api/admin/seo/'+state.page+'/'+state.language,{method:'PUT',body:JSON.stringify(payload)});const refreshed=await request('/api/admin/seo');state.settings=refreshed.settings;status.textContent='Saved successfully.'}catch(err){status.textContent=err.message}};
 root.querySelector('#seo-page').onchange=e=>{state.page=e.target.value;render()};root.querySelector('#seo-language').onchange=e=>{state.language=e.target.value;render()};
 }
-button.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('active',b.dataset.tab==='seo'));load().catch(e=>{const c=document.querySelector('#content');if(c)c.innerHTML='<section class="panel">'+esc(e.message)+'</section>'})});
-if(typeof originalGo==='function'){window.go=function(tab){if(tab==='seo'){button.click();return}if(tab==='arrange'){arrangeButton.click();return}return originalGo(tab)}}
+if(typeof originalGo==='function'){
+ window.go=function(tab){
+  if(!orderLoaded)loadOrder();
+  if(tab==='seo'||tab==='favicon'){openSeo(tab);return}
+  if(tab==='arrange'){markTab('arrange');renderArrange();return}
+  return originalGo(tab);
+ };
+}
+loadOrder();
 })();
