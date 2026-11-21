@@ -367,6 +367,9 @@ td .sub{color:var(--muted)}
         <div class="sidebar-label">WORKSPACE</div>
         <nav class="admin-nav" aria-label="Admin navigation">
           <button type="button" data-tab="overview" class="active"><span class="nav-dot"></span>Overview</button>
+          <button type="button" data-tab="seo"><span class="nav-dot"></span>SEO Manager</button>
+          <button type="button" data-tab="favicon"><span class="nav-dot"></span>Upload favicon</button>
+          <button type="button" data-tab="arrange"><span class="nav-dot"></span>Reorder admin pages</button>
           <button type="button" data-tab="reviews"><span class="nav-dot"></span>Reviews</button>
           <button type="button" data-tab="operations"><span class="nav-dot"></span>Operations</button>
           <button type="button" data-tab="consultation"><span class="nav-dot"></span>Consultation</button>
@@ -375,9 +378,6 @@ td .sub{color:var(--muted)}
           <button type="button" data-tab="profilePdfs"><span class="nav-dot"></span>Profile PDFs</button>
           <button type="button" data-tab="links"><span class="nav-dot"></span>Website links</button>
           <button type="button" data-tab="admins" id="adminsNav" class="hidden"><span class="nav-dot"></span>Admin approvals</button>
-          <button type="button" data-tab="seo"><span class="nav-dot"></span>SEO Manager</button>
-          <button type="button" data-tab="favicon"><span class="nav-dot"></span>Site favicon</button>
-          <button type="button" data-tab="arrange"><span class="nav-dot"></span>Arrange admin pages</button>
           <button type="button" data-tab="security"><span class="nav-dot"></span>Security</button>
         </nav>
         <div class="sidebar-foot">Experts Group Plus<br><span>Administration workspace</span></div>
@@ -552,4 +552,4 @@ async function admins(){if(me.role!=='owner')return;const d=await api('/api/admi
 async function approveAdmin(id,status){if(!confirm(`${status} this administrator?`))return;try{await api(`/api/admin/admins/${id}/approval`,{method:'PATCH',body:JSON.stringify({status})});admins()}catch(e){alert(e.message)}}
 function security(){ $('#content').innerHTML=heading('Security','Change your administrator password. Use a unique password and a password manager.')+`<section class="panel" style="max-width:600px"><h2>Change password</h2><form id="passwordForm"><div class="field"><label>Current password</label><input type="password" name="currentPassword" required></div><div class="field"><label>New password (minimum 14 characters)</label><input type="password" name="newPassword" minlength="14" required></div><button class="btn primary">Update password</button></form><p class="note">All administrator sessions are protected by HTTP-only cookies. Keep Railway environment secrets private.</p></section>`;$('#passwordForm').onsubmit=async e=>{e.preventDefault();const d=Object.fromEntries(new FormData(e.target));try{await api('/api/auth/password',{method:'POST',body:JSON.stringify(d)});alert('Password updated. Please sign in again.');await api('/api/auth/logout',{method:'POST'});showAuth()}catch(err){alert(err.message)}}}
 (async()=>{try{const d=await api('/api/auth/me');if(d.user)showApp(d.user)}catch(e){showAuth()}})();
-</script><script src="/assets/seo-manager.js?v=20261121-02" defer></script></body></html>
+</script><script src="/assets/seo-manager.js?v=20261121-03" defer></script></body></html>
