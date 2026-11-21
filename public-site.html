@@ -1870,14 +1870,19 @@
       // Only HTTPS destinations are allowed; the link is hidden on other cards.
       const externalLink = document.getElementById('modal-op-external');
       if (externalLink) {
-        let destination = null;
-        try {
-          const candidate = new URL(String(op.externalUrl || ''));
-          if (candidate.protocol === 'https:') destination = candidate.href;
-        } catch (_) {}
+        // The CRM Operations card always opens our official product page.
+        // Override cached or previously saved Operations links for this card only.
+        const isCrmPlatform = op.id === 'crm-platform' || String(op.title || '').trim().toLowerCase() === 'crm platform';
+        let destination = isCrmPlatform ? 'https://www.expertsgp.com/CRM' : null;
+        if (!isCrmPlatform) {
+          try {
+            const candidate = new URL(String(op.externalUrl || ''));
+            if (candidate.protocol === 'https:') destination = candidate.href;
+          } catch (_) {}
+        }
         if (destination) {
           externalLink.href = destination;
-          externalLink.querySelector('span').textContent = op.externalLabel || 'Open CRM Page';
+          externalLink.querySelector('span').textContent = isCrmPlatform ? 'Open CRM Page' : (op.externalLabel || 'Open Service Page');
           externalLink.classList.remove('hidden');
           externalLink.classList.add('inline-flex');
         } else {
