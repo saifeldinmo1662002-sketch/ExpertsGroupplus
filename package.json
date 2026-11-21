@@ -8,7 +8,8 @@
     "start": "node init-db.js && node server.js",
     "dev": "node --watch server.js",
     "db:init": "node init-db.js",
-    "test:crm-route": "node scripts/verify-crm-route.js"
+    "test:crm-route": "node scripts/verify-crm-route.js",
+    "test:favicon": "node scripts/verify-favicon.js"
   },
   "engines": {
     "node": ">=20"

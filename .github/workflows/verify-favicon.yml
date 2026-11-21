@@ -1,0 +1,17 @@
+name: Verify transparent website favicon
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [feature/transparent-brand-favicon-website-20261121]
+permissions:
+  contents: read
+jobs:
+  favicon:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm run test:favicon
