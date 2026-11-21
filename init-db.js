@@ -80,7 +80,8 @@ const seed = require('./seed-content.json');
   for (const [type, rows] of Object.entries({review:seed.reviews, operation:seed.operations, consultation:seed.consultation})) {
     for (let i=0;i<rows.length;i++) {
       const row=rows[i]; const key=String(row.id || `${type}-${i+1}`);
-      await pool.query(`INSERT INTO content_items(content_type,item_key,data,sort_order) VALUES($1,$2,$3,$4) ON CONFLICT(content_type,item_key) DO NOTHING`,[type,key,row,i]);
+      const sortOrder=type==='operation'&&key==='crm-platform'?-1:i;
+      await pool.query(`INSERT INTO content_items(content_type,item_key,data,sort_order) VALUES($1,$2,$3,$4) ON CONFLICT(content_type,item_key) DO NOTHING`,[type,key,row,sortOrder]);
     }
   }
   // Seed optimized bilingual SEO only where no settings exist or the legacy default title is unchanged.
