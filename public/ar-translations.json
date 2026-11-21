@@ -463,5 +463,14 @@
   "Preparing your PDF...": "جارٍ تجهيز ملف PDF...",
   "Your profile download is ready.": "أصبح الملف التعريفي جاهزًا للتنزيل.",
   "We could not prepare the PDF. Please try again.": "تعذّر تجهيز ملف PDF. يرجى المحاولة مرة أخرى.",
-  "Please complete all four fields with valid details.": "يرجى استكمال جميع الحقول الأربعة ببيانات صحيحة."
+  "Please complete all four fields with valid details.": "يرجى استكمال جميع الحقول الأربعة ببيانات صحيحة.",
+  "CRM Platform": "منصة إدارة علاقات العملاء (CRM)",
+  "A connected customer relationship management workspace for sales pipelines, contacts, follow-ups and team activities.": "منصة متكاملة لإدارة علاقات العملاء، وتنظيم فرص البيع وجهات الاتصال والمتابعات وأنشطة فريق المبيعات.",
+  "Experts Group Plus CRM brings customer information, deals, sales activities and workflow management into one organized workspace. Explore the platform, compare plans and start with a 14-day free trial.": "تجمع منصة CRM من خبراء جروب بلس بيانات العملاء والصفقات وأنشطة المبيعات وإدارة سير العمل في مكان واحد منظم. اكتشف خصائص المنصة وقارن الباقات وابدأ بتجربة مجانية لمدة 14 يومًا.",
+  "Customizable sales pipelines and deal stages": "مسارات مبيعات ومراحل صفقات قابلة للتخصيص",
+  "Centralized contacts and client records": "إدارة موحدة لجهات الاتصال وملفات العملاء",
+  "Activities, follow-ups and team coordination": "متابعة الأنشطة والمهام والتنسيق بين أعضاء الفريق",
+  "Workflow automations and sales visibility": "أتمتة سير العمل ورؤية أوضح لأداء المبيعات",
+  "A dedicated CRM platform designed to help teams stay organized and move opportunities forward.": "منصة CRM مخصصة لتنظيم عمل فرق المبيعات ومساعدتها على متابعة الفرص وتطويرها.",
+  "Open CRM Page": "افتح صفحة CRM"
 }
