@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const base=path.join(__dirname,'..');
-const { _test:{rewriteOfficeBrowserUrls,rewriteOfficeLocation,scopeOfficeCookie,stripHopHeaders} }=require('../office-proxy');
+const { _test:{rewriteOfficeBrowserUrls,rewriteOfficeLocation,scopeOfficeCookie,stripHopHeaders,normalizeOriginForOffice} }=require('../office-proxy');
 
 for(const [before,after] of [
   ['<script src="/app.js"></script>','<script src="/office/app.js"></script>'],
@@ -31,6 +31,24 @@ assert.equal(rewriteOfficeLocation('/'),'/office/');
 assert.equal(rewriteOfficeLocation('https://ai-office-web-production-10a6e521.up.railway.app/employee.html?next=1'),'/office/employee.html?next=1');
 assert.equal(rewriteOfficeLocation('https://www.expertsgp.com/contact'),'https://www.expertsgp.com/contact');
 
+// The public website's browser Origin differs from the Railway upstream Host.
+// Verify that the proxy accepts only requests from its own origin before
+// translating the approved Origin for the upstream CSRF middleware.
+assert.deepEqual(normalizeOriginForOffice('https://www.expertsgp.com','www.expertsgp.com','POST'),
+ {allowed:true,upstreamOrigin:'https://ai-office-web-production-10a6e521.up.railway.app'});
+assert.deepEqual(normalizeOriginForOffice('https://evil.example','www.expertsgp.com','POST'),
+ {allowed:false,upstreamOrigin:null});
+assert.deepEqual(normalizeOriginForOffice('http://www.expertsgp.com','www.expertsgp.com','POST'),
+ {allowed:false,upstreamOrigin:null});
+assert.deepEqual(normalizeOriginForOffice('null','www.expertsgp.com','POST'),
+ {allowed:false,upstreamOrigin:null});
+assert.deepEqual(normalizeOriginForOffice('https://www.expertsgp.com.attacker.com','www.expertsgp.com','POST'),
+ {allowed:false,upstreamOrigin:null});
+assert.deepEqual(normalizeOriginForOffice(undefined,'www.expertsgp.com','POST'),
+ {allowed:true,upstreamOrigin:null});
+assert.deepEqual(normalizeOriginForOffice('https://www.expertsgp.com/extra','www.expertsgp.com','POST'),
+ {allowed:false,upstreamOrigin:null});
+
 assert.equal(scopeOfficeCookie('egp_office=abcd; Path=/; HttpOnly; Secure; SameSite=Strict'),'egp_office=abcd; Path=/office; HttpOnly; Secure; SameSite=Strict');
 assert.equal(scopeOfficeCookie('egp_employee=abcd; HttpOnly; Secure'),'egp_employee=abcd; HttpOnly; Secure; Path=/office');
 assert.equal(stripHopHeaders({host:'example.test',connection:'keep-alive','content-type':'application/octet-stream'})['content-type'],'application/octet-stream');
@@ -46,4 +64,4 @@ assert.equal((bottom.match(/href="\/admin"/g)||[]).length,1);
 assert.equal((bottom.match(/href="\/office"/g)||[]).length,1);
 const compact=bottom.match(/<div class="[^"]*flex-nowrap[^"]*">([^<]*<a\b[\s\S]*?)<\/div>/);
 assert.ok(compact&&compact[1].includes('href="/admin"')&&compact[1].includes('href="/office"'),'The links must sit beside each other in one footer flex row');
-console.log('AI Office same-domain routing: 23 checks passed.');
+console.log('AI Office same-domain routing and login Origin security checks passed.');
