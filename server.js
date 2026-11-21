@@ -63,6 +63,10 @@ app.all(/^\/crm(?:\/|$)/,(req,res)=>res.redirect(308,'/CRM'+req.originalUrl.slic
 const crmPublicSignupLimiter=rateLimit({windowMs:60*60*1000,limit:15,standardHeaders:true,legacyHeaders:false,message:{error:'Too many CRM signup attempts. Please try again later.'}});
 app.post(/^\/CRM\/api\/public\/trial-requests$/,crmPublicSignupLimiter,require('./crm-proxy'));
 app.all(/^\/CRM(?:\/|$)/,require('./crm-proxy'));
+// Route AI Office at the same company domain while retaining its separate
+// Railway service, database, admin session and employee time clock.
+// Install before body parsers so upload streams pass through untouched.
+app.all(/^\/office(?:\/|$)/,require('./office-proxy'));
 app.use(express.json({limit:'1mb'}));
 app.use(express.urlencoded({extended:false,limit:'20kb'}));
 app.use(session({
@@ -197,7 +201,7 @@ app.get('/api/admin/seo/search-console',requireAdmin,async(req,res)=>{try{
  }catch(e){console.error('Search Console bridge request failed:',e.message);res.status(502).json({configured:true,error:'Unable to retrieve Google Search Console data through Apps Script: '+e.message})}});
  
 app.get('/health',(req,res)=>res.json({ok:true}));
-app.get('/robots.txt',(req,res)=>res.set('Cache-Control','public, max-age=3600').type('text/plain').send('User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /api/\nSitemap: '+SITE_URL+'/sitemap.xml\n'));
+app.get('/robots.txt',(req,res)=>res.set('Cache-Control','public, max-age=3600').type('text/plain').send('User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /office\nDisallow: /api/\nSitemap: '+SITE_URL+'/sitemap.xml\n'));
 app.get('/sitemap.xml',(req,res)=>{
  const pages=['home','about','training','consultation','operations','bpo','contact'],langs=['en','ar'];
  const urls=pages.flatMap(p=>langs.map(l=>{
