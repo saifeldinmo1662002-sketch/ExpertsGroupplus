@@ -19,7 +19,7 @@ function rewriteRelativeUrls(text) {
   // '/deals', '/login' or '/preferences' are passed to CRM's api() helper and
   // must stay unchanged.
   return text
-    .replace(/([\x22\x27\x60])\/(?=(?:api(?=[\/\x22\x27\x60])|assets\/|crm(?=[\/\x22\x27\x60])|owner\.html|owner\.css|owner\.js|invite\.html|invite\.js|reset-password\.html|reset-password\.js|verify-email\.html|verify-email\.js|landing\.css|landing\.js|pricing-billing\.js|styles\.css|app\.js|deal-filters\.js|integrations-ui\.js|calendar-views\.js))/gi, '$1/CRM/')
+    .replace(/([\x22\x27\x60])\/(?=(?:api(?=[\/\x22\x27\x60])|assets\/|crm(?=[\/\x22\x27\x60])|owner\.html|owner\.css|owner\.js|invite\.html|invite\.js|reset-password\.html|reset-password\.js|verify-email\.html|verify-email\.js|landing\.css|landing\.js|pricing-billing\.js|styles\.css|crm-modern\.css|egp-scrollbars\.css|crm-pipeline-scroll\.css|meeting-scheduler\.js|app\.js|deal-filters\.js|integrations-ui\.js|calendar-views\.js))/gi, '$1/CRM/')
     .replace(/(href\s*=\s*[\x22\x27])\/(?=[\x22\x27])/gi, '$1/CRM/')
     .replace(/url\(\s*\/(?!\/)/gi, 'url(/CRM/');
 }
