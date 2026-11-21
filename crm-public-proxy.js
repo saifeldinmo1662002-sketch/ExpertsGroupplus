@@ -50,8 +50,8 @@ async function readCrmUpstream(resource) {
 function registerCrmPublicSite(app, siteUrl) {
   const {rateLimit} = require('express-rate-limit');
   const limiter = rateLimit({windowMs:15*60*1000,limit:8,standardHeaders:true,legacyHeaders:false});
-  app.get('/crm/', (req,res)=>res.redirect(308,'/crm'));
-  app.get('/crm', async(req,res)=>{
+  app.get(['/crm','/crm/'], async(req,res)=>{
+    if(req.path.endsWith('/'))return res.redirect(308,'/crm');
     try {
       const html=(await readCrmUpstream('/')).toString('utf8');
       if(!html.includes('id="trialForm"')||!html.includes('<html'))throw Error('Unexpected CRM landing response');
