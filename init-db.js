@@ -77,6 +77,17 @@ const seed = require('./seed-content.json');
     CREATE INDEX IF NOT EXISTS profile_download_requests_requested_idx ON profile_download_requests(requested_at DESC);
     CREATE INDEX IF NOT EXISTS profile_download_requests_profile_idx ON profile_download_requests(profile_key,requested_at DESC);
   `);
+  // One-time, non-destructive favicon update: apply the approved brand icon now,
+  // while preserving any future favicon changed through the SEO admin interface.
+  await pool.query(`
+    WITH applied AS (
+      INSERT INTO site_preferences(key,value) VALUES ('egp_favicon_diamonds_2026_applied','1')
+      ON CONFLICT(key) DO NOTHING RETURNING key
+    )
+    INSERT INTO site_preferences(key,value)
+    SELECT 'search_favicon_url','https://www.expertsgp.com/assets/egp-favicon.png' FROM applied
+    ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value;
+  `);
   for (const [type, rows] of Object.entries({review:seed.reviews, operation:seed.operations, consultation:seed.consultation})) {
     for (let i=0;i<rows.length;i++) {
       const row=rows[i]; const key=String(row.id || `${type}-${i+1}`);

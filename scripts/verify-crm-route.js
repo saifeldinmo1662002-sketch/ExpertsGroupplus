@@ -1,36 +1,28 @@
 'use strict';
-const assert=require('node:assert/strict');
-const fs=require('node:fs');
-const vm=require('node:vm');
-const {rewriteCrmLanding,rewriteCrmLandingScript}=require('../crm-public-proxy');
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const server=fs.readFileSync('server.js','utf8');
-const proxy=fs.readFileSync('crm-public-proxy.js','utf8');
+const proxy=fs.readFileSync('crm-proxy.js','utf8');
 new vm.Script(server,{filename:'server.js'});
-new vm.Script(proxy,{filename:'crm-public-proxy.js'});
-assert.match(server,/registerCrmPublicSite\(app,SITE_URL\)/);
-assert.match(server,/SITE_URL\+'\/crm<\/loc>/);
-assert.match(proxy,/app\.get\(\['\/crm','\/crm\/'\]/);
-assert.match(proxy,/if\(req\.path\.endsWith\('\/'\)\)return res\.redirect\(308,'\/crm'\)/);
-assert.match(proxy,/app\.get\('\/crm\/login'/);
-assert.match(proxy,/app\.get\('\/crm\/owner'/);
-assert.match(proxy,/app\.post\('\/crm\/api\/public\/trial-requests'/);
-assert.match(proxy,/CRM_ASSETS\.has\(name\)/);
-assert.match(proxy,/CRM_MAX_ASSET_BYTES/);
-assert.match(proxy,/CRM_PUBLIC_ORIGIN\+'\/api\/public\/trial-requests'/);
-assert.match(proxy,/X-Robots-Tag/);
-
-const sample='<html><head><link rel="icon" href="/assets/egp-mark.svg"><link rel="stylesheet" href="/landing.css"><script src="/landing.js"></script><script src="/pricing-billing.js"></script></head><body><img src="/assets/egp-mark-site-dark.svg"><a href="/">Home</a><a href="/crm">Log in</a><a href="/owner.html">Owner</a></body></html>';
-const page=rewriteCrmLanding(sample,'https://www.expertsgp.com/crm');
-for(const expected of [
- 'href="/crm/assets/egp-mark.svg"','src="/crm/assets/egp-mark-site-dark.svg"',
- 'href="/crm/landing.css"','src="/crm/landing.js"','src="/crm/pricing-billing.js"',
- 'href="/crm"','href="/crm/login"','href="/crm/owner"',
- '<link rel="canonical" href="https://www.expertsgp.com/crm">',
- '<meta property="og:url" content="https://www.expertsgp.com/crm">'
-]) assert(page.includes(expected),'Missing: '+expected);
-assert(!page.includes('href="/owner.html"'));
-assert(!page.includes('href="/landing.css"'));
-const rewritten=rewriteCrmLandingScript("fetch('/api/public/trial-requests',{method:'POST'})");
-assert(rewritten.includes("fetch('/crm/api/public/trial-requests'"));
-assert(!rewritten.includes("fetch('/api/public/trial-requests'"));
-console.log('Public /crm path, canonical, sitemap and safe upstream route checks passed');
+new vm.Script(proxy,{filename:'crm-proxy.js'});
+assert(server.includes("app.all(/^\\/crm(?:\\/|$)/"),'Lowercase /crm redirect must exist');
+assert(server.includes("app.all(/^\\/CRM(?:\\/|$)/,require('./crm-proxy'))"),'Main /CRM reverse proxy must remain');
+assert(server.includes("SITE_URL+'/CRM</loc>"),'CRM must be listed in sitemap');
+assert.match(proxy,/const PREFIX = '\/CRM'/);
+assert.match(proxy,/const CRM_UPSTREAM = new URL\('https:\/\/crm-web-production/);
+assert.match(proxy,/DISALLOWED_HEADERS/);
+assert.match(proxy,/x-forwarded-host/);
+assert.match(proxy,/proxyPath === '\/crm'/);
+assert.match(proxy,/noindex, nofollow/);
+assert.match(proxy,/REQUEST_TIMEOUT_MS/);
+assert.match(proxy,/TEXT_LIMIT/);
+// Validate that browser-facing resource URLs, including the favicon, remain under /CRM.
+const start=proxy.indexOf('function rewriteRelativeUrls(');
+const end=proxy.indexOf('\nfunction changeLocation(',start);
+assert(start>0&&end>start,'CRM URL rewriter is present');
+const rewrite=new Function(proxy.slice(start,end)+'\nreturn rewriteRelativeUrls;')();
+const input='<link rel="icon" href="/assets/egp-favicon.png"><script src="/landing.js"></script><a href="/crm">Login</a>';
+const rewritten=rewrite(input);
+assert.match(rewritten,/href="\/CRM\/assets\/egp-favicon\.png"/);
+assert.match(rewritten,/src="\/CRM\/landing\.js"/);
+assert.match(rewritten,/href="\/CRM\/crm"/);
+console.log('Company /CRM reverse proxy, sitemap, SEO and resource rewrite checks passed.');
