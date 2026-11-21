@@ -155,6 +155,23 @@
         "Shipment tracking integration"
       ],
       "advantage": "Direct freight forwarder relationships in EMEA."
+    },
+    {
+      "id": "crm-platform",
+      "icon": "contact-round",
+      "tag": "Tech",
+      "title": "CRM Platform",
+      "desc": "A connected customer relationship management workspace for sales pipelines, contacts, follow-ups and team activities.",
+      "detailedDesc": "Experts Group Plus CRM brings customer information, deals, sales activities and workflow management into one organized workspace. Explore the platform, compare plans and start with a 14-day free trial.",
+      "benefits": [
+        "Customizable sales pipelines and deal stages",
+        "Centralized contacts and client records",
+        "Activities, follow-ups and team coordination",
+        "Workflow automations and sales visibility"
+      ],
+      "advantage": "A dedicated CRM platform designed to help teams stay organized and move opportunities forward.",
+      "externalUrl": "https://crm-web-production-943c6485.up.railway.app/",
+      "externalLabel": "Open CRM Page"
     }
   ],
   "reviews": [
