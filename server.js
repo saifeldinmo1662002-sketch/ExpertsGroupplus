@@ -97,8 +97,8 @@ function pageFromPath(url){const m=url.match(/^\/(en|ar)(?:\/([^/?#]+))?\/?$/);r
 async function addHead(html,lang,page){
  let [title,desc]=(lang==='ar'?pageMetaAr:pageMeta)[page];let seo={};
  try{const q=await pool.query('SELECT * FROM seo_page_settings WHERE page_key=$1 AND language=$2',[page,lang]);if(q.rows[0])seo=q.rows[0]}catch(e){if(e.code!=='42P01')console.error('SEO settings read failed:',e.message)}
- let faviconUrl='';
- try{const f=await pool.query("SELECT value FROM site_preferences WHERE key='search_favicon_url'");faviconUrl=f.rows[0]?.value||''}catch(e){if(e.code!=='42P01')console.error('Favicon preference read failed:',e.message)}
+ let faviconUrl='https://www.expertsgp.com/assets/egp-favicon.png';
+ try{const f=await pool.query("SELECT value FROM site_preferences WHERE key='search_favicon_url'");faviconUrl=f.rows[0]?.value||faviconUrl}catch(e){if(e.code!=='42P01')console.error('Favicon preference read failed:',e.message)}
  title=seo.seo_title||title;desc=seo.meta_description||desc;const url=SITE_URL+canonicalPath(lang,page);
  const escMeta=v=>String(v||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
  const canonical=safeUrl(seo.canonical_url)||url;const robots=seo.robots_directive||'index,follow,max-image-preview:large';const socialTitle=seo.social_title||title;const socialDescription=seo.social_description||desc;
@@ -118,7 +118,8 @@ async function addHead(html,lang,page){
   const [serviceName,serviceDescription]=serviceMeta[page];
   graph.push({'@type':'Service','@id':url+'#service','name':lang==='ar'?title:serviceName,'description':lang==='ar'?desc:serviceDescription,'url':url,'provider':{'@id':orgId},'mainEntityOfPage':{'@id':url+'#webpage'}});
  }
- const head=(faviconUrl?'\n<link rel="icon" href="'+escMeta(faviconUrl)+'">':'')+'\n<meta name="description" content="'+escMeta(desc)+'">'+
+ const head='\n<link rel="icon" type="image/png" sizes="192x192" href="'+escMeta(faviconUrl)+'">'+
+ '\n<link rel="apple-touch-icon" sizes="192x192" href="/assets/egp-favicon.png">'+'\n<meta name="description" content="'+escMeta(desc)+'">'+
  '\n<meta name="robots" content="'+escMeta(robots)+'">'+
  '\n<link rel="canonical" href="'+escMeta(canonical)+'">'+
  '\n<link rel="alternate" hreflang="en" href="'+SITE_URL+canonicalPath('en',page)+'">'+
@@ -460,6 +461,8 @@ app.patch('/api/admin/admins/:id/approval',requireOwner,async(req,res)=>{const s
 
 // The /crm public-only proxy was superseded by the full /CRM reverse proxy above.
 
+app.get('/favicon.ico',(req,res)=>res.redirect(302,'/assets/egp-favicon.png'));
+app.get('/favicon.png',(req,res)=>res.redirect(302,'/assets/egp-favicon.png'));
 app.use('/assets',express.static(PUBLIC,{maxAge:'1d',setHeaders:(res,filePath)=>{if(filePath.endsWith('seo-manager.js'))res.setHeader('Cache-Control','no-store, max-age=0, must-revalidate')}}));
 app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-age=0, must-revalidate');res.sendFile(path.join(PUBLIC,'admin.html'))});
 app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],async(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');res.type('html').send(await addHead(html,route.lang,route.page))});
