@@ -75,6 +75,8 @@ assert.ok(server.includes("Disallow: /office"),'Do not index private AI office U
 const bottom=footer.slice(footer.indexOf('<footer'),footer.indexOf('</footer>')+9);
 assert.equal((bottom.match(/href="\/admin"/g)||[]).length,1);
 assert.equal((bottom.match(/href="\/office"/g)||[]).length,1);
-const compact=bottom.match(/<div class="[^"]*flex-nowrap[^"]*">([^<]*<a\b[\s\S]*?)<\/div>/);
-assert.ok(compact&&compact[1].includes('href="/admin"')&&compact[1].includes('href="/office"'),'The links must sit beside each other in one footer flex row');
+assert.equal((bottom.match(/href="\/office\/employee\.html"/g)||[]).length,1,'Exactly one employee login link expected');
+const compact=bottom.match(/<div class="[^"]*\bflex-wrap\b[^"]*">([^<]*<a\b[\s\S]*?)<\/div>/);
+assert.ok(compact&&compact[1].includes('href="/admin"')&&compact[1].includes('href="/office"')&&compact[1].includes('href="/office/employee.html"'),
+ 'Admin, AI Office and Employee Login must share the same responsive footer row');
 console.log('AI Office same-domain routing and login Origin security checks passed.');
