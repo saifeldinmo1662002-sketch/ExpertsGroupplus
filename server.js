@@ -144,7 +144,10 @@ async function addHead(html,lang,page){
  output=output.replace(/(<section\b[^>]*id=[\"']view-([^\"']+)[\"'][^>]*class=[\"'])([^\"']*)([\"'])/gi,(whole,start,view,classes,end)=>{const tokens=classes.split(/\s+/).filter(Boolean).filter(token=>token!=='hidden');if(view!==page)tokens.unshift('hidden');return start+tokens.join(' ')+end;});
  if(faviconUrl)output=output.replace(/<link\b(?=[^>]*\brel\s*=\s*[\"'](?:shortcut\s+)?icon[\"'])[^>]*>/gi,'');
  output=output.replace('</head>',head+'\n</head>');
- if(lang==='ar')output=translateArabicHtml(output);
+ if(lang==='ar'){
+   output=output.replace(/href="\/en\/(services\/|resources(?:\/|"))/g,(match,tail)=>'href="/ar/'+tail);
+   output=translateArabicHtml(output);
+ }
  return output;
 }
 function requireAdmin(req,res,next){if(!req.session.admin)return res.status(401).json({error:'Authentication required.'});next()}
