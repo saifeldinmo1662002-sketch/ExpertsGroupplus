@@ -19,6 +19,8 @@ for(const [before,after] of [
   ['import("/agent-ui.js")','import("/office/agent-ui.js")'],
   ['import("/employee-record.js")','import("/office/employee-record.js")'],
   ['<link href="/personnel.css">','<link href="/office/personnel.css">'],
+  ['<link href="/payroll.css">','<link href="/office/payroll.css">'],
+  ['import("/payroll-ui.js")','import("/office/payroll-ui.js")'],
   ['<a href="/employee.html">Clock in</a>','<a href="/office/employee.html">Clock in</a>'],
   ['<img src="/brand-logo-dark.svg">','<img src="/office/brand-logo-dark.svg">'],
   ["url('/brand-mark.svg')","url('/office/brand-mark.svg')"],
