@@ -30,6 +30,7 @@ for(const [before,after] of [
   ['<link href="/issues.css">','<link href="/office/issues.css">'],
   ['fetch("/api/agents/agent-1/export.pdf")','fetch("/office/api/agents/agent-1/export.pdf")'],
   ['<a href="/employee.html">Clock in</a>','<a href="/office/employee.html">Clock in</a>'],
+  ['<a href="/rose.html">Rose</a>','<a href="/office/rose.html">Rose</a>'],
   ['<img src="/brand-logo-dark.svg">','<img src="/office/brand-logo-dark.svg">'],
   ["url('/brand-mark.svg')","url('/office/brand-mark.svg')"],
   ['url(/brand-mark.svg)','url(/office/brand-mark.svg)']
@@ -40,6 +41,7 @@ for(const value of [
 ])assert.equal(rewriteOfficeBrowserUrls(value),value,'Must not double prefix or change external links: '+value);
 
 assert.equal(rewriteOfficeLocation('/login'),'/office/login');
+assert.equal(rewriteOfficeLocation('/rose.html'),'/office/rose.html');
 assert.equal(rewriteOfficeLocation('/'),'/office/');
 assert.equal(rewriteOfficeLocation('https://ai-office-web-production-10a6e521.up.railway.app/employee.html?next=1'),'/office/employee.html?next=1');
 assert.equal(rewriteOfficeLocation('https://www.expertsgp.com/contact'),'https://www.expertsgp.com/contact');
