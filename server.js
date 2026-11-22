@@ -135,19 +135,11 @@ async function addHead(html,lang,page){
  '\n<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="'+escMeta(socialTitle)+'"><meta name="twitter:description" content="'+escMeta(socialDescription)+'">'+
  '\n<script type="application/ld+json">'+JSON.stringify({'@context':'https://schema.org','@graph':graph})+'</script>';
  let output=html.replace(/<title>[^<]*<\/title>/i,`<title>${escMeta(title)}</title>`).replace(/<html lang="[^"]*"/i,`<html lang="${lang}" dir="${lang==='ar'?'rtl':'ltr'}"`);
- // Populate a semantic primary heading in the initial HTML for each service page.
- if(['training','consultation','operations','bpo'].includes(page)){
-   const headings=lang==='ar'?{training:'التدريب المؤسسي',consultation:'الاستشارات الإدارية',operations:'الخدمات التشغيلية',bpo:'تعهيد العمليات التجارية'}:{training:'Corporate Training Programs',consultation:'Strategic Business Consultation',operations:'Business Operations Services',bpo:'Business Process Outsourcing'};
-   output=output.replace('<div class="service-hero-container" data-service="'+page+'"></div>','<div class="service-hero-container" data-service="'+page+'"><h1 class="sr-only">'+headings[page]+'</h1></div>');
- }
  // Make the requested route's content visible in the initial HTML response, not only after client-side JavaScript runs.
  output=output.replace(/(<section\b[^>]*id=[\"']view-([^\"']+)[\"'][^>]*class=[\"'])([^\"']*)([\"'])/gi,(whole,start,view,classes,end)=>{const tokens=classes.split(/\s+/).filter(Boolean).filter(token=>token!=='hidden');if(view!==page)tokens.unshift('hidden');return start+tokens.join(' ')+end;});
  if(faviconUrl)output=output.replace(/<link\b(?=[^>]*\brel\s*=\s*[\"'](?:shortcut\s+)?icon[\"'])[^>]*>/gi,'');
  output=output.replace('</head>',head+'\n</head>');
- if(lang==='ar'){
-   output=output.replace(/href="\/en\/(services\/|resources(?:\/|")|(?:training|consultation|operations|bpo|faq|pricing)")/g,(match,tail)=>'href="/ar/'+tail);
-   output=translateArabicHtml(output);
- }
+ if(lang==='ar')output=translateArabicHtml(output);
  return output;
 }
 function requireAdmin(req,res,next){if(!req.session.admin)return res.status(401).json({error:'Authentication required.'});next()}
@@ -212,13 +204,12 @@ app.get('/health',(req,res)=>res.json({ok:true}));
 app.get('/robots.txt',(req,res)=>res.set('Cache-Control','public, max-age=3600').type('text/plain').send('User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /office\nDisallow: /api/\nSitemap: '+SITE_URL+'/sitemap.xml\n'));
 app.get('/sitemap.xml',(req,res)=>{
  const pages=['home','about','training','consultation','operations','bpo','contact'],langs=['en','ar'];
- const seoContent=require('./seo-content');
  const urls=pages.flatMap(p=>langs.map(l=>{
   const loc=SITE_URL+canonicalPath(l,p);
   const alternates=langs.map(a=>'<xhtml:link rel="alternate" hreflang="'+a+'" href="'+SITE_URL+canonicalPath(a,p)+'"/>').join('')+
    '<xhtml:link rel="alternate" hreflang="x-default" href="'+SITE_URL+canonicalPath('en',p)+'"/>';
   return '<url><loc>'+loc+'</loc>'+alternates+'</url>';
- })).concat(langs.flatMap(l=>[...seoContent.serviceSlugs.map(s=>'/'+l+'/services/'+s),'/'+l+'/resources','/'+l+'/faq','/'+l+'/pricing',...seoContent.articleSlugs.map(s=>'/'+l+'/resources/'+s)].map(p=>{const alternate=p.replace(/^\/(en|ar)\//,'/'+(l==='en'?'ar':'en')+'/');return '<url><loc>'+SITE_URL+p+'</loc><xhtml:link rel="alternate" hreflang="'+l+'" href="'+SITE_URL+p+'"/><xhtml:link rel="alternate" hreflang="'+(l==='en'?'ar':'en')+'" href="'+SITE_URL+alternate+'"/></url>';}))).join('');
+ })).join('');
  res.set('Cache-Control','public, max-age=3600').type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+urls+'<url><loc>'+SITE_URL+'/CRM</loc><changefreq>weekly</changefreq><priority>0.8</priority></url></urlset>');
 });
 
@@ -480,22 +471,7 @@ app.get('/favicon.ico',(req,res)=>res.redirect(302,'/assets/egp-favicon.png'));
 app.get('/favicon.png',(req,res)=>res.redirect(302,'/assets/egp-favicon.png'));
 app.use('/assets',express.static(PUBLIC,{maxAge:'1d',setHeaders:(res,filePath)=>{if(filePath.endsWith('seo-manager.js'))res.setHeader('Cache-Control','no-store, max-age=0, must-revalidate')}}));
 app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-age=0, must-revalidate');res.sendFile(path.join(PUBLIC,'admin.html'))});
-// Resolve historic and noncanonical paths to exactly one URL per indexable page.
-app.get('/',(req,res)=>res.redirect(301,'/en/'));
-app.get(['/en','/ar'],(req,res)=>res.redirect(301,req.path+'/'));
-app.get(/^\/(en|ar)\/(about|training|consultation|operations|bpo|contact)\/$/,(req,res)=>res.redirect(301,req.path.replace(/\/$/,'')));
-app.get(/^\/(en|ar)\/(services\/[^/]+|resources(?:\/[^/]+)?|faq|pricing)\/$/,(req,res)=>res.redirect(301,req.path.replace(/\/$/,'')));
-app.get('/:lang(en|ar)/services/:slug',(req,res,next)=>{const html=require('./seo-content').render('service',req.params.lang,req.params.slug);if(!html)return next();res.set('Cache-Control','public,max-age=300').type('html').send(html)});
-app.get('/:lang(en|ar)/:page(faq|pricing)',(req,res)=>{res.set('Cache-Control','public,max-age=300').type('html').send(require('./seo-content').render(req.params.page,req.params.lang))});
-app.get('/:lang(en|ar)/resources',(req,res)=>{res.set('Cache-Control','public,max-age=300').type('html').send(require('./seo-content').render('resources',req.params.lang))});
-app.get('/:lang(en|ar)/resources/:slug',(req,res,next)=>{const html=require('./seo-content').render('article',req.params.lang,req.params.slug);if(!html)return next();res.set('Cache-Control','public,max-age=300').type('html').send(html)});
-app.get(['/en/','/ar/','/en/:page','/ar/:page'],async(req,res,next)=>{
- const route=pageFromPath(req.path);
- if(!route || (req.params.page && !allowedPages.has(req.params.page)))return next();
- const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');
- res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');
- res.type('html').send(await addHead(html,route.lang,route.page))
-});
-app.get('*',(req,res)=>res.status(404).type('text/plain').send('Page not found'));
+app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],async(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');res.type('html').send(await addHead(html,route.lang,route.page))});
+app.get('*',(req,res)=>{if(req.path.includes('.'))return res.status(404).send('Not found');res.redirect(302,'/en/')});
 
 app.listen(PORT,()=>console.log(`Experts Group Plus platform listening on ${PORT}`));
