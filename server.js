@@ -218,7 +218,7 @@ app.get('/sitemap.xml',(req,res)=>{
   const alternates=langs.map(a=>'<xhtml:link rel="alternate" hreflang="'+a+'" href="'+SITE_URL+canonicalPath(a,p)+'"/>').join('')+
    '<xhtml:link rel="alternate" hreflang="x-default" href="'+SITE_URL+canonicalPath('en',p)+'"/>';
   return '<url><loc>'+loc+'</loc>'+alternates+'</url>';
- })).concat(langs.flatMap(l=>[...seoContent.serviceSlugs.map(s=>'/'+l+'/services/'+s),'/'+l+'/resources',...seoContent.articleSlugs.map(s=>'/'+l+'/resources/'+s)].map(p=>{const alternate=p.replace(/^\/(en|ar)\//,'/'+(l==='en'?'ar':'en')+'/');return '<url><loc>'+SITE_URL+p+'</loc><xhtml:link rel="alternate" hreflang="'+l+'" href="'+SITE_URL+p+'"/><xhtml:link rel="alternate" hreflang="'+(l==='en'?'ar':'en')+'" href="'+SITE_URL+alternate+'"/></url>';}))).join('');
+ })).concat(langs.flatMap(l=>[...seoContent.serviceSlugs.map(s=>'/'+l+'/services/'+s),'/'+l+'/resources','/'+l+'/faq','/'+l+'/pricing',...seoContent.articleSlugs.map(s=>'/'+l+'/resources/'+s)].map(p=>{const alternate=p.replace(/^\/(en|ar)\//,'/'+(l==='en'?'ar':'en')+'/');return '<url><loc>'+SITE_URL+p+'</loc><xhtml:link rel="alternate" hreflang="'+l+'" href="'+SITE_URL+p+'"/><xhtml:link rel="alternate" hreflang="'+(l==='en'?'ar':'en')+'" href="'+SITE_URL+alternate+'"/></url>';}))).join('');
  res.set('Cache-Control','public, max-age=3600').type('application/xml').send('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+urls+'<url><loc>'+SITE_URL+'/CRM</loc><changefreq>weekly</changefreq><priority>0.8</priority></url></urlset>');
 });
 
@@ -484,8 +484,9 @@ app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-
 app.get('/',(req,res)=>res.redirect(301,'/en/'));
 app.get(['/en','/ar'],(req,res)=>res.redirect(301,req.path+'/'));
 app.get(/^\/(en|ar)\/(about|training|consultation|operations|bpo|contact)\/$/,(req,res)=>res.redirect(301,req.path.replace(/\/$/,'')));
-app.get(/^\/(en|ar)\/(services\/[^/]+|resources(?:\/[^/]+)?)\/$/,(req,res)=>res.redirect(301,req.path.replace(/\/$/,'')));
+app.get(/^\/(en|ar)\/(services\/[^/]+|resources(?:\/[^/]+)?|faq|pricing)\/$/,(req,res)=>res.redirect(301,req.path.replace(/\/$/,'')));
 app.get('/:lang(en|ar)/services/:slug',(req,res,next)=>{const html=require('./seo-content').render('service',req.params.lang,req.params.slug);if(!html)return next();res.set('Cache-Control','public,max-age=300').type('html').send(html)});
+app.get('/:lang(en|ar)/:page(faq|pricing)',(req,res)=>{res.set('Cache-Control','public,max-age=300').type('html').send(require('./seo-content').render(req.params.page,req.params.lang))});
 app.get('/:lang(en|ar)/resources',(req,res)=>{res.set('Cache-Control','public,max-age=300').type('html').send(require('./seo-content').render('resources',req.params.lang))});
 app.get('/:lang(en|ar)/resources/:slug',(req,res,next)=>{const html=require('./seo-content').render('article',req.params.lang,req.params.slug);if(!html)return next();res.set('Cache-Control','public,max-age=300').type('html').send(html)});
 app.get(['/en/','/ar/','/en/:page','/ar/:page'],async(req,res,next)=>{
