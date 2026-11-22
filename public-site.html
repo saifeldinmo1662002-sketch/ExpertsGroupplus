@@ -464,12 +464,6 @@
           </div>
           <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-3 tracking-tight">Our Four Divisions</h2>
           <div class="w-16 h-1 bg-brand-gold mx-auto rounded-full"></div>
-          <nav aria-label="Service pages" class="flex flex-wrap gap-4 justify-center mt-6 text-sm font-semibold">
-            <a href="/en/training" class="text-brand-blue dark:text-brand-gold underline underline-offset-4">Corporate Training</a>
-            <a href="/en/consultation" class="text-brand-blue dark:text-brand-gold underline underline-offset-4">Business Consultation</a>
-            <a href="/en/operations" class="text-brand-blue dark:text-brand-gold underline underline-offset-4">Operations Services</a>
-            <a href="/en/bpo" class="text-brand-blue dark:text-brand-gold underline underline-offset-4">BPO Services</a>
-          </nav>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -708,7 +702,6 @@
 
     <section id="view-training" class="page-view hidden animate-fade-in pb-16">
       <div class="service-hero-container" data-service="training"></div>
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6"><a class="text-brand-blue dark:text-brand-gold font-semibold underline underline-offset-4" href="/en/services/corporate-training">Explore corporate training programs in detail</a></div>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
         <div class="text-center mb-12 max-w-3xl mx-auto">
@@ -915,15 +908,6 @@
 
     <section id="view-operations" class="page-view hidden animate-fade-in pb-16">
       <div class="service-hero-container" data-service="operations"></div>
-      <section aria-label="Explore operational services" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">Explore Our Specialized Operations Services</h2>
-        <div class="flex flex-wrap gap-3 text-sm font-semibold">
-          <a href="/en/services/crm-platform" class="text-brand-blue dark:text-brand-gold underline underline-offset-4">CRM Platform</a>
-          <a href="/en/services/web-development" class="text-brand-blue dark:text-brand-gold underline underline-offset-4">Web Development</a>
-          <a href="/en/services/social-media-management" class="text-brand-blue dark:text-brand-gold underline underline-offset-4">Social Media Management</a>
-          <a href="/en/services/talent-acquisition" class="text-brand-blue dark:text-brand-gold underline underline-offset-4">Talent Acquisition</a>
-        </div>
-      </section>
 
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-16">
         <div class="text-center mb-8 max-w-3xl mx-auto">
@@ -1250,9 +1234,6 @@
             <li><button onclick="navigateTo('operations')" class="hover:text-brand-gold transition-colors">Expert Operations</button></li>
             <li><button onclick="navigateTo('bpo')" class="hover:text-brand-gold transition-colors">Expert BPO</button></li>
             <li><button onclick="navigateTo('contact')" class="hover:text-brand-gold transition-colors">Contact</button></li>
-            <li><a href="/en/resources" class="hover:text-brand-gold transition-colors">Business Resources & Guides</a></li>
-            <li><a href="/en/faq" class="hover:text-brand-gold transition-colors">Frequently Asked Questions</a></li>
-            <li><a href="/en/pricing" class="hover:text-brand-gold transition-colors">How Our Pricing Works</a></li>
           </ul>
         </div>
 
@@ -1554,7 +1535,7 @@
       }
 
       if (updateHistory) {
-        window.location.assign(`/${(window.location.pathname.match(/^\/(en|ar)(?:\/|$)/) || [,'en'])[1]}/${pageId === 'home' ? '' : pageId}`); return;
+        window.history.pushState({ page: pageId }, '', `#${pageId}`);
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2275,20 +2256,17 @@
       startSliderTimer();
       applySiteSettingsToDOM();
 
+      const initialHash = window.location.hash.replace('#', '');
       const validPages = ['home', 'about', 'training', 'consultation', 'operations', 'bpo', 'contact'];
-      const pathnameParts = window.location.pathname.split('/').filter(Boolean);
-      const initialPage = validPages.includes(pathnameParts[1]) ? pathnameParts[1] : 'home';
-      // Preserve historic section links while moving visitors to the canonical document URL.
-      const legacyPage = window.location.hash.slice(1);
-      if (validPages.includes(legacyPage) && legacyPage !== initialPage) {
-        const lang = pathnameParts[0] === 'ar' ? 'ar' : 'en';
-        window.location.replace('/' + lang + '/' + (legacyPage === 'home' ? '' : legacyPage));
+      if (initialHash && validPages.includes(initialHash)) {
+        navigateTo(initialHash, false);
       } else {
-        navigateTo(initialPage, false);
+        navigateTo('home', false);
       }
+
       window.addEventListener('popstate', () => {
-        const path = window.location.pathname.split('/').filter(Boolean);
-        navigateTo(validPages.includes(path[1]) ? path[1] : 'home', false);
+        const hash = window.location.hash.replace('#', '') || 'home';
+        navigateTo(hash, false);
       });
 
       if (window.lucide) lucide.createIcons();
@@ -2375,7 +2353,6 @@
       egTranslateTree(document.body, egCurrentLanguage);
       updateLanguageControls(egCurrentLanguage);
       try { localStorage.setItem('eg_language', egCurrentLanguage); } catch (e) {}
-      if (announce) { const parts = window.location.pathname.split('/').filter(Boolean); const slug = parts[1] || ''; window.history.replaceState({}, '', '/' + egCurrentLanguage + '/' + slug); const canonical = document.querySelector('link[rel="canonical"]'); if (canonical) canonical.href = 'https://www.expertsgp.com/' + egCurrentLanguage + '/' + slug; }
       if (window.lucide) lucide.createIcons();
       if (announce && typeof showGlobalToast === 'function') {
         showGlobalToast(egCurrentLanguage === 'ar' ? 'تم تفعيل اللغة العربية' : 'English language enabled');
