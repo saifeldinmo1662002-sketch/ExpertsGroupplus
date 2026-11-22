@@ -145,7 +145,7 @@ async function addHead(html,lang,page){
  if(faviconUrl)output=output.replace(/<link\b(?=[^>]*\brel\s*=\s*[\"'](?:shortcut\s+)?icon[\"'])[^>]*>/gi,'');
  output=output.replace('</head>',head+'\n</head>');
  if(lang==='ar'){
-   output=output.replace(/href="\/en\/(services\/|resources(?:\/|")|(?:training|consultation|operations|bpo)")/g,(match,tail)=>'href="/ar/'+tail);
+   output=output.replace(/href="\/en\/(services\/|resources(?:\/|")|(?:training|consultation|operations|bpo|faq|pricing)")/g,(match,tail)=>'href="/ar/'+tail);
    output=translateArabicHtml(output);
  }
  return output;
