@@ -52,6 +52,34 @@ function layout(lang,title,description,h1,body,url,type,crumb){
 function sectionsHtml(data){return '<p class="intro">'+esc(data.intro)+'</p><div class="tiles">'+data.sections.map(([h,p])=>'<section class="tile"><h2>'+esc(h)+'</h2><p>'+esc(p)+'</p></section>').join('')+'</div>'}
 function render(kind,lang,slug){
  lang=lang==='ar'?'ar':'en';const ar=lang==='ar';
+ if(kind==='pricing' || kind==='faq'){
+   const title=kind==='pricing'?(ar?'كيف نحدد أسعار خدماتنا | خبراء جروب بلس':'How Our Services Are Priced | Experts Group Plus'):(ar?'أسئلة متكررة عن خدماتنا | خبراء جروب بلس':'Frequently Asked Questions | Experts Group Plus');
+   const description=kind==='pricing'?(ar?'تعرف على طريقة تحديد نطاق وأسعار التدريب والاستشارات والتشغيل وتعهيد العمليات حسب احتياجات شركتك.':'Learn how Experts Group Plus scopes and prices customized training, consulting, operations and BPO services.'):(ar?'إجابات عن الأسئلة الشائعة حول خدمات التدريب والاستشارات والعمليات وتعهيد الأعمال في خبراء جروب بلس.':'Answers to common questions about our training, consulting, operations and business process outsourcing services.');
+   const h1=kind==='pricing'?(ar?'إزاي بنحدد تكلفة الخدمات؟':'How Our Business Services Are Priced'):(ar?'أسئلة متكررة':'Frequently Asked Questions');
+   const url=SITE+'/'+lang+'/'+kind;
+   let body='';
+   if(kind==='pricing'){
+     const steps=ar?[['١. نفهم احتياج الشركة','بنبدأ بمناقشة أهدافك والمهام المطلوبة وحجم الشغل وتوقيت التنفيذ.'],['٢. نحدد نطاق العمل','بنوضح المخرجات والمتطلبات والتسليمات وطريقة المتابعة.'],['٣. نقدم عرض مناسب','بنشاركك عرض سعر حسب نطاق الخدمة والموارد المطلوبة وشروط التنفيذ.']]:[['1. Understand your goals','We discuss objectives, responsibilities, work volume and the delivery timeline.'],['2. Define the scope','We clarify deliverables, dependencies, reporting needs and service expectations.'],['3. Prepare a tailored proposal','You receive a scope-based quote outlining the engagement and commercial terms.']];
+     body='<p class="intro">'+(ar?'خدمات الشركات بتختلف حسب حجم الفريق وطبيعة الشغل، علشان كده بنقدم عروض أسعار مخصصة بدل ما نعلن أرقام ثابتة مش مناسبة لكل عميل.':'Scope, workload, delivery model and required expertise can vary significantly. We therefore provide tailored proposals rather than publishing a fixed price that may not reflect your requirements.')+'</p><div class="tiles">'+steps.map(([h,p])=>'<section class="tile"><h2>'+esc(h)+'</h2><p>'+esc(p)+'</p></section>').join('')+'</div>';
+   }else{
+     const questions=ar?[
+       ['إيه الخدمات اللي بتقدموها؟','بنقدم التدريب المؤسسي والاستشارات الإدارية والخدمات التشغيلية وتعهيد عمليات الأعمال.'],
+       ['هل الخدمات مناسبة للشركات الصغيرة؟','نطاق التعاون بيتحدد حسب طبيعة الشركة واحتياجاتها، وممكن نناقش الحل المناسب في مكالمة تعريفية.'],
+       ['هل فيه أسعار ثابتة؟','بنقدم عرض سعر مخصص بناءً على نطاق الخدمة وحجم العمل والموارد المطلوبة.'],
+       ['هل ممكن تنفيذ الخدمات بالعربي أو الإنجليزي؟','ممكن مناقشة اللغة المناسبة للمشروع مع فريقنا قبل الاتفاق.'],
+       ['إزاي أبدأ؟','تقدر تتواصل مع الفريق لتحديد احتياجاتك ومناقشة نطاق العمل والخطوات التالية.']
+     ]:[
+       ['What services does Experts Group Plus provide?','Our core divisions cover corporate training, business consultation, operations services and business process outsourcing.'],
+       ['Do you work with small companies?','We discuss the scope and suitability of each engagement based on your team and goals.'],
+       ['Do your services have fixed prices?','We prepare tailored quotes based on scope, resources, delivery model and the work involved.'],
+       ['Can services be delivered in English or Arabic?','We can discuss language requirements during discovery and agree on the appropriate project approach.'],
+       ['How do we get started?','Contact our team to discuss your needs, proposed scope and next steps.']
+     ];
+     body='<p class="intro">'+(ar?'هنا إجابات عن الأسئلة اللي بتوصلنا من الشركات قبل بدء التعاون.':'Useful answers to common questions when exploring a potential engagement.')+'</p>'+questions.map(([q,a])=>'<details><summary>'+esc(q)+'</summary><p>'+esc(a)+'</p></details>').join('');
+   }
+   body+='<div class="actions"><a class="btn" href="/'+lang+'/contact">'+(ar?'تواصل معنا':'Discuss Your Requirements')+'</a><a class="btn alt" href="/'+lang+'/resources">'+(ar?'المقالات والأدلة':'Browse Resources')+'</a></div>';
+   return layout(lang,title,description,h1,body,url,kind,[[ar?'الرئيسية':'Home',SITE+'/'+lang+'/'],[h1,url]]);
+ }
  if(kind==='resources'){
   const blocks=Object.entries(articles).map(([s,a])=>'<article class="tile"><h2>'+esc(a[lang].h1)+'</h2><p>'+esc(a[lang].description)+'</p><a href="/'+lang+'/resources/'+s+'">'+(ar?'اقرأ المقال':'Read the guide')+'</a></article>').join('');
   const serviceBlocks=Object.entries(services).map(([s,a])=>'<article class="tile"><h3>'+esc(a[lang].h1)+'</h3><a href="/'+lang+'/services/'+s+'">'+(ar?'استكشف الخدمة':'Explore service')+'</a></article>').join('');
