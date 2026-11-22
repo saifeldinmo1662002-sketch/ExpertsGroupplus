@@ -1535,7 +1535,7 @@
       }
 
       if (updateHistory) {
-        window.history.pushState({ page: pageId }, '', `#${pageId}`);
+        window.location.assign(`/${(window.location.pathname.match(/^\/(en|ar)(?:\/|$)/) || [,'en'])[1]}/${pageId === 'home' ? '' : pageId}`); return;
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2256,17 +2256,20 @@
       startSliderTimer();
       applySiteSettingsToDOM();
 
-      const initialHash = window.location.hash.replace('#', '');
       const validPages = ['home', 'about', 'training', 'consultation', 'operations', 'bpo', 'contact'];
-      if (initialHash && validPages.includes(initialHash)) {
-        navigateTo(initialHash, false);
+      const pathnameParts = window.location.pathname.split('/').filter(Boolean);
+      const initialPage = validPages.includes(pathnameParts[1]) ? pathnameParts[1] : 'home';
+      // Preserve historic section links while moving visitors to the canonical document URL.
+      const legacyPage = window.location.hash.slice(1);
+      if (validPages.includes(legacyPage) && legacyPage !== initialPage) {
+        const lang = pathnameParts[0] === 'ar' ? 'ar' : 'en';
+        window.location.replace('/' + lang + '/' + (legacyPage === 'home' ? '' : legacyPage));
       } else {
-        navigateTo('home', false);
+        navigateTo(initialPage, false);
       }
-
       window.addEventListener('popstate', () => {
-        const hash = window.location.hash.replace('#', '') || 'home';
-        navigateTo(hash, false);
+        const path = window.location.pathname.split('/').filter(Boolean);
+        navigateTo(validPages.includes(path[1]) ? path[1] : 'home', false);
       });
 
       if (window.lucide) lucide.createIcons();
@@ -2353,6 +2356,7 @@
       egTranslateTree(document.body, egCurrentLanguage);
       updateLanguageControls(egCurrentLanguage);
       try { localStorage.setItem('eg_language', egCurrentLanguage); } catch (e) {}
+      if (announce) { const parts = window.location.pathname.split('/').filter(Boolean); const slug = parts[1] || ''; window.history.replaceState({}, '', '/' + egCurrentLanguage + '/' + slug); const canonical = document.querySelector('link[rel="canonical"]'); if (canonical) canonical.href = 'https://www.expertsgp.com/' + egCurrentLanguage + '/' + slug; }
       if (window.lucide) lucide.createIcons();
       if (announce && typeof showGlobalToast === 'function') {
         showGlobalToast(egCurrentLanguage === 'ar' ? 'تم تفعيل اللغة العربية' : 'English language enabled');
