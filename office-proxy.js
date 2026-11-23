@@ -14,7 +14,7 @@ const HOP_HEADERS = new Set([
   'connection','host','keep-alive','proxy-authorization','proxy-authenticate',
   'te','trailer','transfer-encoding','upgrade'
 ]);
-const CLIENT_ASSET = '(?:api(?:\\/|[\\x22\\x27\\x60])|vendor\\/three\\/|brand-(?:mark|logo(?:-dark)?)\\.svg|favicon(?:\\.ico|\\.png)|(?:app|cctv|workspace-ui|hr-ui|employee|agent-ui|employee-record|payroll-ui|hr-command|issues-ui|employee-hub|expense-review|sender-ui)\\.js|(?:styles|cctv|workspace|employee|personnel|payroll|hr-command|issues)\\.css|employee(?:\\.html|\\/)|rose\\.html)';
+const CLIENT_ASSET = '(?:api(?:\\/|[\\x22\\x27\\x60])|vendor\\/three\\/|brand-(?:mark|logo(?:-dark)?)\\.svg|favicon(?:\\.ico|\\.png)|(?:app|cctv|workspace-ui|hr-ui|employee|agent-ui|employee-record|payroll-ui|hr-command|issues-ui|employee-hub|expense-review|sender-ui)\\.js|(?:styles|cctv|workspace|employee|personnel|payroll|hr-command|issues|agent-profile)\\.css|employee(?:\\.html|\\/)|rose\\.html)';
 const URL_RE = new RegExp('([\\x22\\x27\\x60])\\/(?='+CLIENT_ASSET+')','gi');
 const CSS_URL_RE = /url\(\s*(["']?)\/(?=(?:brand-|vendor\/three\/|(?:styles|cctv|workspace|employee|personnel|payroll|hr-command|issues)\.css))/gi;
 
