@@ -16,14 +16,14 @@ const HOP_HEADERS = new Set([
 ]);
 const CLIENT_ASSET = '(?:api(?:\\/|[\\x22\\x27\\x60])|vendor\\/three\\/|brand-(?:mark|logo(?:-dark)?)\\.svg|favicon(?:\\.ico|\\.png)|(?:app|cctv|workspace-ui|hr-ui|employee|agent-ui|employee-record|payroll-ui|hr-command|issues-ui|employee-hub|expense-review|sender-ui)\\.js|(?:styles|cctv|workspace|employee|personnel|payroll|hr-command|issues|agent-profile)\\.css|employee(?:\\.html|\\/)|rose\\.html)';
 const URL_RE = new RegExp('([\\x22\\x27\\x60])\\/(?='+CLIENT_ASSET+')','gi');
-const CSS_URL_RE = /url\(\s*(["']?)\/(?=(?:brand-|vendor\/three\/|(?:styles|cctv|workspace|employee|personnel|payroll|hr-command|issues)\.css))/gi;
+const CSS_URL_RE = /url\(\s*(["']?)\/(?=(?:brand-|vendor\/three\/|(?:styles|cctv|workspace|employee|personnel|payroll|hr-command|issues|agent-profile)\.css))/gi;
 
 function rewriteOfficeBrowserUrls(text){
   // Only routes belonging to AI Office are prefixed. A bare / (company website)
   // and unrelated public links stay unchanged. API JSON is not rewritten.
   return text
     .replace(URL_RE, '$1'+PREFIX+'/')
-    .replace(/(\b(?:src|href)\s*=\s*["'])\/(?!office\/|\/)((?:api\/|vendor\/three\/|brand-[^"']+|(?:app|cctv|workspace-ui|hr-ui|employee|agent-ui|employee-record|payroll-ui|hr-command|issues-ui|employee-hub|expense-review|sender-ui)\.js|(?:styles|cctv|workspace|employee|personnel|payroll|hr-command|issues)\.css|employee\.html|rose\.html)[^"']*)/gi,
+    .replace(/(\b(?:src|href)\s*=\s*["'])\/(?!office\/|\/)((?:api\/|vendor\/three\/|brand-[^"']+|(?:app|cctv|workspace-ui|hr-ui|employee|agent-ui|employee-record|payroll-ui|hr-command|issues-ui|employee-hub|expense-review|sender-ui)\.js|(?:styles|cctv|workspace|employee|personnel|payroll|hr-command|issues|agent-profile)\.css|employee\.html|rose\.html)[^"']*)/gi,
       '$1'+PREFIX+'/$2')
     .replace(CSS_URL_RE,'url($1'+PREFIX+'/');
 }
