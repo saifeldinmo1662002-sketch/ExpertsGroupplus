@@ -19,6 +19,7 @@ for(const [before,after] of [
   ['import("/agent-ui.js")','import("/office/agent-ui.js")'],
   ['import("/employee-record.js")','import("/office/employee-record.js")'],
   ['<link href="/personnel.css">','<link href="/office/personnel.css">'],
+  ['<link href="/agent-profile.css">','<link href="/office/agent-profile.css">'],
   ['<link href="/payroll.css">','<link href="/office/payroll.css">'],
   ['import("/payroll-ui.js")','import("/office/payroll-ui.js")'],
   ['import("/hr-command.js")','import("/office/hr-command.js")'],
