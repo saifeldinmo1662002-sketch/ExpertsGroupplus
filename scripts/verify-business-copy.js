@@ -21,8 +21,7 @@ const required=[
   'How do BPO renewals work?',
   'How is BPO quality monitored?',
   '6-Month Minimum',
-  '3-Month Notice',
-  'Matched Specialists'
+  '3-Month Notice'
 ];
 for (const value of required) {
   assert(visible.includes(value),'Missing English website copy: '+value);
@@ -66,27 +65,20 @@ assert.equal(visible.split('<div').length-1,visible.split('</div>').length-1,'Un
 assert.equal(visible.split('<article').length-1,visible.split('</article>').length-1,'Unbalanced article elements');
 
 
-// Every service hero has one small, translated badge rather than an announcement panel.
-for(const [service,label] of Object.entries({
-  training:'Tailored Training',
-  consultation:'Right-Fit Advisory',
-  operations:'Matched Specialists',
-  bpo:'Managed BPO'
-})){
-  assert(visible.includes('data-service-badge="'+service+'"'),'Missing '+service+' badge');
-  assert(visible.includes(label),'Missing '+service+' badge text');
-  assert(translations[label],'Missing Arabic translation for '+label);
-  assert.equal(embedded[label],translations[label],'Embedded Arabic translation mismatch for '+label);
+// Service pages must flow directly from their hero into real page content.
+assert(!visible.includes('data-service-badge='),'Obsolete service badge wrapper remains');
+for (const service of ['training','consultation','operations','bpo']) {
+  assert(visible.includes('class="service-hero-container" data-service="'+service+'"'),'Missing hero for '+service);
 }
-assert.equal((visible.match(/data-service-badge="/g)||[]).length,4,'Expected exactly four service badges');
-for(const old of [
-  'Training Tailored to Your Workforce',
-  'The Right Advisory Expertise',
-  'One Project, The Right Specialists',
-  'Managed Service and Clear Accountability'
-]){
-  assert(!visible.includes('<h2 class="font-bold text-slate-900 dark:text-white mb-1">'+old+'</h2>'),'Large announcement not removed: '+old);
+for (const label of [
+  'Tailored Training','Right-Fit Advisory','Matched Specialists','Managed BPO',
+  'Training Tailored to Your Workforce','The Right Advisory Expertise',
+  'One Project, The Right Specialists','Managed Service and Clear Accountability'
+]) {
+  assert(!visible.includes(label),'Unnecessary callout label remains: '+label);
 }
-assert(visible.includes('rounded-full border border-brand-blue/15'),'Compact pill styling missing');
-
+assert(visible.includes('data-service="training"></div>\n      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10"'),'Training section spacing is wrong');
+assert(visible.includes('data-service="consultation"></div>\n      <div class="pt-8 sm:pt-10 pb-12'),'Consultation section spacing is wrong');
+assert(visible.includes('data-service="operations"></div>\n      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10"'),'Operations section spacing is wrong');
+assert(visible.includes('data-service="bpo"></div>\n      <!-- Compact BPO service commitments'),'BPO section spacing is wrong');
 console.log('BUSINESS_COPY_VALIDATED');
