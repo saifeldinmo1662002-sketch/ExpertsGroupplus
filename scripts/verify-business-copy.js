@@ -62,7 +62,7 @@ for(const key of [
   assert(translations[key],'Missing Arabic translation for '+key);
   assert.equal(embedded[key],translations[key],'Embedded translation not in sync: '+key);
 }
-assert.equal((visible.match(/<div(?:\\s|>)/g)||[]).length,(visible.match(/<\\/div>/g)||[]).length,'Unbalanced static div elements');
-assert.equal((visible.match(/<article(?:\\s|>)/g)||[]).length,(visible.match(/<\\/article>/g)||[]).length,'Unbalanced article elements');
+assert.equal(visible.split('<div').length-1,visible.split('</div>').length-1,'Unbalanced static div elements');
+assert.equal(visible.split('<article').length-1,visible.split('</article>').length-1,'Unbalanced article elements');
 
 console.log('BUSINESS_COPY_VALIDATED');
