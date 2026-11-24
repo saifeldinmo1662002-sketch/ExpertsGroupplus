@@ -1554,35 +1554,53 @@
     let touchStartX = null;
     let touchEndX = null;
 
-    function navigateTo(pageId, updateHistory = true) {
-      const validPages = ['home', 'about', 'training', 'consultation', 'operations', 'bpo', 'contact'];
-      if (!validPages.includes(pageId)) pageId = 'home';
+    // The URL path, not only the #fragment, identifies the active service page.
+    // Use the same English / Arabic routes that the server supports for direct links.
+    const SITE_PAGES = ['home', 'about', 'training', 'consultation', 'operations', 'bpo', 'contact'];
+
+    function sitePagePath(pageId, language) {
+      const page = SITE_PAGES.includes(pageId) ? pageId : 'home';
+      const lang = language === 'ar' ? 'ar' : 'en';
+      return `/${lang}/${page === 'home' ? '' : page}`;
+    }
+
+    function getSitePageFromLocation() {
+      const match = window.location.pathname.match(/^\/(?:en|ar)(?:\/([^/]+))?\/?$/i);
+      const pathPage = match && match[1] ? match[1].toLowerCase() : 'home';
+      // Support existing #page bookmarks without allowing a stale hash to
+      // override a real /en/operations or /ar/bpo path.
+      if (SITE_PAGES.includes(pathPage) && pathPage !== 'home') return pathPage;
+      const hashPage = window.location.hash.slice(1).toLowerCase();
+      return SITE_PAGES.includes(hashPage) ? hashPage : 'home';
+    }
+
+    function navigateTo(pageId, updateHistory = true, scrollToTop = true) {
+      if (!SITE_PAGES.includes(pageId)) pageId = 'home';
 
       document.querySelectorAll('.page-view').forEach(view => {
         view.classList.add('hidden');
       });
 
       const targetView = document.getElementById(`view-${pageId}`);
-      if (targetView) {
-        targetView.classList.remove('hidden');
-      }
+      if (targetView) targetView.classList.remove('hidden');
 
-      // Update Nav Link Highlights
       document.querySelectorAll('.nav-link').forEach(btn => {
         btn.classList.remove('text-brand-blue', 'dark:text-brand-gold');
       });
       const activeBtn = document.getElementById(`nav-btn-${pageId}`);
-      if (activeBtn) {
-        activeBtn.classList.add('text-brand-blue', 'dark:text-brand-gold');
-      }
+      if (activeBtn) activeBtn.classList.add('text-brand-blue', 'dark:text-brand-gold');
 
       if (updateHistory) {
-        window.history.pushState({ page: pageId }, '', `#${pageId}`);
+        const nextPath = sitePagePath(pageId, egCurrentLanguage);
+        // A real path persists across refresh and can be shared or bookmarked.
+        if (window.location.pathname !== nextPath || window.location.hash) {
+          window.history.pushState({ page: pageId, language: egCurrentLanguage }, '', nextPath + window.location.search);
+        }
       }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-
-
+      // Do not override the browser's scroll restoration on a refresh or
+      // Back / Forward navigation. User-initiated page changes start at top.
+      if (scrollToTop) window.scrollTo({ top: 0, behavior: 'smooth' });
       if (window.lucide) lucide.createIcons();
     }
 
@@ -2299,17 +2317,21 @@
       startSliderTimer();
       applySiteSettingsToDOM();
 
-      const initialHash = window.location.hash.replace('#', '');
-      const validPages = ['home', 'about', 'training', 'consultation', 'operations', 'bpo', 'contact'];
-      if (initialHash && validPages.includes(initialHash)) {
-        navigateTo(initialHash, false);
-      } else {
-        navigateTo('home', false);
+      const initialPage = getSitePageFromLocation();
+      navigateTo(initialPage, false, false);
+
+      // Normalize legacy #page links and old bare / URLs to the existing
+      // SEO-friendly language/page route without adding a Back-button entry.
+      const initialPath = sitePagePath(initialPage, egCurrentLanguage);
+      if (window.location.pathname !== initialPath || window.location.hash) {
+        window.history.replaceState({ page: initialPage, language: egCurrentLanguage }, '', initialPath + window.location.search);
       }
 
       window.addEventListener('popstate', () => {
-        const hash = window.location.hash.replace('#', '') || 'home';
-        navigateTo(hash, false);
+        // Back / Forward can cross an English <-> Arabic language switch.
+        const routeLang = window.location.pathname.match(/^\/(en|ar)(?:\/|$)/);
+        if (routeLang && routeLang[1] !== egCurrentLanguage) applySiteLanguage(routeLang[1], false);
+        navigateTo(getSitePageFromLocation(), false, false);
       });
 
       if (window.lucide) lucide.createIcons();
@@ -2405,7 +2427,11 @@
     window.egApplyTranslations = applySiteLanguage;
 
     function toggleLanguage() {
-      applySiteLanguage(egCurrentLanguage === 'en' ? 'ar' : 'en', true);
+      const activePage = getSitePageFromLocation();
+      const nextLang = egCurrentLanguage === 'en' ? 'ar' : 'en';
+      applySiteLanguage(nextLang, true);
+      // Keep the selected service and the language in the URL on refresh.
+      window.history.pushState({ page: activePage, language: nextLang }, '', sitePagePath(activePage, nextLang) + window.location.search);
     }
 
     // Newly rendered cards, FAQs, modals and other dynamic content are translated as they appear.
