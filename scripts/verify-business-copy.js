@@ -22,7 +22,7 @@ const required=[
   'How is BPO quality monitored?',
   '6-Month Minimum',
   '3-Month Notice',
-  'One Project, The Right Specialists'
+  'Matched Specialists'
 ];
 for (const value of required) {
   assert(visible.includes(value),'Missing English website copy: '+value);
