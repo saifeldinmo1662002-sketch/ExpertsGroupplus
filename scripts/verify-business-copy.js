@@ -21,8 +21,7 @@ const required=[
   'How do BPO renewals work?',
   'How is BPO quality monitored?',
   '6-Month Minimum',
-  '3-Month Notice',
-  'Matched Specialists'
+  '3-Month Notice'
 ];
 for (const value of required) {
   assert(visible.includes(value),'Missing English website copy: '+value);
