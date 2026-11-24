@@ -114,7 +114,11 @@ function createBpoProfile(language='en') {
  const font=(bold=false)=>ar?(bold?'ARB':'AR'):(bold?'Helvetica-Bold':'Helvetica');
  const txt=(str,x,y,w,opts={})=>{
    const {size=11,color=C.ink,bold=false,align=(ar?'right':'left'),height=80}=opts;
-   doc.fillColor(color).font(font(bold)).fontSize(size).text(str,x,y,{
+   // Arabic webfont is an Arabic-only subset; Latin tier names, page numbers
+   // and company wordmark must use the built-in Latin font to avoid empty glyphs.
+   const useLatin=ar && /^[\x00-\x7F]+$/.test(String(str));
+   const chosen=useLatin ? (bold?'Helvetica-Bold':'Helvetica') : font(bold);
+   doc.fillColor(color).font(chosen).fontSize(size).text(str,x,y,{
      width:w,height,align,lineGap:ar?4:3,breakLine:false,features:ar?['rtla']:[],ellipsis:false});
  };
  const rrect=(x,y,w,h,fill,r=12,stroke=null)=>{
