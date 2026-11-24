@@ -11,7 +11,8 @@
     "test:crm-route": "node scripts/verify-crm-route.js",
     "test:favicon": "node scripts/verify-favicon.js",
     "test:office-route": "node scripts/verify-office-route.js",
-    "test:business-copy": "node scripts/verify-business-copy.js"
+    "test:business-copy": "node scripts/verify-business-copy.js",
+    "test:page-navigation": "node scripts/verify-page-navigation.js"
   },
   "engines": {
     "node": ">=20"
