@@ -81,21 +81,21 @@ const contactLimiter=rateLimit({windowMs:60*60*1000,limit:8,standardHeaders:true
 const allowedPages=new Set(['home','about','training','consultation','operations','bpo','contact']);
 const slugToPage=p=>allowedPages.has(p)?p:'home';
 const pageMeta={
- home:["Business Consulting, Training & BPO | Experts Group Plus","Grow your business with corporate training, strategic consulting, outsourced operations and BPO services from Experts Group Plus."],
- about:["About Experts Group Plus | Business Services Partner","Discover how Experts Group Plus supports organizations through practical training, business consulting, operations and outsourcing services."],
- training:["Corporate Training & Employee Development | Experts Group Plus","Build employee and leadership capabilities with practical corporate training programs designed around your team's needs and business goals."],
- consultation:["Business Consulting & Strategic Advisory | Experts Group Plus","Improve business performance with management consulting, strategic planning, operational reviews and practical advisory support."],
- operations:["Outsourced Business Operations | Experts Group Plus","Access flexible business operations support across marketing, creative, technology and corporate functions, tailored to your organization."],
- bpo:["BPO & Business Process Outsourcing | Experts Group Plus","Explore business process outsourcing for customer support, sales support and back-office operations with Experts Group Plus."],
+ home:["Business Solutions & Managed Services | Experts Group Plus","One accountable partner for training, consultation, operations and BPO. Carefully assessed expertise, tailored proposals and coordinated service delivery."],
+ about:["About Us | Vetted Expertise, One Accountable Partner","Learn how Experts Group Plus assesses professional expertise, matches services to business needs and coordinates quality-focused delivery."],
+ training:["Corporate Training & Employee Development | Experts Group Plus","Training for employees, departments and leaders, tailored to your business objectives and delivered with coordinated quality review."],
+ consultation:["Business Consulting & Strategic Advisory | Experts Group Plus","Consultation matched to your industry, financial and operational challenges, with tailored diagnostics and practical advisory support."],
+ operations:["Outsourced Business Operations | Experts Group Plus","Find the right specialists for marketing, design, technology, recruitment and operations, coordinated through one accountable partner."],
+ bpo:["BPO & Business Process Outsourcing | Experts Group Plus","Managed BPO for customer service, sales support and back-office functions with clear agreements, ongoing oversight and quarterly feedback."],
  contact:["Contact Experts Group Plus | Schedule a Consultation","Speak with Experts Group Plus about corporate training, business consulting, outsourced operations or BPO. Schedule a conversation."]
 };
 const pageMetaAr={
- home:["خدمات الأعمال والاستشارات والتعهيد | خبراء جروب بلس","نساعد الشركات على تطوير أعمالها من خلال التدريب المؤسسي والاستشارات الإدارية وخدمات التشغيل وتعهيد العمليات، بحلول تناسب احتياجات كل شركة."],
- about:["من نحن | خبراء جروب بلس لخدمات الأعمال","تعرّف على خبراء جروب بلس وكيف نساعد الشركات في التدريب وتطوير الأداء والاستشارات الإدارية وتشغيل الأعمال وخدمات التعهيد."],
- training:["تدريب الشركات وتطوير الموظفين | خبراء جروب بلس","برامج تدريب عملي للشركات والموظفين والمديرين، مصممة لتطوير المهارات ورفع كفاءة الفرق وتحسين الأداء في بيئة العمل."],
- consultation:["استشارات إدارية وتطوير الأعمال | خبراء جروب بلس","استشارات إدارية واستراتيجية لمساعدة الشركات على تقييم الأداء وتطوير خطط العمل وتحسين العمليات واتخاذ قرارات أفضل."],
- operations:["خدمات تشغيل وإدارة الأعمال | خبراء جروب بلس","دعم مرن لتشغيل الأعمال في التسويق والتصميم والتقنية والوظائف الإدارية، بما يتناسب مع طبيعة شركتك واحتياجاتها."],
- bpo:["تعهيد العمليات وخدمات BPO للشركات | خبراء جروب بلس","حلول تعهيد العمليات للشركات تشمل دعم العملاء ومساندة المبيعات والأعمال المكتبية والإدارية، مع مرونة تناسب حجم العمل."],
+ home:["خدمات الأعمال والاستشارات والتعهيد | خبراء جروب بلس","شريك واحد مسؤول عن التدريب والاستشارات والتشغيل وتعهيد العمليات، مع اختيار الخبرات المناسبة وتنسيق التنفيذ ومراجعة الجودة."],
+ about:["من نحن | خبراء جروب بلس لخدمات الأعمال","اكتشف كيف تقيّم خبراء جروب بلس الخبرات المهنية وتختار الأنسب لاحتياجات شركتك وتنسق التنفيذ وتتابع الجودة."],
+ training:["تدريب الشركات وتطوير الموظفين | خبراء جروب بلس","برامج تدريب للموظفين والإدارات والقيادات، مصممة وفق أهداف شركتك مع تنسيق التنفيذ ومراجعة الجودة."],
+ consultation:["استشارات إدارية وتطوير الأعمال | خبراء جروب بلس","استشارات تناسب مجال شركتك وتحدياتها المالية والتشغيلية، بتشخيص مخصص وتوصيات عملية."],
+ operations:["خدمات تشغيل وإدارة الأعمال | خبراء جروب بلس","اختر المتخصصين المناسبين للتسويق والتصميم والتقنية والتوظيف والتشغيل، مع جهة واحدة مسؤولة عن التنسيق."],
+ bpo:["تعهيد العمليات وخدمات BPO للشركات | خبراء جروب بلس","حلول تعهيد مُدارة لدعم العملاء والمبيعات والأعمال المكتبية، بعقود واضحة ومتابعة للجودة وآراء العملاء كل ربع سنة."],
  contact:["تواصل معنا واحجز استشارة | خبراء جروب بلس","تواصل مع فريق خبراء جروب بلس لمناقشة احتياجات شركتك في التدريب والاستشارات الإدارية والتشغيل وخدمات تعهيد العمليات."]
 };
 function canonicalPath(lang,page){return `/${lang}/${page==='home'?'':page}`.replace(/\/$/,'/')}
