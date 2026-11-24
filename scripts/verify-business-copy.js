@@ -37,4 +37,32 @@ assert.equal(html.split('<script').length-1,html.split('</script>').length-1,'Un
 assert(visible.includes('renew automatically'),'Missing BPO renewal rule');
 assert(visible.includes('six-month minimum'),'Missing BPO six-month commitment');
 assert(visible.includes('three months’ termination notice'),'Missing BPO notice rule');
+
+// Layout and bilingual regression checks for the compact homepage / portrait BPO cards.
+assert(visible.includes('id="home-advantages"'),'Missing compact home advantages');
+assert(visible.includes('id="bpo-highlights"'),'Missing compact BPO summary');
+assert(visible.includes('id="bpo-plan-grid"'),'Missing BPO plan grid');
+assert(visible.includes('grid-cols-1 md:grid-cols-2 lg:grid-cols-3'),'BPO plans must stack on phones and show portrait columns on desktop');
+for(const name of ['professional','premium','ultimate']){
+  assert(visible.includes('data-bpo-plan="'+name+'"'),'Missing BPO option '+name);
+}
+assert.equal((visible.match(/data-bpo-plan="/g)||[]).length,3,'Exactly three BPO options expected');
+assert(visible.includes('@media (min-width: 1700px)'),'Responsive ultra-wide layout rule missing');
+assert(visible.includes('#view-home .max-w-7xl'),'Wide view should remain scoped to homepage');
+assert(!visible.includes('Priority 48-hour onboarding launch'),'Unverified fixed onboarding promise reappeared');
+assert(!visible.includes('Most Popular'),'Unverified most-popular claim reappeared');
+for(const key of [
+ 'Featured','Priority onboarding planning','Dedicated team lead & quality oversight',
+ 'Agreed service levels & email/chat coverage','Ultimate','All of Professional, plus:','All of Premium, plus:',
+ 'Relevant experience and feedback checked before we recommend a specialist.',
+ 'Complementary expertise, brought together under one coordinated service.',
+ 'A tailored quotation prepared within 24 hours of your request.',
+ 'One relationship, coordinated execution and reviewed deliverables.'
+]){
+  assert(translations[key],'Missing Arabic translation for '+key);
+  assert.equal(embedded[key],translations[key],'Embedded translation not in sync: '+key);
+}
+assert.equal((visible.match(/<div(?:\\s|>)/g)||[]).length,(visible.match(/<\\/div>/g)||[]).length,'Unbalanced static div elements');
+assert.equal((visible.match(/<article(?:\\s|>)/g)||[]).length,(visible.match(/<\\/article>/g)||[]).length,'Unbalanced article elements');
+
 console.log('BUSINESS_COPY_VALIDATED');
