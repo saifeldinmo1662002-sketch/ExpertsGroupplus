@@ -8,6 +8,7 @@ on:
       - 'server.js'
       - 'package.json'
       - 'scripts/verify-business-copy.js'
+      - 'scripts/verify-page-navigation.js'
       - '.github/workflows/website-business-content.yml'
   push:
     branches: [main]
@@ -28,3 +29,4 @@ jobs:
         with:
           node-version: '22'
       - run: npm run test:business-copy
+      - run: npm run test:page-navigation
