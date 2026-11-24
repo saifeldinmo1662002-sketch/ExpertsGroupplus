@@ -32,8 +32,8 @@ for (const value of required) {
 for(const phrase of ['zero lock-in','zero contract lock-in','98% CSAT','55% Close','60% Conv.','15% goodwill','15% refund']) {
   assert(!visible.toLowerCase().includes(phrase.toLowerCase()),'Misleading or private public copy: '+phrase);
 }
-assert.equal((visible.match(/<section\\b/g)||[]).length,(visible.match(/<\\/section>/g)||[]).length,'Unclosed section tag');
-assert.equal((html.match(/<script\\b/g)||[]).length,(html.match(/<\\/script>/g)||[]).length,'Unclosed script tag');
+assert.equal(visible.split('<section ').length-1,visible.split('</section>').length-1,'Unclosed section tag');
+assert.equal(html.split('<script').length-1,html.split('</script>').length-1,'Unclosed script tag');
 assert(visible.includes('renew automatically'),'Missing BPO renewal rule');
 assert(visible.includes('six-month minimum'),'Missing BPO six-month commitment');
 assert(visible.includes('three months’ termination notice'),'Missing BPO notice rule');
