@@ -10,7 +10,8 @@
     "db:init": "node init-db.js",
     "test:crm-route": "node scripts/verify-crm-route.js",
     "test:favicon": "node scripts/verify-favicon.js",
-    "test:office-route": "node scripts/verify-office-route.js"
+    "test:office-route": "node scripts/verify-office-route.js",
+    "test:business-copy": "node scripts/verify-business-copy.js"
   },
   "engines": {
     "node": ">=20"
