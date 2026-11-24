@@ -8,6 +8,9 @@ on:
       - 'server.js'
       - 'package.json'
       - 'scripts/verify-business-copy.js'
+      - 'scripts/bpo-profile-generator.js'
+      - 'scripts/verify-bpo-profiles.js'
+      - 'scripts/sync-bpo-profiles.js'
       - 'scripts/verify-page-navigation.js'
       - '.github/workflows/website-business-content.yml'
   push:
@@ -28,5 +31,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: BPO_PDF_OUTPUT_DIR=bpo-pdf-preview npm run test:bpo-profiles
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bpo-profile-previews
+          path: bpo-pdf-preview/*.pdf
+          retention-days: 7
       - run: npm run test:business-copy
       - run: npm run test:page-navigation

@@ -5,14 +5,15 @@
   "description": "Bilingual Experts Group Plus website with Railway PostgreSQL CMS and admin portal",
   "main": "server.js",
   "scripts": {
-    "start": "node scripts/verify-office-route.js && node init-db.js && node server.js",
+    "start": "node scripts/verify-office-route.js && node init-db.js && node scripts/sync-bpo-profiles.js && node server.js",
     "dev": "node --watch server.js",
     "db:init": "node init-db.js",
     "test:crm-route": "node scripts/verify-crm-route.js",
     "test:favicon": "node scripts/verify-favicon.js",
     "test:office-route": "node scripts/verify-office-route.js",
     "test:business-copy": "node scripts/verify-business-copy.js",
-    "test:page-navigation": "node scripts/verify-page-navigation.js"
+    "test:page-navigation": "node scripts/verify-page-navigation.js",
+    "test:bpo-profiles": "node scripts/verify-bpo-profiles.js"
   },
   "engines": {
     "node": ">=20"
@@ -25,6 +26,8 @@
     "express-rate-limit": "^7.5.0",
     "express-session": "^1.18.1",
     "helmet": "^8.0.0",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "pdfkit": "^0.17.2",
+    "@fontsource/noto-kufi-arabic": "^5.3.0"
   }
 }

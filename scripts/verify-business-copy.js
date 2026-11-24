@@ -39,7 +39,9 @@ assert(visible.includes('three months’ termination notice'),'Missing BPO notic
 
 // Layout and bilingual regression checks for the compact homepage / portrait BPO cards.
 assert(visible.includes('id="home-advantages"'),'Missing compact home advantages');
-assert(visible.includes('id="bpo-highlights"'),'Missing compact BPO summary');
+assert(visible.includes('id="bpo-highlights"'),'Missing compact BPO contract note');
+assert(!visible.includes('grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 max-w-6xl mx-auto mb-9 sm:mb-11'),'Old BPO statistic cards unexpectedly remain');
+for(const pkg of ['Recruitment and hiring of the agreed BPO team','HR administration, payroll and workforce billing','Work in your CRM, dialer and other approved tools','Experts Group Plus-provided CRM, dialer and agreed tools','Documented standard operating procedures (SOPs), approved by the client','Dedicated Team Leader for day-to-day performance','Quality control, monitoring and targeted coaching'])assert(visible.includes(pkg),'BPO offer description missing: '+pkg);
 assert(visible.includes('id="bpo-plan-grid"'),'Missing BPO plan grid');
 assert(visible.includes('grid-cols-1 md:grid-cols-2 lg:grid-cols-3'),'BPO plans must stack on phones and show portrait columns on desktop');
 for(const name of ['professional','premium','ultimate']){
