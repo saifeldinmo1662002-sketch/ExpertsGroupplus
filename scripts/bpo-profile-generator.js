@@ -192,7 +192,7 @@ function createBpoProfile(language='en') {
    doc.roundedRect(44,tier.y,507,37,13).fillColor(tier.color).fill();
    txt(tier.name,61,tier.y+8,475,{size:13,bold:true,color:tier.color===C.gold?C.navy:C.white,height:28,align:ar?'right':'left'});
    txt(tier.desc,61,tier.y+48,473,{size:ar?9:9.1,color:C.muted,height:50});
-   const positions=[tier.y+100,tier.y+121,tier.y+142,tier.y+163];
+   const positions=[tier.y+94,tier.y+114,tier.y+134,tier.y+154];
    tier.bullets.forEach((v,i)=>bullet(v,61,positions[i],468));
  }
 
