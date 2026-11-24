@@ -32,6 +32,11 @@ jobs:
         with:
           node-version: '22'
       - run: npm install --no-audit --no-fund
-      - run: npm run test:bpo-profiles
+      - run: BPO_PDF_OUTPUT_DIR=bpo-pdf-preview npm run test:bpo-profiles
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bpo-profile-previews
+          path: bpo-pdf-preview/*.pdf
+          retention-days: 7
       - run: npm run test:business-copy
       - run: npm run test:page-navigation
