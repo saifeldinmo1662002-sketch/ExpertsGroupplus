@@ -45,7 +45,7 @@ for(const phrase of ['Build your BPO package','Recruitment, training &amp; HR in
 assert(visible.includes('id="bpo-quote-builder"'),'Missing BPO quote builder');
 assert(visible.includes('id="bpo-quote-form"'),'Missing quotation form');
 assert(!visible.includes('data-bpo-plan='),'Obsolete fixed packages remain');
-assert(visible.includes('lg:grid-cols-[minmax(215px,.65fr)_minmax(0,2fr)]'),'Quote builder needs responsive columns');
+assert(visible.includes('lg:grid-cols-[minmax(240px,1fr)_minmax(0,3fr)]'),'Quote builder needs responsive columns');
 assert(visible.includes('@media (min-width: 1700px)'),'Responsive ultra-wide layout rule missing');
 assert(visible.includes('#view-home .max-w-7xl'),'Wide view should remain scoped to homepage');
 assert(!visible.includes('Priority 48-hour onboarding launch'),'Unverified fixed onboarding promise reappeared');
