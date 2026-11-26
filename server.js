@@ -489,7 +489,9 @@ app.get('/favicon.ico',(req,res)=>res.redirect(302,'/assets/egp-favicon.png'));
 app.get('/favicon.png',(req,res)=>res.redirect(302,'/assets/egp-favicon.png'));
 app.use('/assets',express.static(PUBLIC,{maxAge:'1d',setHeaders:(res,filePath)=>{if(filePath.endsWith('seo-manager.js'))res.setHeader('Cache-Control','no-store, max-age=0, must-revalidate')}}));
 app.get(['/admin','/admin/'],(req,res)=>{res.set('Cache-Control','no-store, max-age=0, must-revalidate');res.sendFile(path.join(PUBLIC,'admin.html'))});
-app.get(['/','/en','/en/','/ar','/ar/','/en/:page','/ar/:page'],async(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');res.type('html').send(await addHead(html,route.lang,route.page))});
+// Match the exact alias; Express string routes also match a trailing slash.
+app.get(/^\/en$/,(req,res)=>res.redirect(301,'/en/'+req.originalUrl.slice(req.path.length)));
+app.get(['/','/en/','/ar','/ar/','/en/:page','/ar/:page'],async(req,res,next)=>{const route=pageFromPath(req.path);if(!route)return next();const html=fs.readFileSync(path.join(ROOT,'public-site.html'),'utf8');res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate').set('Pragma','no-cache').set('Expires','0');res.type('html').send(await addHead(html,route.lang,route.page))});
 app.get('*',(req,res)=>{if(req.path.includes('.'))return res.status(404).send('Not found');res.redirect(302,'/en/')});
 
 app.listen(PORT,()=>console.log(`Experts Group Plus platform listening on ${PORT}`));
