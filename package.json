@@ -13,7 +13,8 @@
     "test:office-route": "node scripts/verify-office-route.js",
     "test:business-copy": "node scripts/verify-business-copy.js",
     "test:page-navigation": "node scripts/verify-page-navigation.js",
-    "test:bpo-profiles": "node scripts/verify-bpo-profiles.js"
+    "test:bpo-profiles": "node scripts/verify-bpo-profiles.js",
+    "test:bpo-quote": "node scripts/verify-bpo-quote.js"
   },
   "engines": {
     "node": ">=20"

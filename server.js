@@ -253,18 +253,22 @@ app.post('/api/profile-downloads/:key/request',profileRequestLimiter,async(req,r
 
 function escapeEmailHtml(value=''){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 async function sendContactNotification(id, lead){
+ const isBpo=lead.scope==='Expert BPO — Custom Quotation';
+ const sender=isBpo?(process.env.BPO_QUOTE_FROM||'Experts Group Plus BPO <bpo@expertsgp.com>'):process.env.RESEND_FROM;
+ const recipient=isBpo?(process.env.BPO_QUOTE_TO||'admin@expertsgp.com'):process.env.CONTACT_NOTIFICATION_TO;
+ const notificationTitle=isBpo?'New BPO quotation request':'New website inquiry';
  const fail=async(message)=>{
   const safe=String(message||'Email delivery failed.').slice(0,500);
   try{await pool.query('UPDATE contact_submissions SET notification_status=$1,notification_error=$2 WHERE id=$3',['failed',safe,id])}catch(dbErr){console.error('Could not record contact email failure:',dbErr.message)}
   console.error('Contact notification failed for lead',id,':',safe);
   return {ok:false,error:safe};
  };
- if(!process.env.RESEND_API_KEY||!process.env.RESEND_FROM||!process.env.CONTACT_NOTIFICATION_TO){
+ if(!process.env.RESEND_API_KEY||!sender||!recipient){
   return fail('Email notification is not configured. Check RESEND_API_KEY, RESEND_FROM and CONTACT_NOTIFICATION_TO in Railway.');
  }
  const field=(label,value)=>`<tr><td style="padding:10px 12px;color:#64748b;font-size:12px;border-bottom:1px solid #e2e8f0;width:150px">${escapeEmailHtml(label)}</td><td style="padding:10px 12px;color:#0f172a;font-size:14px;border-bottom:1px solid #e2e8f0">${escapeEmailHtml(value||'—')}</td></tr>`;
  const plain=[
-  'New website inquiry — Experts Group Plus','',
+  notificationTitle+' — Experts Group Plus','',
   `Name: ${lead.name}`,`Email: ${lead.email}`,`Company: ${lead.company||'—'}`,
   `Service interest: ${lead.scope||'—'}`,`Preferred contact: ${lead.preferred_contact||'—'}`,
   `Language: ${lead.language||'en'}`,'','Message:',lead.message||'—','',
@@ -272,8 +276,8 @@ async function sendContactNotification(id, lead){
  ].join('\n');
  const html=`<!doctype html><html><body style="margin:0;background:#f8fafc;padding:28px 12px;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;margin:0 auto;background:#fff;border:1px solid #e2e8f0;border-radius:18px;overflow:hidden">
- <tr><td style="background:#154695;padding:22px 26px;color:#fff"><div style="font-size:11px;letter-spacing:2px;font-weight:bold;color:#dfc87b">EXPERTS GROUP PLUS</div><h1 style="font-size:22px;line-height:1.3;margin:10px 0 0">New website inquiry</h1></td></tr>
- <tr><td style="padding:22px 26px"><p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 18px">A visitor has submitted the contact form. Their details are below.</p>
+ <tr><td style="background:#154695;padding:22px 26px;color:#fff"><div style="font-size:11px;letter-spacing:2px;font-weight:bold;color:#dfc87b">EXPERTS GROUP PLUS</div><h1 style="font-size:22px;line-height:1.3;margin:10px 0 0">${notificationTitle}</h1></td></tr>
+ <tr><td style="padding:22px 26px"><p style="font-size:14px;line-height:1.6;color:#475569;margin:0 0 18px">${isBpo?'A visitor has configured a custom BPO package. Their selections and contact details are below.':'A visitor has submitted the contact form. Their details are below.'}</p>
  <table role="presentation" width="100%" cellspacing="0" cellpadding="0">${field('Name',lead.name)}${field('Email',lead.email)}${field('Company',lead.company)}${field('Service interest',lead.scope)}${field('Preferred contact',lead.preferred_contact)}${field('Language',lead.language)}${field('Submission ID',id)}</table>
  <h2 style="font-size:14px;margin:22px 0 9px;color:#154695">Message</h2><div style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:15px;font-size:14px;line-height:1.65">${escapeEmailHtml(lead.message||'—')}</div>
  <p style="font-size:11px;color:#64748b;margin:22px 0 0">Reply directly to this email to respond to the visitor. This inquiry is also stored in the Experts Group Plus admin portal.</p>
@@ -283,12 +287,12 @@ async function sendContactNotification(id, lead){
    method:'POST',
    headers:{'Authorization':`Bearer ${process.env.RESEND_API_KEY}`,'Content-Type':'application/json','Idempotency-Key':`egp-contact-${id}`},
    body:JSON.stringify({
-    from:process.env.RESEND_FROM,
-    to:[process.env.CONTACT_NOTIFICATION_TO],
+    from:sender,
+    to:[recipient],
     reply_to:[lead.email],
-    subject:`New website inquiry from ${String(lead.name).replace(/[\r\n]+/g,' ').slice(0,100)}`,
+    subject:`${notificationTitle} from ${String(lead.name).replace(/[\r\n]+/g,' ').slice(0,100)}`,
     text:plain,html,
-    tags:[{name:'source',value:'website-contact-form'}]
+    tags:[{name:'source',value:isBpo?'website-bpo-quote':'website-contact-form'}]
    }),
    signal:AbortSignal.timeout(12000)
   });
@@ -307,10 +311,24 @@ async function notifySavedLead(id){
  return sendContactNotification(id,lead);
 }
 
+const {validateQuote}=require('./bpo-quote');
+app.post('/api/bpo-quote',contactLimiter,async(req,res)=>{
+ if(req.body?.website)return res.status(201).json({ok:true});
+ let quote;try{quote=validateQuote(req.body)}catch{return res.status(400).json({error:'Please provide valid contact details and package selections.'})}
+ const scope='Expert BPO — Custom Quotation';
+ try{
+ const result=await pool.query('INSERT INTO contact_submissions(name,email,company,scope,message,preferred_contact,language) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id',[quote.name,quote.email,quote.company,scope,quote.message,quote.phone?'Email / phone':'Email',quote.language]);
+ const id=result.rows[0].id;
+ const delivery=await sendContactNotification(id,{...quote,scope,preferred_contact:quote.phone?'Email / phone':'Email'});
+ res.status(201).json({ok:true,id,notification:delivery.ok?'accepted':'pending'});
+ }catch(error){console.error('BPO quotation save failed:',error.message);res.status(500).json({error:'Could not save your quotation request. Please try again.'})}
+});
+
 app.post('/api/contact',contactLimiter,async(req,res)=>{try{
  const {name,email,company='',scope='',message='',preferredContact='',language='en',website=''}=req.body||{};
  if(website) return res.status(200).json({ok:true});
  if(typeof name!=='string'||name.trim().length<2||name.length>160||typeof email!=='string'||email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return res.status(400).json({error:'Please provide a valid name and email.'});
+ if(scope==='Expert BPO — Custom Quotation')return res.status(400).json({error:'Use the BPO quotation form.'});
  const clean=v=>typeof v==='string'?v.trim().slice(0,5000):'';
  const result=await pool.query(`INSERT INTO contact_submissions(name,email,company,scope,message,preferred_contact,language) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING id`,[clean(name),clean(email),clean(company),clean(scope),clean(message),clean(preferredContact),language==='ar'?'ar':'en']);
  const id=result.rows[0].id;

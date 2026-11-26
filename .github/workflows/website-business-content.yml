@@ -4,6 +4,9 @@ on:
     branches: [main]
     paths:
       - 'public-site.html'
+      - 'public/bpo-quote.js'
+      - 'bpo-quote.js'
+      - 'scripts/verify-bpo-quote.js'
       - 'public/ar-translations.json'
       - 'server.js'
       - 'package.json'
@@ -17,6 +20,9 @@ on:
     branches: [main]
     paths:
       - 'public-site.html'
+      - 'public/bpo-quote.js'
+      - 'bpo-quote.js'
+      - 'scripts/verify-bpo-quote.js'
       - 'public/ar-translations.json'
       - 'server.js'
       - 'package.json'
@@ -38,5 +44,6 @@ jobs:
           name: bpo-profile-previews
           path: bpo-pdf-preview/*.pdf
           retention-days: 7
+      - run: npm run test:bpo-quote
       - run: npm run test:business-copy
       - run: npm run test:page-navigation
