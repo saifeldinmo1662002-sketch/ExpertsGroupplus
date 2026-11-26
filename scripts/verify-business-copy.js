@@ -41,11 +41,11 @@ assert(visible.includes('three months’ termination notice'),'Missing BPO notic
 assert(visible.includes('id="home-advantages"'),'Missing compact home advantages');
 assert(visible.includes('id="bpo-highlights"'),'Missing compact BPO contract note');
 assert(!visible.includes('grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 max-w-6xl mx-auto mb-9 sm:mb-11'),'Old BPO statistic cards unexpectedly remain');
-for(const phrase of ['Build Your Custom BPO Package','Recruitment and hiring of the agreed BPO team','HR administration, payroll and workforce billing','CRM platform','Calendar &amp; scheduling','Advanced reporting &amp; analytics','Submit for Quotation'])assert(visible.includes(phrase),'Missing BPO quote content: '+phrase);
+for(const phrase of ['Build Your Custom BPO Package','Recruitment &amp; hiring','HR, payroll &amp; workforce billing','CRM platform','Calendar &amp; scheduling','Advanced reporting &amp; analytics','Get a Quote','Quote + Meeting'])assert(visible.includes(phrase),'Missing BPO quote content: '+phrase);
 assert(visible.includes('id="bpo-quote-builder"'),'Missing BPO quote builder');
 assert(visible.includes('id="bpo-quote-form"'),'Missing quotation form');
 assert(!visible.includes('data-bpo-plan='),'Obsolete fixed packages remain');
-assert(visible.includes('lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]'),'Quote builder needs responsive columns');
+assert(visible.includes('lg:grid-cols-[minmax(260px,.76fr)_minmax(0,1.85fr)]'),'Quote builder needs responsive columns');
 assert(visible.includes('@media (min-width: 1700px)'),'Responsive ultra-wide layout rule missing');
 assert(visible.includes('#view-home .max-w-7xl'),'Wide view should remain scoped to homepage');
 assert(!visible.includes('Priority 48-hour onboarding launch'),'Unverified fixed onboarding promise reappeared');
