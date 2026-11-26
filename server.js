@@ -56,6 +56,11 @@ if (process.env.NODE_ENV === 'production' && (!process.env.SESSION_SECRET || pro
 
 app.set('trust proxy', 1);
 app.use(helmet({contentSecurityPolicy:false, crossOriginEmbedderPolicy:false}));
+// Canonicalize the bare domain without changing www, service URLs, or email DNS.
+app.use((req,res,next)=>{
+ if(/^expertsgp[.]com(?::[0-9]+)?$/i.test(req.get('host')||''))return res.redirect(308,'https://www.expertsgp.com'+(req.originalUrl.startsWith('/')?req.originalUrl:'/'));
+ next();
+});
 // The CRM runs as a separate Railway service but is exposed under
 // www.expertsgp.com/CRM. Register before body parsers so uploads and JSON
 // reach its API intact; the proxy handles only the /CRM prefix.
