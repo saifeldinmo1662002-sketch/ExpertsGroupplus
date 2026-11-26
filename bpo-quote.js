@@ -47,17 +47,19 @@ const GROUPS = {
     }
   }
 };
+for(const group of Object.values(GROUPS)) if(!Object.hasOwn(group.options,'other'))group.options.other='Other / custom';
 function validateQuote(body){
  const fail=()=>{throw new Error('Invalid quotation details.');};
  const text=(v,max,min=0)=>{if(typeof v!=='string'||v.trim().length<min||v.length>max)fail();return v.trim();};
  if(!body||typeof body!=='object'||Array.isArray(body))fail();
  const name=text(body.name,160,2),company=text(body.company,180,2),email=text(body.email,254,3);
  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))fail();
- const phone=text(body.phone??'',40),notes=text(body.notes??'',3000),headcount=text(body.headcount??'',6);
+ const phone=text(body.phone??'',40),notes=text(body.notes??'',3000),headcount=text(body.headcount??'',6),industry=text(body.industry??'',180);
  if(headcount&&(!/^\d+$/.test(headcount)||Number(headcount)<1||Number(headcount)>100000))fail();
  const selections=body.selections;if(!selections||typeof selections!=='object'||Array.isArray(selections))fail();
  if(Object.keys(selections).length!==Object.keys(GROUPS).length)fail();
- const summary=[];for(const [key,group] of Object.entries(GROUPS)){const values=selections[key];if(!Array.isArray(values)||!values.length||(!group.multiple&&values.length!==1)||values.length>Object.keys(group.options).length||new Set(values).size!==values.length||values.some(v=>typeof v!=='string'||!Object.hasOwn(group.options,v)))fail();summary.push(group.label+': '+values.map(v=>group.options[v]).join(', '));}
- return {name,company,email,phone,language:body.language==='ar'?'ar':'en',message:[...summary,'Estimated team size: '+(headcount||'Not specified'),'Phone: '+(phone||'Not specified'),'Additional requirements: '+(notes||'None provided')].join('\n')};
+ const custom=body.custom??{};if(!custom||typeof custom!=='object'||Array.isArray(custom)||Object.keys(custom).some(k=>!Object.hasOwn(GROUPS,k)))fail();
+ const summary=[];for(const [key,group] of Object.entries(GROUPS)){const values=selections[key];if(!Array.isArray(values)||!values.length||(!group.multiple&&values.length!==1)||values.length>Object.keys(group.options).length||new Set(values).size!==values.length||values.some(v=>typeof v!=='string'||!Object.hasOwn(group.options,v)))fail();const detail=values.includes('other')?text(custom[key],500,1):'';summary.push(group.label+': '+values.map(v=>v==='other'?group.options[v]+': '+detail:group.options[v]).join(', '));}
+ return {name,company,email,phone,language:body.language==='ar'?'ar':'en',message:['Industry: '+(industry||'Not specified'),...summary,'Meeting requested: '+(body.meeting===true?'Yes — customer proceeding to scheduling':'No'),'Estimated team size: '+(headcount||'Not specified'),'Phone: '+(phone||'Not specified'),'Scope of work / additional requirements: '+(notes||'None provided')].join('\n')};
 }
 module.exports={GROUPS,validateQuote};
