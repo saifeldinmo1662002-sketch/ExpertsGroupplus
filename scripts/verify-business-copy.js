@@ -80,5 +80,7 @@ for (const label of [
 assert(visible.includes('data-service="training"></div>\n      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10"'),'Training section spacing is wrong');
 assert(visible.includes('data-service="consultation"></div>\n      <div class="pt-8 sm:pt-10 pb-12'),'Consultation section spacing is wrong');
 assert(visible.includes('data-service="operations"></div>\n      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10"'),'Operations section spacing is wrong');
-assert(visible.includes('data-service="bpo"></div>\n      <!-- Compact BPO service commitments'),'BPO section spacing is wrong');
+assert(visible.includes('data-service="bpo"></div>\n      <div id="bpo-service-overview"'),'BPO overview must follow hero');
+assert(visible.indexOf('id="bpo-service-overview"')<visible.indexOf('id="bpo-quote-builder"'),'Service overview must precede builder');
+for(const phrase of ['Your outsourcing partner','Flexible BPO service models','Professional','Premium','Ultimate','Customize your package'])assert(visible.includes(phrase),'Missing BPO overview: '+phrase);
 console.log('BUSINESS_COPY_VALIDATED');
