@@ -311,7 +311,29 @@ td .sub{color:var(--muted)}
 .analytics-filters input{min-width:min(260px,100%)}
 .analytics-pager{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
 .analytics-pager button:disabled{opacity:.4;cursor:not-allowed}
-.analytics-stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.analytics-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:16px}
+.analytics-stats .stat{padding:12px 14px;border-radius:12px;box-shadow:none;min-width:0}
+.analytics-stats .stat b{font-size:23px;margin-top:4px;line-height:1.2}
+.analytics-report-list{display:grid;gap:8px;margin-bottom:16px}
+.analytics-report{min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.analytics-report summary{display:flex;align-items:center;gap:12px;padding:13px 15px;cursor:pointer;list-style:none;color:var(--navy);font-size:13px;font-weight:650;min-height:48px}
+.analytics-report summary::-webkit-details-marker{display:none}
+.analytics-report summary::after{content:'';width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);margin-left:4px;flex-shrink:0}
+.analytics-report[open] summary::after{transform:rotate(225deg)}
+.analytics-report summary:hover{background:var(--soft)}
+.analytics-report summary:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
+.analytics-report[open] summary{border-bottom:1px solid var(--line)}
+.analytics-report-title{flex:1;min-width:0}
+.analytics-report-hint{color:var(--muted);font-weight:400;font-size:11px;text-align:right}
+.analytics-report-body{padding:14px 15px;min-width:0}
+.analytics-report-body .table-wrap{max-width:100%;overflow-x:auto}
+.analytics-report-body .note:first-child{margin-top:0}
+.analytics-report-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;flex-wrap:wrap}
+.analytics-report-controls .actions{gap:6px}
+.analytics-report-controls h2{font-size:14px;margin:0;color:var(--navy)}
+.analytics-report-body .analytics-trend{height:155px}
+.analytics-report-body .trend-track{height:110px}
+@media(max-width:700px){.analytics-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.analytics-report summary{padding:11px 12px}.analytics-report-body{padding:12px}.analytics-report-hint{max-width:35%;overflow-wrap:anywhere}.analytics-stats .stat b{font-size:21px}}
 </style>
 
 <style id="profile-pdf-admin-styles">
@@ -431,6 +453,17 @@ async function setLeadStatus(id,status){try{await api(`/api/admin/leads/${id}`,{
 async function toggleArchivedLeads(){showArchivedLeads=!showArchivedLeads;await leads()}
 async function archiveLead(id,archived){const action=archived?'hide':'restore';if(!confirm(`${archived?'Hide':'Restore'} this contact submission?`))return;try{await api(`/api/admin/leads/${id}/archive`,{method:'PATCH',body:JSON.stringify({archived})});await (activeTab==='leads'?leads():overview())}catch(e){alert(e.message)}}
 async function deleteLead(id){if(!confirm('Permanently delete this contact submission? This cannot be undone.'))return;try{await api(`/api/admin/leads/${id}`,{method:'DELETE'});await (activeTab==='leads'?leads():overview())}catch(e){alert(e.message)}}
+function analyticsReport(id,title,hint,body){
+ const open=!!(window.analyticsOpenReports||{})[id];
+ return '<details class="analytics-report" data-analytics-report="'+id+'" '+(open?'open':'')+' ontoggle="rememberAnalyticsReport(this)"><summary><span class="analytics-report-title">'+esc(title)+'</span><span class="analytics-report-hint">'+esc(hint)+'</span></summary><div class="analytics-report-body">'+body+'</div></details>';
+}
+function rememberAnalyticsReport(el){
+ if(!el.isConnected)return;
+ (window.analyticsOpenReports||(window.analyticsOpenReports={}))[el.dataset.analyticsReport]=el.open;
+}
+function setAnalyticsReports(open){
+ document.querySelectorAll('#content details[data-analytics-report]').forEach(el=>{el.open=open;rememberAnalyticsReport(el)});
+}
 async function analytics(){
  try{
   const days=Number(window.analyticsDays||28),activityType=window.analyticsActivityType||'all',activityQuery=window.analyticsActivityQuery||'',activityPage=Number(window.analyticsActivityPage||0);
@@ -454,19 +487,20 @@ async function analytics(){
   const total=Number(d.totalActivity||0),pageCount=Math.max(1,Math.ceil(total/Number(d.activityPageSize||30)));
   const activityToolbar='<div class="analytics-filters"><select aria-label="Filter activity type" onchange="window.analyticsActivityType=this.value;window.analyticsActivityPage=0;analytics()"><option value="all" '+(activityType==='all'?'selected':'')+'>All activity</option><option value="page_view" '+(activityType==='page_view'?'selected':'')+'>Page visits</option><option value="button_press" '+(activityType==='button_press'?'selected':'')+'>Button / link presses</option><option value="contact_submit" '+(activityType==='contact_submit'?'selected':'')+'>Contact conversions</option><option value="engaged_time" '+(activityType==='engaged_time'?'selected':'')+'>Engaged time</option></select><input aria-label="Search activity" placeholder="Search page or action…" value="'+esc(activityQuery)+'" onchange="window.analyticsActivityQuery=this.value;window.analyticsActivityPage=0;analytics()"><span class="note">'+fmt(total)+' matching events</span></div>';
   const activityPager='<div class="analytics-pager"><span class="note">Page '+(activityPage+1)+' of '+pageCount+'</span><div class="actions"><button class="btn light small" '+(activityPage<=0?'disabled':'')+' onclick="window.analyticsActivityPage=Math.max(0,'+activityPage+'-1);analytics()">Previous</button><button class="btn light small" '+(activityPage+1>=pageCount?'disabled':'')+' onclick="window.analyticsActivityPage='+activityPage+'+1;analytics()">Next</button></div></div>';
-  $('#content').innerHTML=heading('Website analytics','Independent, first-party visitor insights. All displayed event times use Cairo time.',action)+
+  $('#content').innerHTML=heading('Website analytics','Visitor activity and conversions. Times shown in Cairo.',action)+
    '<div class="cards analytics-stats"><div class="stat"><span class="muted">Unique visitors</span><b>'+fmt(m.visitors)+'</b></div><div class="stat"><span class="muted">Visits</span><b>'+fmt(m.visits)+'</b></div><div class="stat"><span class="muted">Average stay time</span><b>'+duration(m.average_visit_ms)+'</b></div><div class="stat"><span class="muted">Page views</span><b>'+fmt(m.page_views)+'</b></div><div class="stat"><span class="muted">Button / link presses</span><b>'+fmt(m.button_presses)+'</b></div><div class="stat"><span class="muted">Contact conversions</span><b>'+fmt(m.conversions)+'</b></div><div class="stat"><span class="muted">Visit-to-contact rate</span><b>'+Number(m.conversion_rate||0).toFixed(1)+'%</b></div><div class="stat"><span class="muted">PDF profile downloads</span><b>'+fmt(profileData.total)+'</b></div></div>'+
-   '<section class="panel"><h2>Daily visitor activity</h2><p class="note">Page views by day for the selected reporting period (latest 14 days shown).</p>'+trend+'</section>'+
-   '<section class="panel"><h2>Traffic sources and campaigns</h2>'+table(d.sources,[['source','Source'],['medium','Medium'],['campaign','Campaign'],['sessions','Visits'],['visitors','Visitors']])+'</section>'+
-   '<section class="panel"><h2>New and returning visitors</h2>'+table(d.audience||[],[['audience','Audience'],['visitors','Visitors']])+'</section>'+'<section class="panel"><h2>Devices, browsers, operating systems and locale</h2>'+table(d.devices,[['device','Device'],['browser','Browser'],['operating_system','Operating system'],['language','Browser language'],['timezone','Timezone'],['sessions','Visits']])+'</section>'+
-   '<section class="panel"><h2>Page performance</h2>'+table(d.pages,[['page_path','Page'],['views','Page views'],['average_page_ms','Avg. active time',duration],['engaged_ms','Total active time',duration]])+'</section>'+
-   '<section class="panel"><h2>Most pressed buttons and links</h2>'+table(d.buttons,[['button','Button / link'],['page_path','Page'],['presses','Presses']])+'</section>'+
-   '<section class="panel"><h2>Recent activity</h2><p class="note">Each row is an individual event with its recorded server timestamp.</p>'+activityToolbar+table(activityRows,[['when','Date & time'],['action','Action'],['page_path','Page'],['detail','Details'],['device','Device']])+activityPager+'</section>'+
-   '<section class="panel"><div class="heading"><div><h2>PDF profile download submissions</h2><p class="note">Name, company, email and phone entered before a matching PDF was returned. Visible only to approved administrators.</p></div><button class="btn light small" onclick="exportProfileDownloadRequests()">Export CSV</button></div>'+
-   '<p class="note">'+fmt(profileData.total)+' requests in this '+days+'-day period. Showing up to 500 latest records.</p>'+
+   '<div class="analytics-report-controls"><h2>Detailed reports</h2><div class="actions"><button class="btn light small" onclick="setAnalyticsReports(true)">Expand all</button><button class="btn light small" onclick="setAnalyticsReports(false)">Collapse all</button></div></div><div class="analytics-report-list">'+
+   analyticsReport('daily','Daily visitor activity','Page views by day','<p class="note">Latest 14 days in the selected period.</p>'+trend)+
+   analyticsReport('pages','Page performance','Views and time on page',table(d.pages,[['page_path','Page'],['views','Page views'],['average_page_ms','Avg. active time',duration],['engaged_ms','Total active time',duration]]))+
+   analyticsReport('buttons','Buttons and links',fmt(m.button_presses)+' presses',table(d.buttons,[['button','Button / link'],['page_path','Page'],['presses','Presses']]))+
+   analyticsReport('sources','Traffic sources and campaigns','Acquisition',table(d.sources,[['source','Source'],['medium','Medium'],['campaign','Campaign'],['sessions','Visits'],['visitors','Visitors']]))+
+   analyticsReport('audience','New and returning visitors','Audience',table(d.audience||[],[['audience','Audience'],['visitors','Visitors']]))+
+   analyticsReport('devices','Devices and browsers','Technology and locale',table(d.devices,[['device','Device'],['browser','Browser'],['operating_system','Operating system'],['language','Browser language'],['timezone','Timezone'],['sessions','Visits']]))+
+   analyticsReport('activity','Recent activity',fmt(total)+' matching events',activityToolbar+table(activityRows,[['when','Date & time'],['action','Action'],['page_path','Page'],['detail','Details'],['device','Device']])+activityPager)+
+   analyticsReport('profiles','PDF profile downloads',fmt(profileData.total)+' requests','<div class="analytics-report-controls"><p class="note">'+fmt(profileData.total)+' requests in this '+days+'-day period. Showing up to 500 latest records.</p><button class="btn light small" onclick="exportProfileDownloadRequests()">Export CSV</button></div><p class="note">Contact details submitted before a PDF download. Approved administrators only.</p>'+
    table(profileRows,[['name','Name'],['company','Company'],['email','Email'],['phone','Phone number'],['profile_label','Requested profile'],['language','Language'],['requested_when','Date & time']])+
-   '<h3 style="margin:18px 0 8px">Downloads by profile</h3>'+table(profileData.byProfile||[],[['profile_label','Profile'],['total','Downloads']])+'</section>'+
-   '<p class="note">This is independent first-party analytics. It records anonymous browser IDs, pages, interaction events, successful contact submissions, active-tab time, campaign/referrer information and broad device/browser settings. It does not store IP addresses or attempt to infer personal demographics. Referrer query strings are removed to reduce the risk of collecting sensitive URL data. Existing historical events remain, but new attribution/device fields begin filling from this release onward.</p>';
+   '<h3 style="margin:18px 0 8px">Downloads by profile</h3>'+table(profileData.byProfile||[],[['profile_label','Profile'],['total','Downloads']]))+
+   analyticsReport('privacy','About analytics and privacy','Data collection','<p class="note">First-party analytics records anonymous browser IDs, pages, interactions, successful contact submissions, active-tab time, campaign/referrer information and broad device/browser settings. It does not store IP addresses or infer personal demographics. Referrer query strings are removed to reduce the risk of collecting sensitive URL data. Historical events remain available; attribution and device fields are available for events collected after those features were introduced.</p>')+'</div>';
  }catch(e){$('#content').innerHTML=heading('Website analytics','Independent first-party reporting.')+'<section class="panel"><div class="alert error">'+esc(e.message)+'</div></section>'}
 }async function leads(){const d=await api('/api/admin/dashboard'),visible=d.leads.filter(x=>showArchivedLeads?!!x.archived_at:!x.archived_at),archivedCount=d.leads.filter(x=>x.archived_at).length;$('#content').innerHTML=heading('Contact submissions','Manage website inquiries. Hidden records remain stored and can be restored.',`<button class="btn ${showArchivedLeads?'primary':'light'}" onclick="toggleArchivedLeads()">${showArchivedLeads?'Show active':'Show hidden'} (${archivedCount})</button>`)+`<section class="panel">${leadTable(visible)}</section>`}
 function profilePdfSlots(){
